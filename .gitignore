@@ -1,0 +1,21 @@
+# Installed dependencies
+node_modules/
+
+# Personal library (created automatically by NotesApp)
+01-inbox/
+02-source-notes/
+03-atomic-notes/
+04-content-maps/
+05-self-assessment/
+06-spaced-repetition/
+
+# Local secrets and configuration
+.env
+.env.*
+!.env.example
+
+# Logs, temporary files, and operating-system metadata
+*.log
+*.tmp
+.DS_Store
+Thumbs.db

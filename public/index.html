@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NotesApp — Notes and Spaced Repetition</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Lora:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+</head>
+<body class="theme-light">
+  <div class="app-layout">
+    <!-- ==================== BARRA LATERAL (SIDEBAR) ==================== -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <span class="logo-monogram" aria-hidden="true">n.</span>
+          <div class="logo-text">
+            <h1>NotesApp</h1>
+            <span class="subtitle" data-i18n="appSubtitle">Evidence-Based Notes</span>
+          </div>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        
+        <button class="nav-item active" data-view="inicio">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10 12 3l9 7v11h-6v-7H9v7H3z"/></svg>
+          <span class="nav-label" data-i18n="navHome">Home</span>
+        </button>
+
+        <div class="nav-group-label" data-i18n="navLibrary">Library</div>
+        <button class="nav-item" data-view="bandeja">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h18v16H3z M3 13h5l2 3h4l2-3h7"/></svg>
+          <span class="nav-label" data-i18n="navInbox">Inbox</span>
+          <span class="badge" id="badge-inbox">0</span>
+        </button>
+        <button class="nav-item" data-view="atomicas">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18M6 6l12 12M6 18 18 6"/></svg>
+          <span class="nav-label" data-i18n="navAtomicas">Atomic Notes</span>
+          <span class="badge" id="badge-atomicas">0</span>
+        </button>
+        <button class="nav-item" data-view="fuentes">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 3h12l4 4v14H4z M8 11h8M8 15h6"/></svg>
+          <span class="nav-label" data-i18n="navFuentes">Source Notes</span>
+          <span class="badge" id="badge-fuentes">0</span>
+        </button>
+        <button class="nav-item" data-view="mapas">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5l6-2 6 2 6-2v16l-6 2-6-2-6 2z M9 3v16M15 5v16"/></svg>
+          <span class="nav-label" data-i18n="navMapas">Content Maps</span>
+          <span class="badge" id="badge-mapas">0</span>
+        </button>
+
+        <div class="nav-group-label" data-i18n="navLearning">Learning</div>
+        <button class="nav-item highlight-nav" data-view="repaso">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11a9 9 0 1 1 3 8 M3 4v7h7 M12 7v5l3 2"/></svg>
+          <span class="nav-label" data-i18n="navRepaso">Spaced Repetition</span>
+          <span class="badge badge-due" id="badge-repaso">0</span>
+        </button>
+        <button class="nav-item" data-view="grafo">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5h4v4H5zM15 15h4v4h-4zM15 3h4v4h-4zM7 9v8h8M9 7h8v8"/></svg>
+          <span class="nav-label" data-i18n="navGrafo">Knowledge Graph</span>
+        </button>
+        <button class="nav-item" data-view="analitica">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
+          <span class="nav-label" data-i18n="navAnalitica">Retention Analytics</span>
+        </button>
+
+        <div class="nav-group-label" data-i18n="navTools">Tools</div>
+        <button class="nav-item" data-view="llm">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v14H4zM8 9l3 3-3 3M13 15h3"/></svg>
+          <span class="nav-label" data-i18n="navLlm">LLM Assistant &amp; Prompt</span>
+        </button>
+        <button class="nav-item" data-view="guia">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5c-3-2-6-2-10-1v15c4-1 7-1 10 1 3-2 6-2 10-1V4c-4-1-7-1-10 1z M12 5v15"/></svg>
+          <span class="nav-label" data-i18n="navGuia">Guide &amp; Evidence</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="evidence-pill" data-i18n-title="evidenceTooltip">
+          <span class="pill-dot"></span>
+          <span data-i18n="evidencePillText">Distributed practice + Active retrieval</span>
+        </div>
+        <div class="footer-actions-row">
+          <div class="lang-switch-group" data-i18n-title="languageTooltip">
+            <button type="button" class="btn-lang active" id="btn-lang-es">ES</button>
+            <button type="button" class="btn-lang" id="btn-lang-en">EN</button>
+          </div>
+          <button id="theme-toggle" class="btn-theme" title="Alternar tema claro/oscuro" data-i18n-title="toggleTheme">
+            <span id="theme-icon">🌙</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ==================== ÁREA PRINCIPAL ==================== -->
+    <main class="main-content">
+      <!-- HEADER SUPERIOR CON CAPTURA RÁPIDA -->
+      <header class="top-header">
+        <div class="quick-capture-box">
+          <span class="qc-icon" aria-hidden="true">+</span>
+          <input type="text" id="quick-capture-input" placeholder="Captura rápida sin fricción... (Escribe y presiona Enter)" data-i18n-placeholder="quickCapturePlaceholder" />
+          <button id="quick-capture-btn" class="btn-primary-sm" data-i18n="quickCaptureBtn">Capture</button>
+        </div>
+
+        <div class="header-actions">
+          <button id="btn-import-json-trigger" class="btn-ghost" data-i18n-title="importTooltip" data-i18n="btnImportJson">📥 Import JSON</button>
+          <button id="btn-search-trigger" class="btn-ghost" title="Buscar en todas las notas (Ctrl + K)" data-i18n-title="btnSearchTooltip">
+            🔍 <span class="kbd-shortcut">Ctrl+K</span>
+          </button>
+          <button id="btn-header-repaso" class="btn-accent">
+            <span data-i18n="btnReviewHeader">🧠 Review today</span> (<span id="header-due-count">0</span>)
+          </button>
+        </div>
+      </header>
+
+      <!-- ==================== CONTENEDOR DE VISTAS ==================== -->
+      <section class="content-container">
+
+        <!-- 0. VISTA: INICIO / HOME -->
+<div id="view-inicio" class="view-panel active">
+ <div class="home-heading"><div><p class="home-eyebrow" data-i18n="homeEyebrow">YOUR WORKSPACE</p><h2 data-i18n="homeFocusTitle">A little focus. Lasting knowledge.</h2><p data-i18n="homeFocusSubtitle">Capture a thought, connect an idea, or make time to remember.</p></div></div>
+ <section class="home-focus" aria-labelledby="home-focus-title"><div class="focus-copy"><p class="home-eyebrow" data-i18n="homeToday">TODAY</p><h3 id="home-focus-title" data-i18n="homeReviewFocus">Keep what you learn.</h3><p data-i18n="homeReviewFocusDesc">A short review turns your notes into knowledge you can recall.</p><button class="btn-primary" onclick="switchView('repaso')"><span data-i18n="homeStartReview">Start review</span> <span aria-hidden="true">→</span></button></div><div class="focus-count"><span id="home-count-due">0</span><span data-i18n="homeStatDue">Due today</span></div></section>
+ <section class="home-library" aria-labelledby="home-library-title"><div class="home-section-heading"><h3 id="home-library-title" data-i18n="homeLibrary">Your library</h3><span data-i18n="homeLibraryHint">Small ideas, connected.</span></div><div class="home-metrics"><button class="home-metric" onclick="switchView('atomicas')"><span class="metric-value" id="home-count-atomicas">0</span><span data-i18n="homeStatAtomicas">Atomic notes</span><span class="metric-arrow" aria-hidden="true">↗</span></button><button class="home-metric" onclick="switchView('fuentes')"><span class="metric-value" id="home-count-fuentes">0</span><span data-i18n="homeStatFuentes">Source notes</span><span class="metric-arrow" aria-hidden="true">↗</span></button><button class="home-metric" onclick="switchView('mapas')"><span class="metric-value" id="home-count-mapas">0</span><span data-i18n="homeStatMapas">Content maps</span><span class="metric-arrow" aria-hidden="true">↗</span></button><button class="home-metric" onclick="switchView('repaso')"><span class="metric-value" id="home-count-cards">0</span><span data-i18n="homeStatCards">Flashcards</span><span class="metric-arrow" aria-hidden="true">↗</span></button></div></section>
+ <div class="home-shortcuts"><button onclick="openModal('modal-import-json')"><span><strong data-i18n="homeActionImportJsonTitle">Import JSON package</strong><small data-i18n="homeImportHint">Bring structured notes into your library.</small></span><span aria-hidden="true">↗</span></button><button onclick="switchView('llm')"><span><strong data-i18n="homeActionLlmTitle">Master LLM prompt</strong><small data-i18n="homePromptHint">Turn source material into connected notes.</small></span><span aria-hidden="true">↗</span></button></div>
+ <section class="home-reference" aria-labelledby="home-reference-title"><div class="home-section-heading"><h3 id="home-reference-title" data-i18n="homeReference">A closer look</h3><span data-i18n="homeReferenceHint">Explore only what you need.</span></div>
+ <details class="home-disclosure"><summary><span class="disclosure-copy"><strong data-i18n="homeHowImport">From source to notes</strong><span data-i18n="homeHowImportHint">The four steps of importing knowledge.</span></span><span class="disclosure-chevron" aria-hidden="true">⌄</span></summary><div class="disclosure-body">            <div class="pipeline-section">
+              <h4 class="pipeline-title" data-i18n="homePipelineTitle">🔄 The Intelligent Ingestion Pipeline</h4>
+              <div class="pipeline-steps-grid">
+                <div class="pipeline-step">
+                  <div class="step-num">1</div>
+                  <h5 data-i18n="homePipelineStep1Title">1. Raw Material</h5>
+                  <p data-i18n="homePipelineStep1Desc">Copy any article, book chapter, paper, or lecture transcript.</p>
+                </div>
+                <div class="pipeline-arrow">➔</div>
+                <div class="pipeline-step">
+                  <div class="step-num">2</div>
+                  <h5 data-i18n="homePipelineStep2Title">2. Master LLM Prompt</h5>
+                  <p data-i18n="homePipelineStep2Desc">Paste the raw text alongside our prompt into Claude, ChatGPT, or Gemini.</p>
+                </div>
+                <div class="pipeline-arrow">➔</div>
+                <div class="pipeline-step">
+                  <div class="step-num">3</div>
+                  <h5 data-i18n="homePipelineStep3Title">3. Categorized JSON</h5>
+                  <p data-i18n="homePipelineStep3Desc">The AI extracts sources, atomic concepts, SM-2 flashcards, and relational maps.</p>
+                </div>
+                <div class="pipeline-arrow">➔</div>
+                <div class="pipeline-step">
+                  <div class="step-num">4</div>
+                  <h5 data-i18n="homePipelineStep4Title">4. NotesApp Ingestion</h5>
+                  <p data-i18n="homePipelineStep4Desc">Paste the JSON into 'Import JSON'. NotesApp writes the Markdown files and refreshes the graph.</p>
+                </div>
+              </div>
+            </div>
+
+</div></details>
+ <details class="home-disclosure"><summary><span class="disclosure-copy"><strong data-i18n="homeHowStored">Where your knowledge lives</strong><span data-i18n="homeHowStoredHint">Six folders, with a purpose for each.</span></span><span class="disclosure-chevron" aria-hidden="true">⌄</span></summary><div class="disclosure-body"><h4 data-i18n="homeStorageGuideTitle">Storage hierarchy and JSON ingestion guide</h4><p data-i18n="homeStorageGuideSubtitle"></p>            <div class="folders-hierarchy-grid">
+              <div class="folder-card">
+                <div class="folder-card-header">
+                  <span class="fc-icon">📥</span>
+                  <strong class="fc-path" data-i18n="homeFolder1Title">01-inbox/</strong>
+                </div>
+                <p class="fc-desc" data-i18n="homeFolder1Desc">Stores raw thoughts captured with zero friction as plain Markdown files (inbox-*.md). Protects working memory by postponing categorization until a dedicated processing block.</p>
+                <div class="fc-badge" data-i18n="homeDetail0">Zero friction • Sweller 1988</div>
+              </div>
+
+              <div class="folder-card">
+                <div class="folder-card-header">
+                  <span class="fc-icon">📚</span>
+                  <strong class="fc-path" data-i18n="homeFolder2Title">02-source-notes/</strong>
+                </div>
+                <p class="fc-desc" data-i18n="homeFolder2Desc">Files named fuente-*.md with author metadata, media type (book, paper, video), exact quotes, and paraphrased key takeaways. Separates external information from personal synthesis.</p>
+                <div class="fc-badge" data-i18n="homeDetail1">Bibliographic grounding</div>
+              </div>
+
+              <div class="folder-card">
+                <div class="folder-card-header">
+                  <span class="fc-icon">⚛️</span>
+                  <strong class="fc-path" data-i18n="homeFolder3Title">03-atomic-notes/</strong>
+                </div>
+                <p class="fc-desc" data-i18n="homeFolder3Desc">Files named atomica-*.md. Each note houses exactly ONE autonomous idea written in your own words (Generation Effect), stating why it matters and linking to related concepts.</p>
+                <div class="fc-badge">Zettelkasten • Slamecka 1978</div>
+              </div>
+
+              <div class="folder-card">
+                <div class="folder-card-header">
+                  <span class="fc-icon">🗺️</span>
+                  <strong class="fc-path" data-i18n="homeFolder4Title">04-content-maps/</strong>
+                </div>
+                <p class="fc-desc" data-i18n="homeFolder4Desc">Files named mapa-*.md. High-level conceptual organizers (Kiewra 1991). Strictly requires a relational reason explaining why each note belongs to that thematic map.</p>
+                <div class="fc-badge" data-i18n="homeDetail2">Required connection reason • Kiewra 1991</div>
+              </div>
+
+              <div class="folder-card">
+                <div class="folder-card-header">
+                  <span class="fc-icon">🎯</span>
+                  <strong class="fc-path" data-i18n="homeFolder5Title">05-self-assessment/</strong>
+                </div>
+                <p class="fc-desc" data-i18n="homeFolder5Desc">Files named pregunta-*.md. Question and answer pairs generated from each atomic note. Provides fuel for the SM-2 active recall testing algorithm.</p>
+                <div class="fc-badge">Active Recall • Dunlosky 2013</div>
+              </div>
+
+              <div class="folder-card">
+                <div class="folder-card-header">
+                  <span class="fc-icon">⚡</span>
+                  <strong class="fc-path" data-i18n="homeFolder6Title">06-spaced-repetition/</strong>
+                </div>
+                <p class="fc-desc" data-i18n="homeFolder6Desc">The reviews.json file. Logs review timestamps, Ease Factors, repetition counts, and interval days to mathematically schedule your next optimal review sessions.</p>
+                <div class="fc-badge" data-i18n="homeDetail3">SM-2 algorithm + Interleaving</div>
+              </div>
+            </div>
+
+</div></details>
+ <details class="home-disclosure"><summary><span class="disclosure-copy"><strong data-i18n="homeHowSchema">Import format & file structure</strong><span data-i18n="homeHowSchemaHint">JSON fields and their Markdown destinations.</span></span><span class="disclosure-chevron" aria-hidden="true">⌄</span></summary><div class="disclosure-body">            <div class="schema-table-wrapper">
+              <h4 class="pipeline-title" data-i18n="homeSchemaTableTitle">🗺️ JSON Schema to Disk Mapping</h4>
+              <table class="guide-table schema-mapping-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="homeThKey">JSON Property</th>
+                    <th data-i18n="homeThTarget">Disk Destination</th>
+                    <th data-i18n="homeThRole">Cognitive &amp; Functional Role</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>carpetas.atomica / fuente</code></td>
+                    <td><code>03-atomic-notes/folder/</code></td>
+                    <td data-i18n="homeDetail4">Organize topics in physical folders while retaining connections through wikilinks.</td>
+                  </tr>
+                  <tr>
+                    <td><code>notas_fuente[]</code></td>
+                    <td><code>02-source-notes/fuente-[id].md</code></td>
+                    <td data-i18n="homeDetail5">Stores source summaries, authors, original media, and direct quotations.</td>
+                  </tr>
+                  <tr>
+                    <td><code>notas_atomicas[]</code></td>
+                    <td><code>03-atomic-notes/atomica-[id].md</code></td>
+                    <td data-i18n="homeDetail6">Self-contained ideas with your own definitions, their significance, and wikilinks [[...]].</td>
+                  </tr>
+                  <tr>
+                    <td><code>notas_atomicas[].autoevaluacion</code></td>
+                    <td><code>05-self-assessment/pregunta-[id].md</code></td>
+                    <td data-i18n="homeDetail7">An active-recall flashcard linked to the atomic note and scheduled with SM-2.</td>
+                  </tr>
+                  <tr>
+                    <td><code>mapas_contenido[]</code></td>
+                    <td><code>04-content-maps/mapa-[id].md</code></td>
+                    <td data-i18n="homeDetail8">Thematic organizers with a required explanation for each connection (razon field).</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+</div></details>
+ <details class="home-disclosure"><summary><span class="disclosure-copy"><strong data-i18n="homeHowMethod">The method behind your workspace</strong><span data-i18n="homeHowMethodHint">Learning principles and supporting references.</span></span><span class="disclosure-chevron" aria-hidden="true">⌄</span></summary><div class="disclosure-body"><h4 data-i18n="homeTitle">Welcome to NotesApp</h4><p data-i18n="homeSubtitle"></p><p data-i18n="homeBadgeEvidence"></p><button class="btn-ghost" onclick="switchView('guia')" data-i18n="navGuia">Guide & Evidence</button></div></details>
+ </section>
+</div>
+
+        <!-- 1. VISTA: BANDEJA DE ENTRADA -->
+        <div id="view-bandeja" class="view-panel">
+          <!-- EXPLICACIÓN COGNITIVA DE SECCIÓN -->
+          <div class="section-explainer" id="explainer-bandeja">
+            <div class="explainer-badge">
+              <span class="badge-icon">💡</span>
+              <span data-i18n="inboxExplainerTitle">💡 Zero Friction &amp; Working Memory (Sweller 1988)</span>
+            </div>
+            <p class="explainer-body" data-i18n="inboxExplainerText">Human working memory has strict bandwidth limits. Interrupting reading or thinking to classify an idea derails deep attention. Capture thoughts here instantly and process them in a dedicated batch.</p>
+            <button type="button" class="btn-explainer-toggle" onclick="toggleExplainer('bandeja')">✕</button>
+          </div>
+
+          <div class="panel-header">
+            <div>
+              <h2 data-i18n="inboxTitle">Inbox</h2>
+              <p class="panel-desc" data-i18n="inboxDesc">Capture raw thoughts with zero friction. Process them into atomic notes or sources later.</p>
+            </div>
+            <div class="panel-actions">
+              <div class="filter-group">
+                <button class="btn-filter active" data-filter="pendientes" data-i18n="filterPending">Pending</button>
+                <button class="btn-filter" data-filter="procesadas" data-i18n="filterProcessed">Processed</button>
+                <button class="btn-filter" data-filter="todas" data-i18n="filterAll">All</button>
+              </div>
+            </div>
+          </div>
+          <div id="inbox-list" class="cards-grid">
+            <!-- Renderizado dinámico -->
+          </div>
+        </div>
+
+        <!-- 2. VISTA: NOTAS ATÓMICAS -->
+        <div id="view-atomicas" class="view-panel">
+          <!-- EXPLICACIÓN COGNITIVA DE SECCIÓN -->
+          <div class="section-explainer" id="explainer-atomicas">
+            <div class="explainer-badge">
+              <span class="badge-icon">⚛️</span>
+              <span data-i18n="atomicasExplainerTitle">⚛️ Atomicity Principle &amp; Generation Effect (Luhmann &amp; Slamecka 1978)</span>
+            </div>
+            <p class="explainer-body" data-i18n="atomicasExplainerText">Each atomic note must be self-contained and discuss exactly one concept. Explaining it entirely in your own words (Generation Effect) forces conceptual reconstruction, dramatically boosting retention over passive copying.</p>
+            <button type="button" class="btn-explainer-toggle" onclick="toggleExplainer('atomicas')">✕</button>
+          </div>
+
+          <div class="panel-header">
+            <div>
+              <h2 data-i18n="atomicasTitle">Atomic Notes</h2>
+              <p class="panel-desc" data-i18n="atomicasDesc">One single idea per note, formulated in your own words and deliberately connected.</p>
+            </div>
+            <div class="panel-actions">
+              <button class="btn-ghost" onclick="openCreateFolderModal('atomica')" data-i18n="newFolder">+ 📁 New Folder</button>
+              <button class="btn-primary" id="btn-new-atomica" data-i18n="btnNewAtomica">+ New Atomic Note</button>
+            </div>
+          </div>
+          <div class="vault-filter-toolbar">
+            <div class="vft-group">
+              <span class="vft-icon">📁</span>
+              <select id="atomica-folder-filter" class="vft-select">
+                <option value="" data-i18n="filterAllFolders">All folders</option>
+              </select>
+            </div>
+            <div class="vft-group">
+              <span class="vft-icon">🏷️</span>
+              <select id="atomica-tag-filter" class="vft-select">
+                <option value="" data-i18n="filterAllTags">All hashtags</option>
+              </select>
+            </div>
+          </div>
+          <div id="atomicas-list" class="cards-grid">
+            <!-- Renderizado dinámico -->
+          </div>
+        </div>
+
+        <!-- 3. VISTA: NOTAS FUENTE -->
+        <div id="view-fuentes" class="view-panel">
+          <!-- EXPLICACIÓN COGNITIVA DE SECCIÓN -->
+          <div class="section-explainer" id="explainer-fuentes">
+            <div class="explainer-badge">
+              <span class="badge-icon">📚</span>
+              <span data-i18n="fuentesExplainerTitle">📚 Bibliographic Grounding &amp; Critical Synthesis</span>
+            </div>
+            <p class="explainer-body" data-i18n="fuentesExplainerText">Source notes safeguard authorship and exact citations. They allow you to trace the origin of an idea and spark new atomic concepts without contaminating the conceptual purity of your permanent network.</p>
+            <button type="button" class="btn-explainer-toggle" onclick="toggleExplainer('fuentes')">✕</button>
+          </div>
+
+          <div class="panel-header">
+            <div>
+              <h2 data-i18n="fuentesTitle">Source Notes</h2>
+              <p class="panel-desc" data-i18n="fuentesDesc">Bibliographic registry, verbatim quotes, and key paraphrased takeaways from consulted works.</p>
+            </div>
+            <div class="panel-actions">
+              <button class="btn-ghost" onclick="openCreateFolderModal('fuente')" data-i18n="newFolder">+ 📁 New Folder</button>
+              <button class="btn-primary" id="btn-new-fuente" data-i18n="btnNewFuente">+ New Source Note</button>
+            </div>
+          </div>
+          <div class="vault-filter-toolbar">
+            <div class="vft-group">
+              <span class="vft-icon">📁</span>
+              <select id="fuente-folder-filter" class="vft-select">
+                <option value="" data-i18n="filterAllFolders">All folders</option>
+              </select>
+            </div>
+            <div class="vft-group">
+              <span class="vft-icon">🏷️</span>
+              <select id="fuente-tag-filter" class="vft-select">
+                <option value="" data-i18n="filterAllTags">All hashtags</option>
+              </select>
+            </div>
+          </div>
+          <div id="fuentes-list" class="cards-grid">
+            <!-- Renderizado dinámico -->
+          </div>
+        </div>
+
+        <!-- 4. VISTA: MAPAS DE CONTENIDO -->
+        <div id="view-mapas" class="view-panel">
+          <!-- EXPLICACIÓN COGNITIVA DE SECCIÓN -->
+          <div class="section-explainer" id="explainer-mapas">
+            <div class="explainer-badge">
+              <span class="badge-icon">🗺️</span>
+              <span data-i18n="mapasExplainerTitle">🗺️ Matrix Organization vs Passive Outlines (Kiewra 1991)</span>
+            </div>
+            <p class="explainer-body" data-i18n="mapasExplainerText">Linear outlines foster illusions of competence. In NotesApp, every note added to a map strictly requires a 'reason' explaining its relationship, training high-order relational processing.</p>
+            <button type="button" class="btn-explainer-toggle" onclick="toggleExplainer('mapas')">✕</button>
+          </div>
+
+          <div class="panel-header">
+            <div>
+              <h2 data-i18n="mapasTitle">Content Maps</h2>
+              <p class="panel-desc" data-i18n="mapasDesc">Hierarchical structures with mandatory relational reasoning (Kiewra et al. 1991).</p>
+            </div>
+            <div class="panel-actions">
+              <div class="filter-group">
+                <button class="btn-filter active" id="btn-map-cards-view" data-i18n="viewCards">Cards</button>
+                <button class="btn-filter" id="btn-map-matrix-view" data-i18n="viewMatrix">Conceptual Matrix</button>
+              </div>
+              <button class="btn-primary" id="btn-new-mapa" data-i18n="btnNewMapa">+ New Content Map</button>
+            </div>
+          </div>
+          <div id="mapas-list" class="mapas-grid">
+            <!-- Renderizado dinámico -->
+          </div>
+          <div id="mapas-matrix-container" class="matrix-wrapper" style="display: none;">
+            <!-- Renderizado matriz comparativa -->
+          </div>
+        </div>
+
+        <!-- 5. VISTA: REPASO ESPACIADO (SM-2 + INTERLEAVING) -->
+        <div id="view-repaso" class="view-panel">
+          <!-- EXPLICACIÓN COGNITIVA DE SECCIÓN -->
+          <div class="section-explainer" id="explainer-repaso">
+            <div class="explainer-badge">
+              <span class="badge-icon">⚡</span>
+              <span data-i18n="repasoExplainerTitle">⚡ Active Retrieval Practice with Interleaving (Dunlosky 2013 &amp; SM-2)</span>
+            </div>
+            <p class="explainer-body" data-i18n="repasoExplainerText">Retrieving information from memory fortifies synaptic pathways far more than passive review. The SM-2 algorithm schedules reviews right at the threshold of forgetting, while cross-topic interleaving sharpens conceptual discrimination.</p>
+            <button type="button" class="btn-explainer-toggle" onclick="toggleExplainer('repaso')">✕</button>
+          </div>
+
+          <div class="panel-header">
+            <div>
+              <h2 data-i18n="repasoTitle">Spaced Repetition Session</h2>
+              <p class="panel-desc" data-i18n="repasoDesc">Optimized SM-2 algorithm with round-robin topic interleaving for maximum consolidation.</p>
+            </div>
+            <div class="panel-actions">
+              <a href="/api/export/anki" download class="btn-ghost" title="Download flashcards for Anki (TSV)" data-i18n-title="controlTip0" data-i18n="repasoExportAnki">📥 Export to Anki</a>
+              <button class="btn-ghost" id="btn-refresh-queue" data-i18n="repasoRefreshQueue">🔄 Refresh Queue</button>
+            </div>
+          </div>
+
+          <div class="review-session-container">
+            <div class="queue-meta-bar">
+              <span id="queue-status-text" data-i18n="loading">Loading...</span>
+              <span class="interleaving-badge" title="Questions alternate between topics" data-i18n-title="controlTip1" data-i18n="repasoInterleavingActive">🔀 Interleaving Active</span>
+            </div>
+
+            <!-- TARJETA FLASHCARD INTERACTIVA -->
+            <div id="flashcard-container" class="flashcard">
+              <div class="card-header">
+                <span class="card-tema-tag" id="fc-tema">Topic</span>
+                <span class="card-interval-tag" id="fc-interval">Current interval: 1d</span>
+              </div>
+
+              <div class="card-body">
+                <div class="card-question-box">
+                  <span class="label-badge" data-i18n="uiCopy2">QUESTION (Q)</span>
+                  <div class="card-text" id="fc-question">Loading question…</div>
+                </div>
+
+                <div class="card-answer-box" id="fc-answer-container" style="display: none;">
+                  <hr class="card-divider" />
+                  <span class="label-badge label-success" data-i18n="uiCopy4">ANSWER (A)</span>
+                  <div class="card-text" id="fc-answer">Answer…</div>
+                  <div class="card-origin" id="fc-origin"></div>
+                </div>
+              </div>
+
+              <div class="card-actions">
+                <button id="fc-btn-reveal" class="btn-reveal">
+                  <span data-i18n="repasoShowAnswer">Show Answer</span> <span class="kbd-hint" data-i18n="repasoSpaceHint">Space</span>
+                </button>
+
+                <!-- BOTONES DE CALIFICACIÓN SM-2 -->
+                <div id="fc-grading-buttons" class="grading-panel" style="display: none;">
+                  <div class="grading-header" data-i18n="repasoGradingPrompt">How well did you recall it? (Keys 0–5)</div>
+                  <div class="grading-buttons-row">
+                    <button class="grade-btn g0" data-q="0">
+                      <span class="g-num">0</span>
+                      <span class="g-name" data-i18n="repasoG0">Complete blackout</span>
+                    </button>
+                    <button class="grade-btn g1" data-q="1">
+                      <span class="g-num">1</span>
+                      <span class="g-name" data-i18n="repasoG1">Vague incorrect</span>
+                    </button>
+                    <button class="grade-btn g2" data-q="2">
+                      <span class="g-num">2</span>
+                      <span class="g-name" data-i18n="repasoG2">Struggled incorrect</span>
+                    </button>
+                    <button class="grade-btn g3" data-q="3">
+                      <span class="g-num">3</span>
+                      <span class="g-name" data-i18n="repasoG3">Recalled with effort</span>
+                    </button>
+                    <button class="grade-btn g4" data-q="4">
+                      <span class="g-num">4</span>
+                      <span class="g-name" data-i18n="repasoG4">Good retention</span>
+                    </button>
+                    <button class="grade-btn g5" data-q="5">
+                      <span class="g-num">5</span>
+                      <span class="g-name" data-i18n="repasoG5">Perfect recall</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANTALLA DE FELICITACIÓN -->
+            <div id="review-empty-state" class="empty-state" style="display: none;">
+              <div class="empty-icon">🎉</div>
+              <h3 data-i18n="repasoCongratsTitle">Review queue completed for today!</h3>
+              <p data-i18n="repasoCongratsText">You have engaged in active retrieval with topic interleaving. Your brain has solidified long-term neural traces.</p>
+              <button class="btn-primary" id="btn-practice-all" data-i18n="repasoPracticeAll">Practice all cards</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. VISTA: GRAFO DE CONOCIMIENTO -->
+        <div id="view-grafo" class="view-panel">
+          <!-- EXPLICACIÓN COGNITIVA DE SECCIÓN -->
+          <details class="graph-method"><summary data-i18n="graphMethod">About this graph</summary><div>
+            <div class="explainer-badge">
+              <span class="badge-icon">🕸️</span>
+              <span data-i18n="grafoExplainerTitle">🕸️ Conceptual Topology &amp; Knowledge Island Discovery</span>
+            </div>
+            <p class="explainer-body" data-i18n="grafoExplainerText">Knowledge is a non-linear semantic web. This graph helps you spot central hub nodes, cross-disciplinary bridges, and isolated orphaned notes that need to be woven into your network.</p>
+            </div></details>
+
+          <div class="panel-header">
+            <div>
+              <h2 data-i18n="grafoTitle">Interactive Knowledge Graph</h2>
+              <p class="panel-desc" data-i18n="grafoDesc">Visualizes note relationships with draggable physics, proportional sizing, and smart filters.</p>
+            </div>
+            <div class="panel-actions">
+              <div class="vft-group" style="margin-right: 6px;">
+                <input type="text" id="graph-search-input" class="graph-control-input" placeholder="🔍 Buscar nodo..." data-i18n-placeholder="grafoSearchPlaceholder" />
+              </div>
+              <div class="vft-group" style="margin-right: 6px;">
+                <select id="graph-tag-filter" class="graph-control-select">
+                  <option value="" data-i18n="filterAllTags">All hashtags</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <button class="btn-filter" id="btn-graph-physics" title="Pause or resume physics" data-i18n-title="controlTip2" data-i18n="grafoPhysics">⏸️ Physics</button>
+                <button class="btn-filter" id="btn-graph-zoom-in" title="Zoom in" data-i18n-title="controlTip3">+</button>
+                <button class="btn-filter" id="btn-graph-zoom-out" title="Zoom out" data-i18n-title="controlTip4">−</button>
+                <button class="btn-filter" id="btn-graph-fit" data-i18n="graphFit">Fit view</button>
+                <button class="btn-filter" id="btn-graph-reset" title="Reset view" data-i18n-title="controlTip5">↺</button>
+              </div>
+            </div>
+          </div>
+          <div class="graph-legend-bar">
+            <button type="button" class="legend-item" id="legend-filter-mapa" aria-pressed="false" title="Filter by maps" data-i18n-title="controlTip6"><span class="dot dot-mapa"></span> <span data-i18n="grafoLegendMapas">Maps</span></button>
+            <button type="button" class="legend-item" id="legend-filter-fuente" aria-pressed="false" title="Filter by sources" data-i18n-title="controlTip7"><span class="dot dot-fuente"></span> <span data-i18n="grafoLegendFuentes">Sources</span></button>
+            <button type="button" class="legend-item" id="legend-filter-atomica" aria-pressed="false" title="Filter by atomic notes" data-i18n-title="controlTip8"><span class="dot dot-atomica"></span> <span data-i18n="grafoLegendAtomicas">Atomic</span></button>
+            <span class="graph-hint" data-i18n="grafoHint">💡 Click legend to filter. Drag nodes to move. Larger nodes possess more incoming and outgoing connections.</span>
+          </div>
+          <div class="graph-summary"><span id="graph-status" role="status" aria-live="polite"></span><span id="graph-zoom-label" aria-label="Zoom">100%</span><button type="button" id="graph-retry" class="btn-ghost" data-i18n="graphRetry" hidden>Retry</button></div>
+          <div class="graph-workspace"><div class="graph-wrapper">
+            <canvas id="graph-canvas" tabindex="0" aria-label="Knowledge graph" aria-describedby="graph-help"></canvas>
+            <div class="graph-tooltip" id="graph-tooltip"></div><p id="graph-empty" class="graph-empty" hidden></p>
+          </div><aside id="graph-detail" class="graph-detail"></aside></div>
+          <p id="graph-help" class="graph-help" data-i18n="graphHelp">Select a node to inspect its connections. Drag the background to pan; scroll to zoom. Keyboard: + / − to zoom, 0 to fit.</p>
+          <details class="graph-accessible-list"><summary data-i18n="graphList">Browse matching notes</summary><ul id="graph-note-list"></ul></details>
+        </div>
+
+        <!-- 7. VISTA: ANALÍTICA DE RETENCIÓN -->
+        <div id="view-analitica" class="view-panel">
+          <!-- EXPLICACIÓN COGNITIVA DE SECCIÓN -->
+          <div class="section-explainer" id="explainer-analitica">
+            <div class="explainer-badge">
+              <span class="badge-icon">📊</span>
+              <span data-i18n="analiticaExplainerTitle">📊 Quantitative Evidence of Memory Consolidation</span>
+            </div>
+            <p class="explainer-body" data-i18n="analiticaExplainerText">Track genuine cognitive growth. A high success rate paired with mature cards proves that knowledge has successfully transitioned into permanent semantic memory.</p>
+            <button type="button" class="btn-explainer-toggle" onclick="toggleExplainer('analitica')">✕</button>
+          </div>
+
+          <div class="panel-header">
+            <div>
+              <h2 data-i18n="analiticaTitle">Learning &amp; Retention Analytics</h2>
+              <p class="panel-desc" data-i18n="analiticaDesc">Objective long-term memory metrics based on the SM-2 algorithm and your review logs.</p>
+            </div>
+            <div class="panel-actions">
+              <button class="btn-ghost" id="btn-refresh-analytics" data-i18n="btnRefreshAnalytics">🔄 Refresh</button>
+            </div>
+          </div>
+          <div class="analytics-grid">
+            <div class="kpi-card">
+              <div class="kpi-label" data-i18n="kpiRetention">Retention Rate</div>
+              <div class="kpi-value text-success" id="kpi-retention">--%</div>
+              <div class="kpi-sub" data-i18n="kpiRetentionSub">Successes (grade ≥ 3)</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label" data-i18n="kpiStreak">Review Streak</div>
+              <div class="kpi-value text-accent" id="kpi-streak" data-i18n="uiCopy6">-- days</div>
+              <div class="kpi-sub" data-i18n="kpiStreakSub">Consecutive active days</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label" data-i18n="kpiEase">Average Ease Factor</div>
+              <div class="kpi-value" id="kpi-ease">--</div>
+              <div class="kpi-sub" data-i18n="kpiEaseSub">Intrinsic ease of material</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-label" data-i18n="kpiReviews">Total Reviews Done</div>
+              <div class="kpi-value" id="kpi-total-reviews">--</div>
+              <div class="kpi-sub" data-i18n="kpiReviewsSub">Active recall sessions</div>
+            </div>
+          </div>
+
+          <div class="analytics-sections-row">
+            <!-- DISTRIBUCIÓN DE MADUREZ -->
+            <div class="analytics-card">
+              <h3 data-i18n="chartMaturityTitle">🌱 Card Maturity Distribution</h3>
+              <p class="text-muted" style="font-size: 12px; margin-bottom: 14px;" data-i18n="chartMaturityDesc">Classification of concepts according to their memory consolidation.</p>
+              <div class="maturity-bars">
+                <div class="maturity-item">
+                  <div class="m-label">
+                    <span data-i18n="chartMaturityNew">New (0 reviews)</span>
+                    <strong id="m-count-nuevas">0</strong>
+                  </div>
+                  <div class="progress-bar-bg"><div class="progress-bar-fill fill-nuevas" id="m-bar-nuevas" style="width: 0%;"></div></div>
+                </div>
+                <div class="maturity-item">
+                  <div class="m-label">
+                    <span data-i18n="chartMaturityLearning">Learning (&lt; 21 days)</span>
+                    <strong id="m-count-aprendizaje">0</strong>
+                  </div>
+                  <div class="progress-bar-bg"><div class="progress-bar-fill fill-aprendizaje" id="m-bar-aprendizaje" style="width: 0%;"></div></div>
+                </div>
+                <div class="maturity-item">
+                  <div class="m-label">
+                    <span data-i18n="chartMaturityMature">Mature (≥ 21 days)</span>
+                    <strong id="m-count-maduras">0</strong>
+                  </div>
+                  <div class="progress-bar-bg"><div class="progress-bar-fill fill-maduras" id="m-bar-maduras" style="width: 0%;"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PRONÓSTICO DE CARGA -->
+            <div class="analytics-card">
+              <h3 data-i18n="chartForecastTitle">📅 Review Load Forecast</h3>
+              <p class="text-muted" style="font-size: 12px; margin-bottom: 14px;" data-i18n="chartForecastDesc">Upcoming reviews scheduled across optimal spacing intervals.</p>
+              <div class="forecast-grid">
+                <div class="forecast-box">
+                  <span class="fc-time" data-i18n="forecastToday">Today</span>
+                  <span class="fc-num" id="fc-today">0</span>
+                </div>
+                <div class="forecast-box">
+                  <span class="fc-time" data-i18n="forecast7d">1–7 days</span>
+                  <span class="fc-num" id="fc-7d">0</span>
+                </div>
+                <div class="forecast-box">
+                  <span class="fc-time" data-i18n="forecast30d">8–30 days</span>
+                  <span class="fc-num" id="fc-30d">0</span>
+                </div>
+                <div class="forecast-box">
+                  <span class="fc-time" data-i18n="forecastLater">> 30 days</span>
+                  <span class="fc-num" id="fc-later">0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 8. VISTA: ASISTENTE LLM & PROMPT (PROMPT STUDIO) -->
+        <div id="view-llm" class="view-panel">
+          <!-- EXPLICACIÓN COGNITIVA DE SECCIÓN -->
+          <div class="section-explainer" id="explainer-llm">
+            <div class="explainer-badge">
+              <span class="badge-icon">🧠</span>
+              <span data-i18n="llmExplainerTitle">🧠 Cognitive Architecture of the NotesApp Prompt</span>
+            </div>
+            <p class="explainer-body" data-i18n="llmExplainerText">Language models typically summarize passively or copy verbatim. This master prompt forces the AI to behave as a cognitive architect: enforces strict single-idea atomicity, blocks copy-pasting to ensure generative wording, creates SM-2 flashcards, and requires relational reasons in every content map.</p>
+            <button type="button" class="btn-explainer-toggle" onclick="toggleExplainer('llm')">✕</button>
+          </div>
+
+          <div class="panel-header">
+            <div>
+              <h2 data-i18n="llmStudioTitle">🤖 LLM Assistant &amp; Master Prompt</h2>
+              <p class="panel-desc" data-i18n="llmStudioSubtitle">Transform any document, book, course, or transcript into a structured package compatible with NotesApp.</p>
+            </div>
+            <div class="panel-actions">
+              <button class="btn-primary" onclick="openModal('modal-import-json')">📥 <span data-i18n="btnLaunchImport">📥 Go to Import JSON</span></button>
+            </div>
+          </div>
+
+          <!-- CONTENEDOR DEL PROMPT STUDIO -->
+          <div class="llm-studio-container">
+            <div class="prompt-controls-bar">
+              <div class="prompt-lang-selector">
+                <span class="prompt-lang-label" data-i18n="promptLangLabel">Prompt Language:</span>
+                <div class="lang-switch-group">
+                  <button type="button" class="btn-lang active" id="btn-prompt-lang-es">Español</button>
+                  <button type="button" class="btn-lang" id="btn-prompt-lang-en">English</button>
+                </div>
+              </div>
+              <button type="button" class="btn-accent" id="btn-copy-studio-prompt" data-i18n="btnCopyPrompt">📋 Copy Prompt to Clipboard</button>
+            </div>
+
+            <div class="prompt-display-box">
+              <textarea id="studio-prompt-textarea" class="studio-prompt-textarea" readonly rows="16"></textarea>
+            </div>
+
+            <!-- LAS 4 REGLAS CIENTÍFICAS -->
+            <div class="prompt-rules-section">
+              <h3 class="rules-header-title" data-i18n="promptRulesTitle">The 4 Unbreakable Scientific Rules of the Prompt</h3>
+              <div class="prompt-rules-grid">
+                <div class="p-rule-card">
+                  <div class="p-rule-icon">⚛️</div>
+                  <h4 data-i18n="promptRule1Title">1. Strict Atomicity (Luhmann)</h4>
+                  <p data-i18n="promptRule1Desc">Exactly one autonomous idea per note. If the source material touches multiple concepts, the AI splits them into independent files.</p>
+                </div>
+                <div class="p-rule-card">
+                  <div class="p-rule-icon">🛡️</div>
+                  <h4 data-i18n="promptRule2Title">2. Generation Effect (Slamecka)</h4>
+                  <p data-i18n="promptRule2Desc">Copying verbatim paragraphs is prohibited. The LLM must clearly explain the underlying mechanism in its own words.</p>
+                </div>
+                <div class="p-rule-card">
+                  <div class="p-rule-icon">🎯</div>
+                  <h4 data-i18n="promptRule3Title">3. Active Recall SM-2 (Dunlosky)</h4>
+                  <p data-i18n="promptRule3Desc">Every atomic note must have an open retrieval question and key answer to fuel spaced retrieval practice.</p>
+                </div>
+                <div class="p-rule-card">
+                  <div class="p-rule-icon">🗺️</div>
+                  <h4 data-i18n="promptRule4Title">4. Content Maps with Mandatory Reason (Kiewra)</h4>
+                  <p data-i18n="promptRule4Desc">No note is linked to a map without an explicit 'razon' field explaining why and how it enriches that conceptual organizer.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9. VISTA: GUÍA DE USO Y EVIDENCIA CIENTÍFICA -->
+        <div id="view-guia" class="view-panel">
+          <div class="panel-header">
+            <div>
+              <h2 data-i18n="uiCopy7">System guide and learning principles</h2>
+              <p class="panel-desc" data-i18n="uiCopy8">How NotesApp works: the learning principles behind each module and how to use them.</p>
+            </div>
+          </div>
+
+          <div class="guide-container">
+            <!-- SECCIÓN 1: EL FLUJO COMPLETO -->
+            <div class="guide-card">
+              <h3 data-i18n="uiCopy9">The learning workflow in five steps</h3>
+              <div class="workflow-steps">
+                <div class="step-card">
+                  <div class="step-badge">1</div>
+                  <h4 data-i18n="uiCopy10">Quick capture</h4>
+                  <p><strong>01-inbox/</strong><br><span data-i18n="guideStepBody0">Capture any thought without stopping to classify it, so you can stay focused.</span></p>
+                </div>
+                <div class="step-card">
+                  <div class="step-badge">2</div>
+                  <h4 data-i18n="uiCopy11">Process into a source</h4>
+                  <p><strong>02-source-notes/</strong><br><span data-i18n="guideStepBody1">For a book, paper, or video, record the reference and paraphrase its key points.</span></p>
+                </div>
+                <div class="step-card">
+                  <div class="step-badge">3</div>
+                  <h4 data-i18n="uiCopy12">Atomic note</h4>
+                  <p><strong>03-atomic-notes/</strong><br><span data-i18n="guideStepBody2">Write the idea in your own words (generation effect). Explain why it matters and how it connects.</span></p>
+                </div>
+                <div class="step-card">
+                  <div class="step-badge">4</div>
+                  <h4 data-i18n="uiCopy13">Organize into maps</h4>
+                  <p><strong>04-content-maps/</strong><br><span data-i18n="guideStepBody3">Add the idea to a thematic map. Explain the reason for its connection.</span></p>
+                </div>
+                <div class="step-card">
+                  <div class="step-badge">5</div>
+                  <h4 data-i18n="uiCopy15">Active recall</h4>
+                  <p><strong>05-self-assessment/ + 06-spaced-repetition/</strong><br><span data-i18n="guideStepBody4">Answer the generated question. SM-2 schedules further reviews, interleaved with other topics.</span></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- SECCIÓN 2: EVIDENCIA CIENTÍFICA DETALLADA -->
+            <div class="guide-card">
+              <h3 data-i18n="uiCopy16">Supporting research</h3>
+              <div class="evidence-grid">
+                <div class="evidence-box">
+                  <div class="ev-header">
+                    <span class="ev-tag high-utility" data-i18n="uiCopy17">HIGH UTILITY</span>
+                    <h4 data-i18n="uiCopy18">Self-testing (practice testing)</h4>
+                  </div>
+                  <p class="ev-meta">Dunlosky et al. (2013); Roediger & Karpicke (2006)</p>
+                  <p class="ev-text" data-i18n="uiCopy19">Trying to recall an answer from memory can improve retention compared with passive rereading. Each atomic note therefore has an associated question.</p>
+                </div>
+
+                <div class="evidence-box">
+                  <div class="ev-header">
+                    <span class="ev-tag high-utility" data-i18n="uiCopy17">HIGH UTILITY</span>
+                    <h4 data-i18n="uiCopy20">Distributed practice (spaced repetition)</h4>
+                  </div>
+                  <p class="ev-meta">Ebbinghaus (1885); Cepeda et al. (2006)</p>
+                  <p class="ev-text" data-i18n="uiCopy21">The brain consolidates memories during rest and sleep. Spacing reviews with SM-2 helps counter forgetting and supports longer retention.</p>
+                </div>
+
+                <div class="evidence-box">
+                  <div class="ev-header">
+                    <span class="ev-tag moderate-utility" data-i18n="uiCopy22">CONCEPT DISCRIMINATION</span>
+                    <h4 data-i18n="uiCopy23">Interleaving</h4>
+                  </div>
+                  <p class="ev-meta">Kornell & Bjork (2008); Rohrer & Taylor (2007)</p>
+                  <p class="ev-text" data-i18n="uiCopy24">Reviewing topics in blocks can create misleading familiarity. Alternating questions across topics requires you to identify which concept to apply.</p>
+                </div>
+
+                <div class="evidence-box">
+                  <div class="ev-header">
+                    <span class="ev-tag moderate-utility" data-i18n="uiCopy25">DEEP ENCODING</span>
+                    <h4 data-i18n="uiCopy26">Generation effect</h4>
+                  </div>
+                  <p class="ev-meta">Slamecka & Graf (1978); Mueller & Oppenheimer (2014)</p>
+                  <p class="ev-text" data-i18n="uiCopy27">Writing in your own words requires reconstructing meaning. NotesApp blocks pasting in idea fields and warns about phrase overlap with the source.</p>
+                </div>
+
+                <div class="evidence-box">
+                  <div class="ev-header">
+                    <span class="ev-tag moderate-utility" data-i18n="uiCopy28">MATRIX ORGANIZATION</span>
+                    <h4 data-i18n="uiCopy29">Matrices and linear outlines</h4>
+                  </div>
+                  <p class="ev-meta">Kiewra et al. (1991, 1999)</p>
+                  <p class="ev-text" data-i18n="guideReasonBody">Explaining the reason for a connection encourages relational processing and helps prevent disconnected collections of notes.</p>
+                </div>
+
+                <div class="evidence-box">
+                  <div class="ev-header">
+                    <span class="ev-tag low-utility" data-i18n="uiCopy30">LOW UTILITY (DISCOURAGED)</span>
+                    <h4 data-i18n="uiCopy31">Passive rereading and highlighting</h4>
+                  </div>
+                  <p class="ev-meta">Dunlosky et al. (2013)</p>
+                  <p class="ev-text" data-i18n="uiCopy32">These popular techniques can create a sense of familiarity without lasting recall. NotesApp does not include a passive highlighting mode.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- SECCIÓN 3: ATAJOS DE TECLADO Y TRUCOS -->
+            <div class="guide-card">
+              <h3 data-i18n="uiCopy33">Keyboard shortcuts and tips</h3>
+              <table class="guide-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="uiCopy34">Shortcut</th>
+                    <th data-i18n="uiCopy35">Action</th>
+                    <th data-i18n="uiCopy36">Context</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><kbd>Ctrl + K</kbd></td>
+                    <td data-i18n="uiCopy37">Global search</td>
+                    <td data-i18n="uiCopy38">Anywhere in the app</td>
+                  </tr>
+                  <tr>
+                    <td><kbd>[[</kbd></td>
+                    <td data-i18n="uiCopy39">Autocomplete a link to an existing atomic note</td>
+                    <td data-i18n="uiCopy40">While writing in connection fields</td>
+                  </tr>
+                  <tr>
+                    <td><kbd>Espacio</kbd></td>
+                    <td data-i18n="uiCopy41">Reveal the flashcard answer</td>
+                    <td data-i18n="uiCopy42">During a review session</td>
+                  </tr>
+                  <tr>
+                    <td><kbd>0</kbd> a <kbd>5</kbd></td>
+                    <td data-i18n="uiCopy43">Grade your recall with SM-2</td>
+                    <td data-i18n="uiCopy44">When the review answer is visible</td>
+                  </tr>
+                  <tr>
+                    <td><kbd>Esc</kbd></td>
+                    <td data-i18n="uiCopy45">Close the active dialog</td>
+                    <td data-i18n="uiCopy46">In any dialog</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </main>
+  </div>
+
+  <!-- ==================== MODALES / DIALOGS ==================== -->
+
+  <!-- MODAL: LECTOR / VISTA PREVIA (PREVIEW-FIRST POR DEFECTO) -->
+  <dialog id="modal-reader" class="modal-dialog modal-reader-dialog">
+    <div class="dialog-content">
+      <div class="reader-header">
+        <div class="reader-meta-row">
+          <span class="card-type-tag" id="reader-type-tag">Atomic</span>
+          <span class="badge-folder" id="reader-folder-badge" style="display: none;">Folder</span>
+          <span class="card-date" id="reader-date">2026-09-24</span>
+        </div>
+        <div class="reader-header-actions">
+          <button class="btn-primary" id="btn-reader-edit" data-i18n="readerEditBtn">✏️ Edit note</button>
+          <button class="btn-close" onclick="closeModal('modal-reader')">✕</button>
+        </div>
+      </div>
+      <div class="dialog-body">
+        <h2 id="reader-title" class="reader-title">Note title</h2>
+
+        <!-- BARRA DE HASHTAGS -->
+        <div id="reader-tags-bar" class="reader-tags-bar" style="display: none;"></div>
+
+        <!-- CONTENIDO FORMATEADO MARKDOWN -->
+        <div id="reader-content" class="reader-markdown-content"></div>
+
+        <!-- SECCIÓN DE AUTOEVALUACIÓN SI TIENE PREGUNTA ASOCIADA -->
+        <div id="reader-qa-card" class="reader-qa-card" style="display: none;">
+          <div class="reader-qa-header">
+            <span class="reader-qa-title" data-i18n="readerQaTitle">🎯 Active Retrieval Practice Question</span>
+            <span class="reader-qa-stats" id="reader-qa-stats">Intervalo: 1d | Ease: 2.5</span>
+          </div>
+          <div class="reader-q-box">
+            <span class="reader-q-label" data-i18n="uiCopy50">QUESTION (Q):</span>
+            <div class="reader-q-text" id="reader-q-text"></div>
+          </div>
+          <div class="reader-a-box">
+            <span class="reader-a-label" data-i18n="uiCopy51">KEY ANSWER (A):</span>
+            <div class="reader-a-text" id="reader-a-text"></div>
+          </div>
+        </div>
+
+        <!-- SECCIÓN DE BACKLINKS -->
+        <div id="reader-backlinks-box" class="reader-backlinks-box" style="display: none;">
+          <h4 class="reader-backlinks-title" data-i18n="readerBacklinksTitle">🔗 Incoming Backlinks</h4>
+          <div id="reader-backlinks-list" class="reader-backlinks-list"></div>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <div style="flex: 1;"></div>
+        <button class="btn-ghost" onclick="closeModal('modal-reader')" data-i18n="close">Close</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- MODAL: CREAR NUEVA CARPETA -->
+  <dialog id="modal-create-folder" class="modal-dialog" style="max-width: 440px;">
+    <div class="dialog-content">
+      <div class="dialog-header">
+        <h3 data-i18n="modalFolderTitle">📁 New Folder</h3>
+        <button class="btn-close" onclick="closeModal('modal-create-folder')">✕</button>
+      </div>
+      <div class="dialog-body">
+        <label data-i18n="modalFolderTypeLabel">Section / Note Type</label>
+        <select id="new-folder-tipo">
+          <option value="atomica" data-i18n="uiCopy52">Atomic notes (03-atomic-notes/)</option>
+          <option value="fuente" data-i18n="uiCopy53">Source notes (02-source-notes/)</option>
+          <option value="mapa" data-i18n="uiCopy54">Content maps (04-content-maps/)</option>
+          <option value="bandeja" data-i18n="uiCopy55">Inbox (01-inbox/)</option>
+        </select>
+        <label data-i18n="modalFolderNameLabel">Folder Name *</label>
+        <input type="text" id="new-folder-name" placeholder="ej. neurociencia, habitos, psicologia" data-i18n-placeholder="modalFolderNamePlaceholder" required />
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-ghost" onclick="closeModal('modal-create-folder')" data-i18n="cancel">Cancel</button>
+        <button class="btn-primary" id="btn-submit-new-folder" data-i18n="modalFolderSubmit">Create Folder</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- MODAL: PROCESAR BANDEJA DE ENTRADA -->
+  <dialog id="modal-process-inbox" class="modal-dialog">
+    <div class="dialog-content">
+      <div class="dialog-header">
+        <h3 data-i18n="uiCopy56">Process: from capture to knowledge</h3>
+        <button class="btn-close" onclick="closeModal('modal-process-inbox')">✕</button>
+      </div>
+
+      <div class="dialog-body">
+        <div class="inbox-original-banner">
+          <strong data-i18n="uiCopy57">Original captured note:</strong>
+          <p id="process-original-text"></p>
+        </div>
+
+        <form id="form-process" onsubmit="return false;">
+          <!-- PASO 1: FUENTE -->
+          <div class="form-section">
+            <div class="section-title">
+              <span data-i18n="uiCopy58">1. Is this from an external source?</span>
+              <label class="toggle-checkbox">
+                <input type="checkbox" id="proc-create-fuente" checked> Crear Nota Fuente
+              </label>
+            </div>
+            <div id="proc-fuente-fields" class="subform">
+              <div class="form-row">
+                <div class="form-col">
+                  <label data-i18n="uiCopy59">Source title *</label>
+                  <input type="text" id="proc-f-titulo" placeholder="e.g. Dunlosky et al. (2013)" data-i18n-placeholder="fieldHint0" />
+                </div>
+                <div class="form-col">
+                  <label data-i18n="uiCopy60">Author(s)</label>
+                  <input type="text" id="proc-f-autor" placeholder="e.g. Dunlosky, Rawson…" data-i18n-placeholder="fieldHint1" />
+                </div>
+                <div class="form-col col-sm">
+                  <label data-i18n="uiCopy61">Type</label>
+                  <select id="proc-f-tipo">
+                    <option value="articulo" data-i18n="uiCopy62">Article</option>
+                    <option value="libro" data-i18n="uiCopy63">Book</option>
+                    <option value="video">Video</option>
+                    <option value="podcast">Podcast</option>
+                    <option value="otro" data-i18n="uiCopy64">Other</option>
+                  </select>
+                </div>
+              </div>
+              <label data-i18n="uiCopy65">Key points (in your own words):</label>
+              <textarea id="proc-f-puntos" rows="3" placeholder="Key points in your own words…" data-i18n-placeholder="fieldHint2"></textarea>
+            </div>
+          </div>
+
+          <!-- PASO 2: NOTA ATÓMICA -->
+          <div class="form-section">
+            <div class="section-title">
+              <span data-i18n="uiCopy66">2. Create an atomic note (generation effect)</span>
+            </div>
+            <div class="subform">
+              <label data-i18n="uiCopy67">Atomic idea title *</label>
+              <input type="text" id="proc-a-titulo" required placeholder="e.g. The spacing effect" data-i18n-placeholder="fieldHint3" />
+
+              <div class="anti-copy-container">
+                <label>
+                  <span data-i18n="formCopy0">Idea (in your own words) *</span>
+                  <span class="anti-copy-badge" data-i18n="uiCopy68">Write in your own words</span>
+                </label>
+                <textarea id="proc-a-idea" rows="3" required placeholder="Write the idea in your own words…" data-i18n-placeholder="fieldHint4"></textarea>
+                <div class="anti-copy-hint" id="proc-anti-copy-hint">
+                  💡 <strong data-i18n="uiCopy69">Generation effect:</strong> <span data-i18n="formCopy2">Pasting is disabled. Producing the content yourself strengthens recall.</span>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-col">
+                  <label data-i18n="uiCopy70">Why does it matter?</label>
+                  <textarea id="proc-a-porque" rows="2" placeholder="Significance or practical consequences…" data-i18n-placeholder="fieldHint5"></textarea>
+                </div>
+                <div class="form-col">
+                  <label data-i18n="uiCopy71">How does it connect with what I know?</label>
+                  <textarea id="proc-a-conecta" rows="2" placeholder="Type [[slug]] to autocomplete links…" data-i18n-placeholder="fieldHint6"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PASO 3: AUTOEVALUACIÓN -->
+          <div class="form-section">
+            <div class="section-title">
+              <span data-i18n="uiCopy72">3. Create a self-test question (active recall)</span>
+            </div>
+            <div class="subform">
+              <label data-i18n="uiCopy73">Question (Q) *</label>
+              <input type="text" id="proc-q-pregunta" placeholder="Why or how does it work…?" data-i18n-placeholder="fieldHint7" />
+              <label data-i18n="uiCopy74">Key answer (A) *</label>
+              <input type="text" id="proc-q-respuesta" placeholder="A concise, precise answer…" data-i18n-placeholder="fieldHint8" />
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="dialog-footer">
+        <button class="btn-ghost" onclick="closeModal('modal-process-inbox')" data-i18n="cancel">Cancel</button>
+        <button class="btn-primary" id="btn-submit-process" data-i18n="uiCopy75">Save and convert note</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- MODAL: DETALLE / EDICIÓN DE NOTA ATÓMICA -->
+  <dialog id="modal-atomica" class="modal-dialog">
+    <div class="dialog-content">
+      <div class="dialog-header">
+        <h3 id="modal-atomica-title">Atomic note</h3>
+        <div class="filter-group" style="margin-left: auto; margin-right: 12px;">
+          <button class="btn-filter active" id="btn-atomica-tab-edit" data-i18n="uiCopy76">Write</button>
+          <button class="btn-filter" id="btn-atomica-tab-preview" data-i18n="uiCopy77">Preview</button>
+        </div>
+        <button class="btn-close" onclick="closeModal('modal-atomica')">✕</button>
+      </div>
+      <div class="dialog-body">
+        <form id="form-atomica" onsubmit="return false;">
+          <input type="hidden" id="atomica-edit-id" />
+          <div class="form-row">
+            <div class="form-col">
+              <label data-i18n="uiCopy78">Title *</label>
+              <input type="text" id="atomica-titulo" required />
+            </div>
+            <div class="form-col">
+              <label data-i18n="uiCopy79">Folder / location</label>
+              <select id="atomica-folder-select">
+                <option value="" data-i18n="uiCopy80">(Root — no subfolder)</option>
+              </select>
+            </div>
+            <div class="form-col">
+              <label data-i18n="uiCopy81">Linked source</label>
+              <select id="atomica-fuente-select">
+                <option value="" data-i18n="uiCopy82">(None)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-col">
+              <label data-i18n="uiCopy83">Tags (separated by commas or #)</label>
+              <input type="text" id="atomica-tags-input" placeholder="e.g. #memory, #psychology, learning" data-i18n-placeholder="fieldHint9" />
+            </div>
+          </div>
+
+          <!-- CAMPO IDEA CON CONTROL ANTI-COPIA -->
+          <div class="anti-copy-container">
+            <label>
+              <span data-i18n="formCopy1">Idea (in my own words) *</span>
+              <span class="anti-copy-badge" data-i18n="uiCopy68">Write in your own words</span>
+            </label>
+            <div id="ngram-warning-bar" class="ngram-bar" style="display: none;">
+              <span id="ngram-text" data-i18n="uiCopy84">Source similarity: 0%</span>
+            </div>
+            <textarea id="atomica-idea" rows="4" required></textarea>
+            
+            <div class="feynman-assistant">
+              <span class="feynman-title" data-i18n="uiCopy85">Feynman assistant (active paraphrasing):</span>
+              <div class="feynman-prompts">
+                <button type="button" class="btn-prompt" onclick="applyFeynmanPrompt('infantil')" data-i18n="uiCopy86">Explain to a beginner</button>
+                <button type="button" class="btn-prompt" onclick="applyFeynmanPrompt('analogia')" data-i18n="uiCopy87">Use an everyday analogy</button>
+                <button type="button" class="btn-prompt" onclick="applyFeynmanPrompt('limite')" data-i18n="uiCopy88">When does it not apply or fail?</button>
+              </div>
+            </div>
+          </div>
+
+          <label data-i18n="uiCopy70">Why does it matter?</label>
+          <textarea id="atomica-porque" rows="3"></textarea>
+
+          <label data-i18n="uiCopy89">How does it connect with what I know? (Use [[id]] to link)</label>
+          <textarea id="atomica-conecta" rows="3"></textarea>
+
+          <!-- SECCIÓN DE BACKLINKS -->
+          <div class="backlinks-section" id="atomica-backlinks-container">
+            <h4 data-i18n="uiCopy90">Incoming links</h4>
+            <div id="atomica-backlinks-list" class="backlinks-list">
+              <span class="text-muted" data-i18n="uiCopy91">No incoming references yet.</span>
+            </div>
+          </div>
+
+          <!-- SECCIÓN DE PREGUNTA ASOCIADA -->
+          <div class="question-section" id="atomica-question-section">
+            <h4 data-i18n="uiCopy92">Associated self-test question</h4>
+            <div class="form-row">
+              <div class="form-col">
+                <label data-i18n="uiCopy93">Question (Q)</label>
+                <input type="text" id="atomica-q-p" placeholder="Write the question…" data-i18n-placeholder="fieldHint10" />
+              </div>
+              <div class="form-col">
+                <label data-i18n="uiCopy94">Key answer (A)</label>
+                <input type="text" id="atomica-q-r" placeholder="Expected answer…" data-i18n-placeholder="fieldHint11" />
+              </div>
+            </div>
+            <div id="atomica-q-stats" class="q-stats-info text-muted"></div>
+          </div>
+        </form>
+
+        <!-- CONTENEDOR DE VISTA PREVIA MARKDOWN -->
+        <div id="atomica-preview-container" class="markdown-preview-pane" style="display: none;"></div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-danger" id="btn-delete-atomica" data-i18n="delete">Delete</button>
+        <div style="flex: 1;"></div>
+        <button class="btn-ghost" onclick="closeModal('modal-atomica')" data-i18n="close">Close</button>
+        <button class="btn-primary" id="btn-save-atomica" data-i18n="saveChanges">Save Changes</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- MODAL: DETALLE / EDICIÓN DE NOTA FUENTE -->
+  <dialog id="modal-fuente" class="modal-dialog">
+    <div class="dialog-content">
+      <div class="dialog-header">
+        <h3 id="modal-fuente-title">Source note</h3>
+        <button class="btn-close" onclick="closeModal('modal-fuente')">✕</button>
+      </div>
+      <div class="dialog-body">
+        <form id="form-fuente" onsubmit="return false;">
+          <input type="hidden" id="fuente-edit-id" />
+          <div class="form-row">
+            <div class="form-col">
+              <label data-i18n="uiCopy78">Title *</label>
+              <input type="text" id="fuente-titulo" required />
+            </div>
+            <div class="form-col">
+              <label data-i18n="uiCopy60">Author(s)</label>
+              <input type="text" id="fuente-autor" />
+            </div>
+            <div class="form-col col-sm">
+              <label data-i18n="uiCopy96">Source type</label>
+              <select id="fuente-tipo-select">
+                <option value="articulo" data-i18n="uiCopy62">Article</option>
+                <option value="libro" data-i18n="uiCopy63">Book</option>
+                <option value="video">Video</option>
+                <option value="podcast">Podcast</option>
+                <option value="otro" data-i18n="uiCopy64">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-col">
+              <label data-i18n="uiCopy79">Folder / location</label>
+              <select id="fuente-folder-select">
+                <option value="" data-i18n="uiCopy80">(Root — no subfolder)</option>
+              </select>
+            </div>
+            <div class="form-col">
+              <label data-i18n="uiCopy83">Tags (separated by commas or #)</label>
+              <input type="text" id="fuente-tags-input" placeholder="e.g. #cognition, reading" data-i18n-placeholder="fieldHint12" />
+            </div>
+          </div>
+
+          <label data-i18n="uiCopy97">Key points (paraphrased, not copied)</label>
+          <textarea id="fuente-puntos" rows="5"></textarea>
+
+          <label data-i18n="uiCopy98">Ideas it inspires (atomic note IDs)</label>
+          <div id="fuente-ideas-container" class="tags-container"></div>
+        </form>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-danger" id="btn-delete-fuente" data-i18n="delete">Delete</button>
+        <div style="flex: 1;"></div>
+        <button class="btn-ghost" onclick="closeModal('modal-fuente')" data-i18n="close">Close</button>
+        <button class="btn-primary" id="btn-save-fuente" data-i18n="save">Save</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- MODAL: DETALLE / EDICIÓN DE MAPA DE CONTENIDO -->
+  <dialog id="modal-mapa" class="modal-dialog">
+    <div class="dialog-content">
+      <div class="dialog-header">
+        <h3 id="modal-mapa-title">Content map</h3>
+        <button class="btn-close" onclick="closeModal('modal-mapa')">✕</button>
+      </div>
+      <div class="dialog-body">
+        <form id="form-mapa" onsubmit="return false;">
+          <input type="hidden" id="mapa-edit-id" />
+          <label data-i18n="uiCopy100">Map title *</label>
+          <input type="text" id="mapa-titulo" required placeholder="e.g. Evidence-based study techniques" data-i18n-placeholder="fieldHint13" />
+
+          <div class="subtemas-editor">
+            <div class="section-title">
+              <span data-i18n="uiCopy101">Map subtopics</span>
+              <span class="badge-mandatory" data-i18n="uiCopy102">Every link needs a reason</span>
+            </div>
+            <div id="mapa-subtemas-list" class="subtemas-list">
+              <!-- Renderizado de subtemas existentes -->
+            </div>
+
+            <!-- FORMULARIO PARA AGREGAR SUBTEMA -->
+            <div class="add-subtema-box">
+              <div class="form-row">
+                <div class="form-col">
+                  <label data-i18n="uiCopy103">Atomic note to link:</label>
+                  <select id="mapa-add-nota-select">
+                    <option value="" data-i18n="uiCopy104">Select an atomic note…</option>
+                  </select>
+                </div>
+                <div class="form-col">
+                  <label data-i18n="uiCopy105">Reason for the connection * (required):</label>
+                  <input type="text" id="mapa-add-razon" placeholder="How does it relate to this map?" data-i18n-placeholder="fieldHint14" />
+                </div>
+                <div class="form-col col-auto" style="align-self: flex-end;">
+                  <button type="button" class="btn-secondary" id="btn-add-subtema" data-i18n="uiCopy106">+ Add</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-danger" id="btn-delete-mapa" data-i18n="delete">Delete</button>
+        <div style="flex: 1;"></div>
+        <button class="btn-ghost" onclick="closeModal('modal-mapa')" data-i18n="close">Close</button>
+        <button class="btn-primary" id="btn-save-mapa" data-i18n="save">Save</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- MODAL: BÚSQUEDA GLOBAL (CTRL + K) -->
+  <dialog id="modal-search" class="modal-dialog modal-search-dialog">
+    <div class="dialog-content">
+      <div class="search-input-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="global-search-input" placeholder="Search by title, content, author, or concept…" data-i18n-placeholder="fieldHint15" autofocus />
+        <button class="btn-close" onclick="closeModal('modal-search')">Esc</button>
+      </div>
+      <div id="global-search-results" class="search-results-list">
+        <!-- Resultados -->
+      </div>
+    </div>
+  </dialog>
+
+  <!-- MODAL: IMPORTAR JSON CATEGORIZADO -->
+  <dialog id="modal-import-json" class="modal-dialog modal-import-dialog">
+    <div class="dialog-content">
+      <div class="reader-header">
+        <div class="reader-meta-row">
+          <span class="card-type-tag" style="color: var(--accent-primary);" data-i18n="btnImportJson">📥 Import JSON</span>
+          <span class="badge-folder" data-i18n="uiCopy107">Quick import (copy and paste)</span>
+        </div>
+        <div class="reader-header-actions">
+          <button class="btn-close" onclick="closeModal('modal-import-json')">✕</button>
+        </div>
+      </div>
+      <div class="dialog-body">
+        <h2 class="reader-title" style="margin-bottom: 6px;" data-i18n="importDialogTitle">📥 Import Structured Knowledge</h2>
+        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;" data-i18n="importDialogDesc">
+          Pega el JSON generado por tu LLM o selecciona un archivo <code>.json</code>. NotesApp procesará y guardará automáticamente las notas fuente, ideas atómicas con autoevaluación SM-2, mapas de contenido y carpetas.
+        </p>
+
+        <!-- BARRA DE ACCIONES RÁPIDAS -->
+        <div class="import-actions-bar">
+          <button type="button" class="btn-ghost" id="btn-paste-json-clipboard" title="Paste clipboard content" data-i18n-title="controlTip9" data-i18n="importPasteClipboard">📋 Paste Clipboard</button>
+          <button type="button" class="btn-ghost" id="btn-trigger-json-file" title="Load a .json file" data-i18n-title="controlTip10" data-i18n="importLoadFile">📁 Load .json File</button>
+          <input type="file" id="input-import-json-file" accept=".json,application/json" style="display: none;" />
+          <button type="button" class="btn-ghost" id="btn-toggle-llm-prompt" title="View and copy the master prompt" data-i18n-title="controlTip11" data-i18n="importTogglePrompt">🤖 View LLM Prompt</button>
+          <button type="button" class="btn-ghost" id="btn-load-sample-import" title="Load sample JSON" data-i18n-title="controlTip12" data-i18n="importLoadSample">📄 Load Sample</button>
+        </div>
+
+        <!-- PANEL COLAPSABLE DEL PROMPT MAESTRO PARA LLM -->
+        <div id="llm-prompt-panel" class="llm-prompt-container" style="display: none;">
+          <div class="llm-prompt-header">
+            <div>
+              <strong data-i18n="uiCopy108">Master prompt for a language model (ChatGPT, Claude, Gemini…)</strong>
+              <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;" data-i18n="uiCopy109">Copy this prompt into your AI tool with your source material, then paste the resulting JSON here.</div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <div class="lang-switch-group">
+                <button type="button" class="btn-lang active" id="btn-import-prompt-lang-es">ES</button>
+                <button type="button" class="btn-lang" id="btn-import-prompt-lang-en">EN</button>
+              </div>
+              <button type="button" class="btn-primary-sm" id="btn-copy-prompt-text" data-i18n="uiCopy110">Copy prompt</button>
+            </div>
+          </div>
+          <textarea id="llm-prompt-textarea" class="llm-prompt-textarea" readonly rows="10"></textarea>
+        </div>
+
+        <!-- ÁREA DE TEXTO JSON -->
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <label for="import-json-textarea" style="margin: 0;" data-i18n="importLabelContent">Structured JSON Payload:</label>
+            <span id="import-json-status" style="font-size: 11px; font-weight: 600;"></span>
+          </div>
+          <textarea id="import-json-textarea" class="import-json-input" placeholder='{\n  "version": "1.0",\n  "notas_fuente": [...],\n  "notas_atomicas": [...],\n  "mapas_contenido": [...]\n}' rows="10"></textarea>
+        </div>
+
+        <!-- RESUMEN DE DETECCIÓN EN TIEMPO REAL -->
+        <div id="import-detection-summary" class="import-detection-box" style="display: none;">
+          <span class="detection-label" data-i18n="importDetectedSummary">Detected items ready to import:</span>
+          <div id="import-detection-badges" class="detection-badges-list"></div>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-ghost" onclick="closeModal('modal-import-json')" data-i18n="cancel">Cancel</button>
+        <button class="btn-primary" id="btn-submit-import-json" disabled data-i18n="btnSubmitImport">🚀 Import into NotesApp</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- POPUP DROPDOWN DE AUTOCOMPLETADO WIKILINKS [[...]] -->
+  <div id="wikilink-autocomplete" class="wikilink-popup" style="display: none;"></div>
+
+  <!-- TOAST NOTIFICACIONES -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- SCRIPTS -->
+  <script src="i18n.js"></script>
+  <script src="graph-math.js"></script>
+  <script src="app.js"></script>
+  <script src="graph.js"></script>
+</body>
+</html>

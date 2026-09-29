@@ -1,0 +1,28 @@
+{
+  "name": "notesapp",
+  "version": "1.0.0",
+  "description": "Sistema de toma de notas y repaso espaciado local-first basado en evidencia científica",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node --test test-graph.cjs && node test-isolated.cjs",
+    "test:graph": "node --test test-graph.cjs"
+  },
+  "keywords": [
+    "notes",
+    "zettelkasten",
+    "spaced-repetition",
+    "sm-2",
+    "interleaving",
+    "local-first",
+    "markdown"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "gray-matter": "^4.0.3"
+  }
+}
