@@ -14,7 +14,8 @@ node_modules/
 .env.*
 !.env.example
 
-# Logs, temporary files, and operating-system metadata
+# Logs, temporary files, build staging, and operating-system metadata
+release/
 *.log
 *.tmp
 .DS_Store

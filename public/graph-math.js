@@ -4,7 +4,7 @@
  const api = {
   matches(node, query, tag, type) {
    return (!type || node.type === type) && (!tag || (node.tags || []).includes(tag)) &&
-    (!query || normalize([node.label,node.id,node.carpeta,...(node.tags || [])].join(' ')).includes(normalize(query)));
+    (!query || normalize([node.label,node.id,node.carpeta,node.campo,node.proyecto,...(node.tags || [])].join(' ')).includes(normalize(query)));
   },
   screen(node, camera) { return {x:node.x*camera.scale+camera.x,y:node.y*camera.scale+camera.y}; },
   world(point, camera) { return {x:(point.x-camera.x)/camera.scale,y:(point.y-camera.y)/camera.scale}; },

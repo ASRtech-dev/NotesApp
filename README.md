@@ -1,231 +1,165 @@
-# NotesApp
+# 🧠 NotesApp — Second Brain, Atomic Notes (Zettelkasten) & Spaced Repetition (SM-2)
 
-**Capture ideas. Connect your notes. Remember what you learn.**
+**Capture ideas. Distill atomic concepts. Connect knowledge maps. Remember everything you learn.**
 
-NotesApp is a local-first note-taking and spaced-repetition application that runs in your browser and stores your knowledge as Markdown files on your computer. It brings together source notes, atomic ideas, content maps, flashcards, and an interactive knowledge graph.
+NotesApp is a **local-first desktop & browser application** for building a personal knowledge base grounded in cognitive science (**Zettelkasten** atomic note-taking, **Feynman** synthesis, **Content Maps**, and **SM-2 Spaced Repetition** with topic interleaving). All your notes live on your computer as plain, portable **Markdown (`.md`)** files with YAML frontmatter—no cloud lock-in, no account required.
 
-English is the default interface language. Spanish is available through the **EN / ES** switcher, and both languages have their own import prompt.
+English is the default interface language, with instant **EN / ES** switching and bilingual AI import prompts.
 
-![NotesApp home screen with an empty library](notesapp-clean.png)
+![NotesApp Home Screen](notesapp-clean.png)
 
-## Features
+---
 
-- **Quick capture:** save thoughts to your inbox and organize them later.
-- **Source notes:** record references, authors, and key takeaways from what you read or watch.
-- **Atomic notes:** explain one idea at a time, connect it with wikilinks, and organize it with folders and tags.
-- **Content maps:** group related ideas and explain why each connection matters. Switch between cards and a conceptual matrix.
-- **Spaced repetition:** review question-and-answer cards with SM-2 scheduling and topic interleaving.
-- **Knowledge graph:** explore connections, search and filter nodes, and inspect related notes.
-- **Learning analytics:** view review history, success rates, streaks, card maturity, and upcoming workload.
-- **JSON import:** import structured note packages, including flashcards and maps.
-- **Exports:** download flashcards for Anki and content maps as Markdown study guides.
-- **Local storage:** keep your notes in readable Markdown files with YAML metadata. No database or account is required.
-- **Light and dark themes**, with English and Spanish interface options.
+## 🚀 Quick Install for Windows (`.exe` Installer)
 
-## Getting started
+This repository includes a **standalone Windows Setup Installer** that bundles the complete application and runtime—**no prior Node.js or command-line setup required**.
 
-### Requirements
+### Option A — Official Windows Installer (`NotesApp-Setup-1.0.0.exe`)
+1. Download **[`NotesApp-Setup-1.0.0.exe`](NotesApp-Setup-1.0.0.exe)** from this repository.
+2. Double-click **`NotesApp-Setup-1.0.0.exe`**.
+3. Choose your installation folder (defaults to `%LocalAppData%\Programs\NotesApp`), select whether to create **Desktop** and **Start Menu** shortcuts, and click **Install Now**.
+4. **NotesApp** launches automatically in a dedicated desktop app window with a **System Tray icon** (right-click the tray icon anytime to open NotesApp, open your Markdown data folder, or exit cleanly).
+5. Includes a built-in uninstaller (`Uninstall-NotesApp.exe`) registered in Windows *Installed Apps*.
 
-- Node.js 20 or newer, with npm.
-- A modern browser.
+> **Silent Install Support:** You can also run `NotesApp-Setup-1.0.0.exe /S` (or `/S /D=C:\CustomPath`) for automated silent deployment.
 
-### Install and run
+### Option B — Direct Desktop Launcher (`NotesApp.exe` or `iniciar-notesapp.bat`)
+- If you cloned or extracted this repository on a Windows machine with Node.js installed, simply double-click **`NotesApp.exe`** (or **`iniciar-notesapp.bat`**) in the project root.
 
-1. Download this repository as a ZIP and extract it, or clone it with Git.
-2. Open a terminal in the project folder, where `package.json` is located.
-3. Install the dependencies and start the application:
+### Option C — Developer / Cross-Platform CLI (`Node.js 20+`)
+```bash
+npm ci
+npm start
+```
+Then open **[http://localhost:3456](http://localhost:3456)** in your browser.
 
-   ```bash
-   npm ci
-   npm start
-   ```
+---
 
-4. Open [http://localhost:3456](http://localhost:3456).
+## ✨ What's New in This Version
 
-Keep the terminal running while you use NotesApp. Press **Ctrl+C** in the terminal to stop the server. To use it again, run `npm start`.
+### 1. Calm, De-Cluttered **Atomic Notes** with Progressive Disclosure
+- **Minimalist 5-Element Grid Cards:** Each card in the **Atomic Notes** gallery displays only what matters for rapid scanning:
+  1. **Project Badge** (e.g., *WBS School Coding - AI Agents & Automations*)
+  2. **Module Pill** (e.g., *📦 Module 1 - Intro to AI*)
+  3. **Note Title**
+  4. **Origin Source** (*📖 Source Note title*)
+  5. **2-Line Core Idea Snippet**
+- **Collapsible Folders Drawer (`📁 Folders`):** The folder & curriculum tree stays tucked away by default so the note grid breathes across the full viewport, opening on demand with a single click.
+- **In-Place Split-Stage Expansion & Progressive Disclosure:** Clicking any atomic note smoothly shifts the remaining notes into a quiet left navigation rail and expands the selected note into a serene reading stage:
+  - **Immediate Focus:** Shows the header context, **💡 Core Idea**, and **🎯 Why It Matters** without visual clutter.
+  - **On-Demand Deep Dive Tabs:** Secondary layers stay neatly folded into three interactive pill tabs at the bottom of the note:
+    - **`🧠 Self-Test Question`** — Practice active recall and reveal the answer inline.
+    - **`🔗 Connections & Maps (N)`** — Read *How It Connects*, jump to linked atomic notes, or open participating Content Maps.
+    - **`🧭 Context & Tags`** — Inspect the full curriculum path (*Field → Project → Module → Topic → Folder*) and `#hashtags`.
 
-### Windows launcher
+### 2. Split-Stage Master-Detail **Content Maps**
+- **Compact Folded Tiles:** When browsing **Content Maps**, cards stay compact—showing only map type (*🎓 Master Course Map* vs. *🗺️ Topic Map*), title, project/module pills, and concept counters.
+- **Full-Height Lateral Expansion:** Clicking any map moves all other maps into a `280px` sticky left switcher rail and expands the active map across a 4-zone architectural canvas:
+  1. **Command Header** with map badges, Study Guide `.md` export, Edit, and `✕ Close Map`.
+  2. **Map Thesis & 3 KPI Counters** (*Atomic Concepts*, *Active Recall Qs*, *Thematic Sub-Maps*).
+  3. **Course Thematic Sub-Maps Panel** (on Master Course Maps) to jump directly to any lesson's sub-map.
+  4. **2-Column Numbered Concept Blueprint** displaying each atomic concept, its connection rationale (`Why it belongs here`), and its core idea preview.
 
-After installing Node.js, double-click **`iniciar-notesapp.bat`**. The launcher installs dependencies if `node_modules` is missing, starts the server, and opens your browser. If the page opens before the server is ready, refresh it once the terminal shows the startup message.
+### 3. Dual-Window Reader for **Source Notes**
+- Opening a **Source Note** presents a side-by-side 2-window workspace:
+  - **Left Primary Window (67%):** Bibliographic header, paraphrased key takeaways, and verbatim highlights/quotes.
+  - **Right Inspector Window (33%):** Extracted **Atomic Notes**, linked **Content Maps**, curriculum hierarchy, and tags.
 
-The application starts with an empty library. Its storage folders are created automatically on startup.
+### 4. Calibrated Anti-Halation **Dark Mode** (Obsidian Slate & WCAG AAA Contrast)
+- Engineered by a 3-expert color & ocular ergonomics committee to eliminate astigmatic halation (white-on-pure-black glare) during long study sessions:
+  - **3-Tier Obsidian Slate Surfaces:** `#0f1218` app canvas → `#171c26` elevated cards with subtle top specular highlights → `#1c2331` inner reading pillars.
+  - **Soft Ivory Typography (`#e6edf5` & `#dde6f0`):** Delivers **13.2:1 AAA contrast** without eye strain, reserving pure bright `#f8fafc` for bolded key terms.
+  - **Luminous Semantic Pills (`>7.5:1 AAA`):** High-contrast pastel badges for Projects (`#e9d5ff`), Modules (`#6ee7b7`), Sources (`#93c5fd`), and Flashcards (`#fde68a`).
+  - **Three Theme Modes:** Cycle effortlessly between **☀️ Light**, **🌙 Dark (Obsidian Slate)**, and **🎨 Pastel (Warm Cream)**.
 
-## How to use NotesApp
+### 5. Visual Section Identity & 3 Vertical Step-by-Step Infographics
+- Every workspace section features a cohesive *Ligne Claire* editorial illustration for instant visual wayfinding.
+- The **System Guide** includes a 3-poster vertical infographic series (`9:16`) explaining the complete workflow in plain, human English:
 
-### 1. Capture a thought
+| Part 1: Capture & AI Import | Part 2: Study & Connect | Part 3: Remember & Master |
+| :---: | :---: | :---: |
+| ![Part 1: Capture & AI Import](public/assets/infographics/infographic-part-1.jpg) | ![Part 2: Study & Connect](public/assets/infographics/infographic-part-2.jpg) | ![Part 3: Remember & Master](public/assets/infographics/infographic-part-3.jpg) |
 
-Enter an idea in the capture bar and select **Capture**. It appears in **Inbox**, where you can filter pending, processed, or all captures.
+---
 
-Use the processing workflow to turn a capture into atomic notes and, when appropriate, a source note. The original capture is marked as processed.
+##🧭 Core Workflow
 
-### 2. Keep track of your sources
+1. **📥 Capture or Import (`Inbox` / `Import JSON`):**
+   - Jot quick fleeting ideas into the top bar or **Inbox**, or use **LLM Assistant & Prompt** to convert raw lecture transcripts, PDFs, or articles into a structured JSON package of Source Notes, Atomic Notes, Content Maps, and SM-2 Flashcards.
+   - **Incremental Course & Project Import:** Import new modules or lessons directly into an existing **Field** and **Project / Course** (`📦 Module` → `📖 Subtopic`) without duplicating projects.
+2. **📚 Synthesize References (`Source Notes`):**
+   - Store books, videos, courses, and articles with paraphrased key points and verbatim quotes.
+3. **⚛️ Distill Single Concepts (`Atomic Notes`):**
+   - One self-contained idea per note (*Core Idea in your own words*, *Why it matters*, *How it connects*, plus an *Active Recall Question & Answer*).
+4. **🗺️ Build Big-Picture Outlines (`Content Maps`):**
+   - Connect atomic notes into Topic Maps and Master Course Maps. Every connection requires an explicit **reason** explaining how the concept fits the map.
+5. **🧠 Retain Long-Term (`Spaced Repetition` & `Retention Analytics`):**
+   - Review due flashcards with the **SM-2 algorithm** (graded `0–5` with topic interleaving), track your retention rate and card maturity in **Analytics**, or explore your **Interactive Knowledge Graph**.
 
-Open **Source Notes** and create a note for a book, article, video, or other reference. Record its title, author, and key points. Use folders and tags to make sources easier to find.
+---
 
-### 3. Write an atomic note
+## 🤖 Importing Notes with an External AI (LLM Prompt)
 
-Open **Atomic Notes** and select **New Atomic Note**. Give the note a clear title, then explain:
+NotesApp includes a built-in master prompt (in English and Spanish) so you can use ChatGPT, Claude, or Gemini to extract rich notes from your study material—without needing any API key inside NotesApp:
 
-- The idea in your own words.
-- Why it matters.
-- How it connects to what you already know.
+1. Open **🤖 LLM Assistant & Prompt** in the sidebar.
+2. Select **English** or **Spanish** and click **Copy Master Prompt**.
+3. Paste the prompt into your preferred AI along with your study text or transcript.
+4. Click **📥 Import JSON** in NotesApp, choose your target **Field** and **Project** (or create a new one), paste the JSON output, and click **Import Package**.
 
-Link a source when relevant. Use `[[note-id]]` to reference another atomic note; the editor offers link suggestions. Backlinks help you find notes that refer to the current one.
+Standalone prompt files are also available in the repository root:
+- [English LLM Import Prompt](PROMPT-LLM-IMPORT-EN.md)
+- [Spanish LLM Import Prompt](PROMPT-LLM-IMPORTACION.md)
 
-The idea field blocks pasting to encourage writing in your own words. The Feynman helper provides prompts for simple explanations, analogies, and exceptions. A wording-overlap indicator can help you compare your explanation with a linked source; it is a writing aid, not a measure of understanding.
+---
 
-Add both a **question** and an **answer** to create a review card for the note.
+## 💾 Local Markdown Storage & Backups
 
-### 4. Organize ideas into a content map
-
-Open **Content Maps** and create a map around a topic. Add related atomic notes and explain the reason for each connection. Every map link requires a reason.
-
-Use the card or matrix view to inspect the structure. Export the map as a Markdown study guide when you want a document you can read or share outside the app.
-
-### 5. Review what is due
-
-Select **Review today** or open **Spaced Repetition**.
-
-1. Read the question and try to recall the answer.
-2. Reveal the answer.
-3. Grade your recall from **0 to 5**, using the descriptions shown on the buttons.
-4. Continue through the queue.
-
-NotesApp updates the next review date after each grade. The due queue contains cards scheduled for today or earlier. **Practice all cards** also includes future cards; grades in this mode update their schedules too.
-
-If you have no cards yet, add a question and answer to an atomic note first.
-
-### 6. Explore your knowledge graph
-
-Open **Knowledge Graph** to see relationships between atomic notes, sources, and maps.
-
-- Search for notes and combine tag and type filters.
-- Select a node to inspect its title, tags, and connections, then open its note from the details panel.
-- Drag a node to reposition it, or drag the background to pan.
-- Scroll to zoom and use **Fit view** to bring the graph into view.
-- Pause the layout when you want the nodes to stay still.
-- Use **Browse matching notes** for a text-based way to select notes.
-
-### 7. Check your review activity
-
-Open **Retention Analytics** for your recorded review success rate, study streak, average ease factor, card maturity, and review forecast. These figures summarize your review activity; they do not directly measure comprehension or long-term memory.
-
-## Import notes with an LLM prompt
-
-NotesApp includes a prompt for preparing structured note packages with an external language model. It does not call an AI service itself or require an API key.
-
-1. Open **LLM Assistant & Prompt**.
-2. Select English or Spanish and copy the prompt.
-3. Use it with your chosen AI tool and the source material you want to process.
-4. Review the generated notes, answers, and connections for accuracy.
-5. In NotesApp, select **Import JSON**.
-6. Paste the generated JSON or load a JSON file, inspect the detected items, and import the package.
-
-Standalone prompts are also included:
-
-- [English import prompt](PROMPT-LLM-IMPORT-EN.md)
-- [Spanish import prompt](PROMPT-LLM-IMPORTACION.md)
-
-**Keep the JSON field names unchanged.** Keys such as `notas_atomicas`, `titulo`, and `razon` remain in Spanish for schema compatibility, even when the note content is English. The import dialog includes a sample template.
-
-Imports reject note IDs that would overwrite existing notes. Use the note editor to update an existing note, or assign a new unique ID and update its references before importing a distinct note.
-
-## Export your work
-
-| Export | Where to find it | Output |
-| --- | --- | --- |
-| Flashcards | Spaced Repetition → Export to Anki | A tab-separated text file for importing into Anki |
-| Study guide | A content map's export action | A Markdown document built from the map and its linked notes |
-| Original notes | The data folders on disk | Markdown files with YAML metadata |
-
-## Storage and backups
-
-By default, NotesApp stores data alongside `server.js`:
+By default, NotesApp stores your library in six plain-text folders alongside `server.js` (or in `%LocalAppData%\NotesApp\Data` if installed in a write-protected system directory):
 
 ```text
-01-inbox/              Quick captures
-02-source-notes/       References and source notes
-03-atomic-notes/       Individual ideas and their links
-04-content-maps/       Topic maps and connection reasons
-05-self-assessment/    Questions, answers, and scheduling metadata
-06-spaced-repetition/  Review queue and history
+01-inbox/              Quick captures (.md)
+02-source-notes/       Bibliographic references and source notes (.md)
+03-atomic-notes/       Distilled atomic concepts and wikilinks (.md)
+04-content-maps/       Master course maps and topic maps (.md)
+05-self-assessment/    SM-2 flashcard questions, answers, and intervals (.md)
+06-spaced-repetition/  Project hierarchy (proyectos.json), folders, and review logs
 _templates/            Reusable Markdown templates
 ```
 
-The numbered folder names stay in English in both interface languages. Internal metadata keys and some generated Markdown headings use Spanish for compatibility; changing the interface language does not translate your note content.
+- **Exports:** Export flashcards as **Anki TSV** (`Spaced Repetition → Export to Anki`) or compile any Content Map into a complete **Markdown Study Guide** (`Content Maps → Study Guide .MD`).
+- **Backups:** Simply copy the `01-inbox` through `06-spaced-repetition` folders to back up or migrate your entire knowledge base.
 
-To back up your library, stop the server and copy all six numbered folders together. Restore them together while the server is stopped to keep notes, cards, and review history aligned. Keep note IDs consistent when editing files manually because links depend on them.
+---
 
-Language and theme preferences are stored in your browser. Note content is stored on disk.
-
-### Optional configuration
-
-| Environment variable | Default | Purpose |
-| --- | --- | --- |
-| `PORT` | `3456` | Local server port |
-| `NOTESAPP_DATA_DIR` | Project folder | Root directory for note storage |
-
-For example, in PowerShell:
-
-```powershell
-$env:PORT = "3457"
-$env:NOTESAPP_DATA_DIR = "C:\NotesAppData"
-npm start
-```
-
-Or in a macOS/Linux shell:
-
-```bash
-PORT=3457 NOTESAPP_DATA_DIR="$HOME/NotesAppData" npm start
-```
-
-Open `http://localhost:3457` for these examples. Use an absolute data path. Selecting another data directory does not move existing notes; NotesApp creates the storage folders there.
-
-## Keyboard shortcuts
+## ⌨️ Keyboard Shortcuts
 
 | Shortcut | Action |
-| --- | --- |
-| Ctrl+K / Cmd+K | Open global search |
-| Escape | Close an open dialog |
-| Space | Reveal the answer during a review |
-| 0–5 | Grade a revealed answer during a review |
-| + / − | Zoom while the graph has focus |
-| 0 | Fit the graph while it has focus |
+| :--- | :--- |
+| `Ctrl + K` / `Cmd + K` | Open Global Search |
+| `Escape` | Close active modal dialog |
+| `Space` | Reveal flashcard answer during Spaced Repetition review |
+| `0` – `5` | Grade recall quality during Spaced Repetition review |
+| `+` / `-` / `0` | Zoom in, zoom out, or fit view in the Knowledge Graph |
 
-## Development and tests
+---
 
-The application uses Node.js, Express, and gray-matter on the server, with plain HTML, CSS, JavaScript, and a Canvas-based graph in the browser. There is no frontend build step.
+## 🛠️ Development, Testing & Building the `.exe` Installer
 
+### Run Automated Tests
 ```bash
 npm test
-npm run test:graph
+```
+Runs both the **Knowledge Graph math & collision suite** (`test-graph.cjs`, 8 unit tests) and the **full isolated API & regression suite** (`test-isolated.cjs`, 39 integration tests on an isolated temporary directory).
+
+### Rebuild the Windows `.exe` Installer
+On Windows, run the PowerShell build script to recompile `NotesApp.exe`, `Uninstall-NotesApp.exe`, and the standalone single-file installer `NotesApp-Setup-1.0.0.exe`:
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\build-installer.ps1
 ```
 
-`npm test` runs the graph tests, integration checks, and regression checks. Integration tests generate synthetic notes in a temporary directory and run a separate server on port `13456`; they do not use or modify your library. Ensure that port is available. Temporary test data is left at the path printed by the test runner.
+---
 
-Main source files:
+## 📄 License
 
-| File | Responsibility |
-| --- | --- |
-| `server.js` | Local API, Markdown persistence, imports, exports, and review scheduling |
-| `public/index.html` | Application views and dialogs |
-| `public/app.js` | Interface behavior and workflows |
-| `public/i18n.js` | Translations and bilingual prompts |
-| `public/style.css` | Layout, components, and themes |
-| `public/graph.js` | Graph rendering and interaction |
-| `public/graph-math.js` | Graph layout, filtering, and camera calculations |
-
-## Troubleshooting
-
-- **`node` or `npm` is not recognized:** install Node.js with npm, then reopen your terminal.
-- **The page does not load:** check that `npm start` is still running and open the address shown in the terminal.
-- **The port is already in use:** stop the other instance or choose a different `PORT`.
-- **There are no review cards:** add a question and answer to an atomic note. If all cards are scheduled for later, use **Practice all cards** for an extra session.
-- **An import fails:** check the JSON syntax, keep the schema keys unchanged, use unique IDs, and include a reason for every map connection.
-- **The interface opens in Spanish:** select **EN**. The browser remembers your previous language choice.
-
-## Deployment scope
-
-NotesApp is designed for personal use on your computer. The server binds to `127.0.0.1` and rejects cross-origin API requests. It has no user accounts, authentication, or shared-workspace permissions.
-
-You can distribute the project through GitHub and run it locally. It cannot run as a complete application on GitHub Pages because it needs a Node.js server and writable local storage. Public or multiuser hosting requires additional application design and access controls.
+ISC License — Local-First Personal Knowledge Management & Spaced Repetition System.

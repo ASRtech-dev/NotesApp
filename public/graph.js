@@ -2,8 +2,21 @@
 const graph = {nodes:[],links:[],map:new Map(),camera:{x:0,y:0,scale:1},width:1,height:1,dpr:1,
  selected:null,hover:null,gesture:null,frame:null,request:0,loaded:false,loading:false,error:false,autoFit:true};
 const graphColors={mapa:'#8b5cf6',fuente:'#3b82f6',atomica:'#159877'};
+const campoColors={'inteligencia-artificial':'#6366f1','ciencias-cognitivas':'#0ea5e9','psicologia-cognitiva':'#ec4899','desarrollo-software':'#10b981','general':'#64748b'};
+function getCampoColor(campo){
+ if(!campo)return null;
+ const slug=String(campo).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+ if(campoColors[slug])return campoColors[slug];
+ let hash=0;for(let i=0;i<campo.length;i++)hash=campo.charCodeAt(i)+((hash<<5)-hash);
+ return `hsl(${Math.abs(hash)%360},65%,50%)`;
+}
 function graphType(type){return {mapa:t('grafoLegendMapas'),fuente:t('grafoLegendFuentes'),atomica:t('grafoLegendAtomicas')}[type]||type;}
-function graphVisible(){return graph.nodes.filter(n=>GraphMath.matches(n,state.graphSearchQuery,state.selectedGraphTag,state.selectedGraphType));}
+function graphVisible(){
+ let nodes=graph.nodes.filter(n=>GraphMath.matches(n,state?.graphSearchQuery,state?.selectedGraphTag,state?.selectedGraphType));
+ if(state?.activeField) nodes=nodes.filter(n=>(n.campo||'')===state.activeField);
+ if(state?.activeProject) nodes=nodes.filter(n=>(n.proyecto||'')===state.activeProject);
+ return nodes;
+}
 function graphPoint(event){const r=document.getElementById('graph-canvas').getBoundingClientRect();return {x:(event.clientX-r.left)*graph.width/r.width,y:(event.clientY-r.top)*graph.height/r.height};}
 function graphResize(){
  const canvas=document.getElementById('graph-canvas'),wrapper=canvas.parentElement;
@@ -32,6 +45,12 @@ function graphDetails(){
  if(!node){paragraph(t('graphSelectTitle'),'graph-detail-heading');paragraph(t('graphSelectHint'));return;}
  paragraph(graphType(node.type),'graph-detail-type');
  const title=document.createElement('h3');title.textContent=node.label;panel.append(title);
+ if(node.campo||node.proyecto){
+  const parts=[];
+  if(node.campo)parts.push(`📁 ${node.campo}`);
+  if(node.proyecto)parts.push(`🎯 ${node.proyecto}`);
+  paragraph(parts.join(' · '),'graph-detail-scope');
+ }
  if(node.carpeta)paragraph(node.carpeta,'graph-detail-folder');
  if(node.tags.length)paragraph(node.tags.map(tag=>'#'+tag).join(' '),'graph-detail-tags');
  const open=document.createElement('button');open.type='button';open.className='btn-primary';open.textContent=t('graphOpenNote');open.onclick=()=>openReaderModal(node.type,node.id);panel.append(open);
@@ -98,7 +117,7 @@ function initGraphControls(){
   }
   const hit=GraphMath.hit(graphVisible(),p,graph.camera);graph.hover=hit?.id||null;canvas.style.cursor=hit?'pointer':'grab';
   const tip=document.getElementById('graph-tooltip');tip.style.display=hit?'block':'none';
-  if(hit){tip.textContent=hit.label;tip.style.left=Math.max(8,Math.min(p.x+14,graph.width-tip.offsetWidth-8))+'px';tip.style.top=Math.max(8,Math.min(p.y+14,graph.height-tip.offsetHeight-8))+'px';}drawGraphFrame();
+  if(hit){let _lbl=hit.label;if(hit.proyecto)_lbl+=' · 🎯 '+hit.proyecto;else if(hit.campo)_lbl+=' · 📁 '+hit.campo;tip.textContent=_lbl;tip.style.left=Math.max(8,Math.min(p.x+14,graph.width-tip.offsetWidth-8))+'px';tip.style.top=Math.max(8,Math.min(p.y+14,graph.height-tip.offsetHeight-8))+'px';}drawGraphFrame();
  });
  const finish=e=>{const g=graph.gesture;if(!g||g.id!==e.pointerId)return;const id=!g.moved?g.node?.id:null;graphCancelGesture();if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);canvas.style.cursor='grab';if(id)graphSelect(id);};
  canvas.addEventListener('pointerup',finish);
@@ -141,13 +160,13 @@ function drawGraphFrame(){
  ctx.setTransform(graph.dpr,0,0,graph.dpr,0,0);ctx.clearRect(0,0,graph.width,graph.height);
  const nodes=graphVisible(),ids=new Set(nodes.map(n=>n.id)),focus=graph.hover||graph.selected,neighbors=new Set([focus]);
  graph.links.forEach(l=>{if(l.source===focus)neighbors.add(l.target);if(l.target===focus)neighbors.add(l.source);});
- const dark=state.theme==='dark',bg=dark?'#1c1c1e':'#fff',fg=dark?'#f1f1f4':'#25262b';
+ const dark=state.theme==='dark',pastel=state.theme==='pastel',bg=dark?'#171c26':(pastel?'#f7f4ed':'#fff'),fg=dark?'#e6edf5':(pastel?'#242132':'#25262b');
  graph.links.forEach(l=>{if(!ids.has(l.source)||!ids.has(l.target))return;const a=GraphMath.screen(graph.map.get(l.source),graph.camera),b=GraphMath.screen(graph.map.get(l.target),graph.camera);
-  ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=focus&&(l.source===focus||l.target===focus)?'#7685ae':dark?'#444853':'#d8dce5';ctx.globalAlpha=focus&&!neighbors.has(l.source)?.2:1;ctx.lineWidth=focus&&(l.source===focus||l.target===focus)?1.8:1;ctx.setLineDash(l.type==='mapa-subtema'?[4,4]:[]);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=focus&&(l.source===focus||l.target===focus)?(dark?'#93c5fd':'#7685ae'):dark?'#526079':(pastel?'#cfc8d8':'#d8dce5');ctx.globalAlpha=focus&&!neighbors.has(l.source)?.2:1;ctx.lineWidth=focus&&(l.source===focus||l.target===focus)?1.8:1;ctx.setLineDash(l.type==='mapa-subtema'?[4,4]:[]);ctx.stroke();
  });ctx.setLineDash([]);ctx.globalAlpha=1;
  const obstacles=nodes.map(n=>{const p=GraphMath.screen(n,graph.camera),r=Math.max(4,n.r*graph.camera.scale);return {x:p.x-r-4,y:p.y-r-4,w:2*r+8,h:2*r+8};});
  nodes.forEach(n=>{const p=GraphMath.screen(n,graph.camera),r=Math.max(4,n.r*graph.camera.scale);ctx.globalAlpha=focus&&!neighbors.has(n.id)?.25:1;
-  ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);ctx.fillStyle=graphColors[n.type]||'#64748b';ctx.fill();ctx.strokeStyle=bg;ctx.lineWidth=2;ctx.stroke();
+  ctx.beginPath();ctx.arc(p.x,p.y,r,0,Math.PI*2);ctx.fillStyle=graphColors[n.type]||'#64748b';ctx.fill();const _cCol=n.campo?getCampoColor(n.campo):null;ctx.strokeStyle=_cCol||bg;ctx.lineWidth=_cCol?3:2;ctx.stroke();
   if(n.id===focus){ctx.beginPath();ctx.arc(p.x,p.y,r+5,0,Math.PI*2);ctx.strokeStyle=fg;ctx.lineWidth=1.5;ctx.stroke();}
  });ctx.globalAlpha=1;
  // Place labels only when they do not cover another node or label. Full text stays in the inspector/list.

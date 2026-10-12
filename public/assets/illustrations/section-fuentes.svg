@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <defs>
+    <linearGradient id="bgSrc" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#eff6ff"/>
+      <stop offset="100%" stop-color="#dbeafe"/>
+    </linearGradient>
+    <linearGradient id="jacketSrc" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1e40af"/>
+      <stop offset="100%" stop-color="#1e3a8a"/>
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="400" height="300" fill="url(#bgSrc)"/>
+  <rect x="18" y="18" width="110" height="190" rx="6" fill="#e0f2fe" stroke="#93c5fd" stroke-width="1.5"/>
+  <rect x="28" y="34" width="90" height="14" rx="3" fill="#bae6fd"/>
+  <rect x="28" y="58" width="90" height="14" rx="3" fill="#bae6fd"/>
+  <rect x="28" y="82" width="90" height="14" rx="3" fill="#bae6fd"/>
+
+  <!-- Floating Source Cards -->
+  <g transform="translate(260, 26)">
+    <rect width="116" height="74" rx="8" fill="#ffffff" stroke="#1e293b" stroke-width="2.2"/>
+    <rect x="0" y="0" width="116" height="18" rx="6" fill="#0284c7"/>
+    <circle cx="12" cy="9" r="3" fill="#ffffff"/>
+    <rect x="22" y="6" width="54" height="6" rx="3" fill="#e0f2fe"/>
+    <rect x="12" y="28" width="92" height="7" rx="3" fill="#38bdf8"/>
+    <rect x="12" y="41" width="76" height="6" rx="3" fill="#94a3b8"/>
+    <rect x="12" y="53" width="84" height="6" rx="3" fill="#cbd5e1"/>
+  </g>
+
+  <g transform="translate(274, 114)">
+    <rect width="104" height="68" rx="8" fill="#ffffff" stroke="#1e293b" stroke-width="2.2"/>
+    <rect x="0" y="0" width="104" height="16" rx="6" fill="#2563eb"/>
+    <polygon points="46,28 46,50 66,39" fill="#0ea5e9" stroke="#1e293b" stroke-width="1.8" stroke-linejoin="round"/>
+    <rect x="14" y="55" width="76" height="5" rx="2.5" fill="#94a3b8"/>
+  </g>
+
+  <!-- Connector lines -->
+  <path d="M225 110 L260 65" stroke="#0284c7" stroke-width="2" stroke-dasharray="4 3" fill="none"/>
+  <path d="M235 145 L274 145" stroke="#2563eb" stroke-width="2" stroke-dasharray="4 3" fill="none"/>
+
+  <!-- Character: Serious Scholar / Researcher -->
+  <!-- Torso & Blazer -->
+  <path d="M92 260 C96 196 122 176 168 176 C214 176 238 196 244 260 Z" fill="url(#jacketSrc)" stroke="#1e293b" stroke-width="2.6"/>
+  <!-- Shirt & Tie -->
+  <polygon points="150,176 168,222 186,176" fill="#f8fafc" stroke="#1e293b" stroke-width="2.2"/>
+  <polygon points="164,186 172,186 174,218 168,225 162,218" fill="#0284c7" stroke="#1e293b" stroke-width="1.8"/>
+  <!-- Lapels -->
+  <path d="M144 176 L132 214 L162 222" fill="none" stroke="#1e293b" stroke-width="2.2"/>
+  <path d="M192 176 L204 214 L174 222" fill="none" stroke="#1e293b" stroke-width="2.2"/>
+
+  <!-- Neck & Head -->
+  <rect x="155" y="148" width="26" height="32" rx="8" fill="#eab68c" stroke="#1e293b" stroke-width="2.4"/>
+  <path d="M134 106 C134 76 202 76 202 106 C202 142 188 160 168 160 C148 160 134 142 134 106 Z" fill="#f3c6a0" stroke="#1e293b" stroke-width="2.5"/>
+  <!-- Hair -->
+  <path d="M130 108 C126 78 148 62 172 64 C198 66 210 82 204 108 C198 92 186 86 168 86 C148 86 138 94 130 108 Z" fill="#334155" stroke="#1e293b" stroke-width="2.4"/>
+  <!-- Glasses (Serious intellectual look) -->
+  <rect x="144" y="106" width="20" height="14" rx="3" fill="#e0f2fe" fill-opacity="0.55" stroke="#1e293b" stroke-width="2.4"/>
+  <rect x="172" y="106" width="20" height="14" rx="3" fill="#e0f2fe" fill-opacity="0.55" stroke="#1e293b" stroke-width="2.4"/>
+  <line x1="164" y1="112" x2="172" y2="112" stroke="#1e293b" stroke-width="2.4"/>
+  <circle cx="154" cy="113" r="2.3" fill="#1e293b"/>
+  <circle cx="182" cy="113" r="2.3" fill="#1e293b"/>
+  <!-- Eyebrows & serious mouth -->
+  <path d="M145 101 L162 103" stroke="#1e293b" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M174 103 L191 101" stroke="#1e293b" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M168 116 L166 128 L171 129" fill="none" stroke="#1e293b" stroke-width="2" stroke-linecap="round"/>
+  <path d="M159 140 Q168 143 177 140" fill="none" stroke="#1e293b" stroke-width="2.2" stroke-linecap="round"/>
+
+  <!-- Desk & Open Book + Stacked Sources -->
+  <rect x="20" y="246" width="360" height="54" fill="#cbd5e1" stroke="#1e293b" stroke-width="2.5"/>
+  <!-- Open reference book -->
+  <path d="M108 246 L168 234 L228 246 L168 254 Z" fill="#ffffff" stroke="#1e293b" stroke-width="2.4"/>
+  <path d="M112 230 L168 242 L224 230 L228 246 L168 254 L108 246 Z" fill="#f8fafc" stroke="#1e293b" stroke-width="2.4"/>
+  <line x1="168" y1="242" x2="168" y2="254" stroke="#1e293b" stroke-width="2.2"/>
+  <!-- Stack of books on left -->
+  <rect x="38" y="228" width="56" height="18" rx="3" fill="#0284c7" stroke="#1e293b" stroke-width="2.2"/>
+  <rect x="42" y="212" width="50" height="16" rx="3" fill="#38bdf8" stroke="#1e293b" stroke-width="2.2"/>
+</svg>

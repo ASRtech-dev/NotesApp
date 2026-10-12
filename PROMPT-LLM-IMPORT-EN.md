@@ -8,12 +8,12 @@ Your mission is to receive the attached documentation, text, or transcript, anal
 1. Source Notes (notas_fuente): Bibliographic synthesis of the source material.
 2. Atomic Notes (notas_atomicas): Indivisible conceptual units generatively rephrased in your own words.
 3. Active Recall Flashcards (autoevaluacion): Practice testing items designed for the SM-2 spaced repetition algorithm.
-4. Content Maps (mapas_contenido): Hierarchical thematic organizers with mandatory relational justifications (Kiewra et al. 1991).
+4. Content Maps (mapas_contenido): Hierarchical thematic organizers with mandatory relational justifications.
 5. Folders and Hashtags (carpetas and tags): Clean thematic organization.
 
-UNBREAKABLE SCIENTIFIC AND PEDAGOGICAL RULES:
+PEDAGOGICAL RULES:
 
-1. Strict Atomicity Principle (Luhmann Zettelkasten):
+1. Strict Atomicity Principle:
    - Each atomic note MUST contain EXACTLY ONE AUTONOMOUS IDEA OR CONCEPT. If a paragraph discusses two distinct ideas, create two separate atomic notes.
    - Generation Effect: The explanation in the 'idea' field MUST be written in your own words with conceptual depth. NEVER copy-paste verbatim sentences from the original source. Explain the underlying mechanism.
    - Each atomic note must explicitly address:
@@ -21,18 +21,31 @@ UNBREAKABLE SCIENTIFIC AND PEDAGOGICAL RULES:
      - 'por_que_importa': Practical significance, impact, or explanatory foundation.
      - 'como_se_conecta': How it interacts or connects with other ideas, using wikilinks [[slug-of-other-note]].
 
-2. Mandatory Active Recall Testing (Dunlosky et al. 2013 / SM-2):
+2. Mandatory Active Recall Testing (SM-2):
    - EVERY atomic note MUST contain an 'autoevaluacion' object.
    - 'pregunta': Open, challenging retrieval question that forces the brain to mentally reconstruct the concept (avoid trivial yes/no or true/false questions).
    - 'respuesta': Concise, precise, and self-contained answer with the key mechanism.
 
-3. Content Maps and Mandatory Relational Reasoning (Kiewra et al. 1991):
+3. Content Maps and Mandatory Relational Reasoning:
    - Every content map groups atomic notes under a structured thematic umbrella.
    - MANDATORY RULE: Every subtopic in 'subtemas' MUST have a 'razon' field explaining clearly and specifically WHY that atomic note belongs to and enriches this thematic map. Links without a reason will be rejected.
 
 4. Identifiers (Slugs):
    - The 'id' fields must be clean lowercase hyphenated slugs (e.g., fuente-author-year, atomica-key-concept, mapa-general-theme).
    - Mandatory prefixes: 'fuente-' for sources, 'atomica-' for atomic notes, 'mapa-' for content maps.
+
+5. Extraction Yield Maximization and High-Quality Flashcards:
+   - Extract the MAXIMUM possible number of atomic notes and flashcards. Aim to generate between 8 and 20 atomic notes per processed source (or more depending on text density).
+   - EVERY atomic note MUST include its self-assessment flashcard ('autoevaluacion'). Never leave any note without a practice question.
+   - Design varied, high-yield active retrieval questions:
+     * Underlying mechanisms ("What is the mechanism of X and how does it operate?")
+     * Cause-and-Effect ("Why does Y occur when X is modified?")
+     * Conceptual discrimination ("How does concept A differ from concept B?")
+     * Applied problem-solving ("How would this principle be applied in a concrete scenario?")
+   - Answers ('respuesta') must be substantial (2-4 sentences) containing the full conceptual explanation, not telegraphic fragments.
+   - Create MULTIPLE content maps if the material covers different dimensions, structuring concepts into distinct thematic hierarchies.
+   - Actively cross-link ideas using wikilinks [[atomica-slug]] in 'como_se_conecta' and the 'enlaces' array to build a dense knowledge graph.
+   - Each 'idea' field must provide 3 to 6 sentences of deep, self-contained conceptual development.
 
 REQUIRED JSON FORMAT (STRICT SCHEMA):
 

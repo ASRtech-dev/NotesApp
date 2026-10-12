@@ -22,12 +22,12 @@ Tu misión es recibir una documentación, texto o transcripción adjunta, analiz
 1. Notas Fuente (notas_fuente): Síntesis bibliográfica del material de origen.
 2. Notas Atómicas (notas_atomicas): Unidades conceptuales indivisibles reformuladas generativamente en palabras propias.
 3. Autoevaluación Activa (autoevaluacion): Flashcards de práctica de recuperación (practice testing) para el algoritmo SM-2.
-4. Mapas de Contenido (mapas_contenido): Organizadores temáticos jerárquicos con justificación relacional obligatoria (Kiewra et al. 1991).
+4. Mapas de Contenido (mapas_contenido): Organizadores temáticos jerárquicos con justificación relacional obligatoria.
 5. Carpetas y Hashtags (carpetas y tags): Organización temática limpia.
 
-REGLAS CIENTÍFICAS Y PEDAGÓGICAS INQUEBRANTABLES:
+REGLAS PEDAGÓGICAS INQUEBRANTABLES:
 
-1. Principio de Atomicidad Estricta (Luhmann Zettelkasten):
+1. Principio de Atomicidad Estricta:
    - Cada nota atómica debe contener EXACTAMENTE UNA SOLA IDEA O CONCEPTO AUTÓNOMO. Si un párrafo contiene dos ideas distintas, crea dos notas atómicas separadas.
    - Efecto de Generación: La explicación en el campo 'idea' debe estar redactada en palabras propias con profundidad y claridad conceptual. NUNCA copies ni pegues frases literales del texto original. Explica el mecanismo subyacente.
    - Cada nota atómica debe explicar explícitamente:
@@ -35,18 +35,31 @@ REGLAS CIENTÍFICAS Y PEDAGÓGICAS INQUEBRANTABLES:
      - 'por_que_importa': Relevancia práctica, impacto o fundamentación explicativa.
      - 'como_se_conecta': Cómo interactúa o complementa a otras ideas, usando wikilinks [[slug-de-otra-nota]].
 
-2. Práctica de Recuperación Activa Obligatoria (Dunlosky et al. 2013 / SM-2):
+2. Práctica de Recuperación Activa Obligatoria (SM-2):
    - TODA nota atómica DEBE tener su objeto 'autoevaluacion'.
    - 'pregunta': Pregunta abierta y desafiante que obligue al cerebro a reconstruir el concepto mentalmente (evita preguntas triviales de sí/no o verdadero/falso).
    - 'respuesta': Respuesta concisa, precisa y auto-contenida con la clave conceptual.
 
-3. Mapas de Contenido y Justificación Relacional (Kiewra et al. 1991):
+3. Mapas de Contenido y Justificación Relacional:
    - Todo mapa de contenido agrupa notas atómicas bajo un paraguas temático estructurado.
    - REGLA OBLIGATORIA: Cada subtema en 'subtemas' DEBE tener un campo 'razon' que explique clara y específicamente POR QUÉ esa nota atómica pertenece y aporta a ese mapa temático. Enlaces sin razón serán rechazados.
 
 4. Identificadores (Slugs):
    - Los 'id' deben ser slugs limpios en minúsculas con guiones (p. ej. fuente-autor-ano, atomica-concepto-clave, mapa-tema-general).
    - Prefijos obligatorios: 'fuente-' para fuentes, 'atomica-' para atómicas, 'mapa-' para mapas.
+
+5. Maximización del Rendimiento de Extracción y Flashcards de Alta Calidad:
+   - Extrae el MÁXIMO número posible de notas atómicas y flashcards. Apunta a generar entre 8 y 20 notas atómicas por cada fuente procesada (o más según la densidad del texto).
+   - CADA nota atómica DEBE tener obligatoriamente su flashcard de autoevaluación ('autoevaluacion'). No dejes ninguna nota sin pregunta de repaso.
+   - Diseña preguntas de autoevaluación diversas y profundas:
+     * Mecanismos ("¿Cómo opera el mecanismo X y qué lo activa?")
+     * Causa-Efecto ("¿Por qué ocurre Y cuando se modifica X?")
+     * Discriminación conceptual ("¿En qué se diferencia el concepto A del concepto B?")
+     * Aplicación práctica ("¿Cómo se aplicaría este principio en un escenario real?")
+   - Las respuestas ('respuesta') deben ser sustanciales (2-4 oraciones) con la clave conceptual completa, no respuestas telegráficas.
+   - Crea MÚLTIPLES mapas de contenido si el texto abarca varias dimensiones, agrupando los conceptos en subtemas organizados.
+   - Conecta activamente las ideas mediante wikilinks [[atomica-slug]] en 'como_se_conecta' y en el array 'enlaces' para construir un grafo denso.
+   - Cada campo 'idea' debe tener de 3 a 6 oraciones de desarrollo conceptual profundo y autónomo.
 
 FORMATO JSON REQUERIDO (SCHEMA ESTRICTO):
 

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <defs>
+    <linearGradient id="bgRep" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ecfdf5"/>
+      <stop offset="100%" stop-color="#d1fae5"/>
+    </linearGradient>
+    <linearGradient id="swRep" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#065f46"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bgRep)"/>
+
+  <!-- Active Recall Flashcards Floating -->
+  <g transform="translate(244, 34)">
+    <rect width="132" height="86" rx="10" fill="#ffffff" stroke="#1e293b" stroke-width="2.5"/>
+    <rect x="0" y="0" width="132" height="22" rx="8" fill="#10b981" stroke="#1e293b" stroke-width="2.2"/>
+    <text x="14" y="15" font-family="sans-serif" font-size="10" font-weight="800" fill="#ffffff">ACTIVE RECALL · Q&amp;A</text>
+    <rect x="14" y="34" width="96" height="7" rx="3.5" fill="#1e293b"/>
+    <rect x="14" y="47" width="74" height="6" rx="3" fill="#64748b"/>
+    <line x1="14" y1="62" x2="118" y2="62" stroke="#a7f3d0" stroke-width="2" stroke-dasharray="4 3"/>
+    <rect x="14" y="69" width="84" height="7" rx="3.5" fill="#059669"/>
+  </g>
+
+  <!-- Spaced Repetition Interval Badges -->
+  <g transform="translate(258, 138)">
+    <rect width="112" height="44" rx="8" fill="#ffffff" stroke="#1e293b" stroke-width="2.2"/>
+    <circle cx="24" cy="22" r="11" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+    <path d="M19 22 L23 26 L30 18" fill="none" stroke="#059669" stroke-width="2.4" stroke-linecap="round"/>
+    <rect x="44" y="13" width="54" height="7" rx="3.5" fill="#059669"/>
+    <rect x="44" y="25" width="40" height="6" rx="3" fill="#94a3b8"/>
+  </g>
+
+  <!-- Neural spark arcs -->
+  <path d="M188 86 Q218 58 242 74" fill="none" stroke="#10b981" stroke-width="2.5" stroke-dasharray="5 4"/>
+  <circle cx="214" cy="68" r="5" fill="#fbbf24" stroke="#1e293b" stroke-width="1.8"/>
+
+  <!-- Character: Focused Student / Memory Practitioner -->
+  <path d="M58 286 C64 202 92 178 140 178 C188 178 214 202 222 286 Z" fill="url(#swRep)" stroke="#1e293b" stroke-width="2.6"/>
+  <polygon points="120,178 140,204 160,178" fill="#ffffff" stroke="#1e293b" stroke-width="2.2"/>
+  <rect x="127" y="148" width="26" height="32" rx="8" fill="#d99b72" stroke="#1e293b" stroke-width="2.4"/>
+  <path d="M108 106 C108 76 172 76 172 106 C172 140 158 158 140 158 C122 158 108 140 108 106 Z" fill="#e6ac83" stroke="#1e293b" stroke-width="2.5"/>
+  <!-- Hair -->
+  <path d="M104 104 C102 74 124 62 146 64 C168 66 178 80 174 104 C166 88 152 84 138 84 C122 84 112 92 104 104 Z" fill="#1e293b" stroke="#1e293b" stroke-width="2.2"/>
+  <!-- Focused eyes & confident recall expression -->
+  <path d="M119 102 L133 104" stroke="#1e293b" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M147 104 L161 102" stroke="#1e293b" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="126" cy="112" r="2.6" fill="#1e293b"/>
+  <circle cx="154" cy="112" r="2.6" fill="#1e293b"/>
+  <path d="M140 115 L138 127 L143 128" fill="none" stroke="#1e293b" stroke-width="2" stroke-linecap="round"/>
+  <path d="M130 139 Q140 144 150 139" fill="none" stroke="#1e293b" stroke-width="2.3" stroke-linecap="round"/>
+
+  <!-- Holding Flashcard in hand -->
+  <g transform="translate(166, 198) rotate(-8)">
+    <rect width="78" height="52" rx="6" fill="#fef3c7" stroke="#1e293b" stroke-width="2.4"/>
+    <rect x="10" y="12" width="48" height="6" rx="3" fill="#d97706"/>
+    <rect x="10" y="24" width="58" height="5" rx="2.5" fill="#78716c"/>
+    <rect x="10" y="34" width="42" height="5" rx="2.5" fill="#78716c"/>
+  </g>
+</svg>

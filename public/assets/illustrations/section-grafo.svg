@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <defs>
+    <linearGradient id="bgGrf" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f0f9ff"/>
+      <stop offset="100%" stop-color="#e0e7ff"/>
+    </linearGradient>
+    <linearGradient id="suitGrf" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bgGrf)"/>
+
+  <!-- Interactive Constellation Graph Nodes -->
+  <g stroke="#6366f1" stroke-width="2.2" opacity="0.85">
+    <line x1="226" y1="88" x2="296" y2="56"/>
+    <line x1="226" y1="88" x2="314" y2="128"/>
+    <line x1="296" y1="56" x2="356" y2="92"/>
+    <line x1="314" y1="128" x2="356" y2="92"/>
+    <line x1="314" y1="128" x2="268" y2="188"/>
+    <line x1="226" y1="88" x2="268" y2="188"/>
+    <line x1="314" y1="128" x2="362" y2="178"/>
+  </g>
+
+  <circle cx="226" cy="88" r="16" fill="#8b5cf6" stroke="#1e293b" stroke-width="2.5"/>
+  <circle cx="296" cy="56" r="13" fill="#0ea5e9" stroke="#1e293b" stroke-width="2.5"/>
+  <circle cx="314" cy="128" r="19" fill="#10b981" stroke="#1e293b" stroke-width="2.5"/>
+  <circle cx="356" cy="92" r="11" fill="#10b981" stroke="#1e293b" stroke-width="2.5"/>
+  <circle cx="268" cy="188" r="13" fill="#0ea5e9" stroke="#1e293b" stroke-width="2.5"/>
+  <circle cx="362" cy="178" r="12" fill="#8b5cf6" stroke="#1e293b" stroke-width="2.5"/>
+
+  <!-- Character: Graph Systems Engineer -->
+  <path d="M44 288 C50 204 78 180 124 180 C168 180 194 204 202 288 Z" fill="url(#suitGrf)" stroke="#1e293b" stroke-width="2.6"/>
+  <polygon points="106,180 124,212 142,180" fill="#38bdf8" stroke="#1e293b" stroke-width="2"/>
+  <rect x="111" y="150" width="26" height="32" rx="8" fill="#eab68c" stroke="#1e293b" stroke-width="2.4"/>
+  <path d="M92 108 C92 78 156 78 156 108 C156 142 142 160 124 160 C106 160 92 142 92 108 Z" fill="#f3c6a0" stroke="#1e293b" stroke-width="2.5"/>
+  <path d="M88 104 C88 74 112 64 134 66 C154 68 162 84 158 106 C150 90 136 86 122 86 C106 86 96 92 88 104 Z" fill="#475569" stroke="#1e293b" stroke-width="2.4"/>
+  <!-- Glasses -->
+  <rect x="102" y="106" width="19" height="13" rx="3" fill="#e0f2fe" fill-opacity="0.6" stroke="#1e293b" stroke-width="2.3"/>
+  <rect x="129" y="106" width="19" height="13" rx="3" fill="#e0f2fe" fill-opacity="0.6" stroke="#1e293b" stroke-width="2.3"/>
+  <line x1="121" y1="112" x2="129" y2="112" stroke="#1e293b" stroke-width="2.3"/>
+  <circle cx="112" cy="112" r="2.3" fill="#1e293b"/>
+  <circle cx="138" cy="112" r="2.3" fill="#1e293b"/>
+  <path d="M115 140 Q124 143 133 140" fill="none" stroke="#1e293b" stroke-width="2.2" stroke-linecap="round"/>
+</svg>

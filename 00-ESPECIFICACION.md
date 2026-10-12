@@ -43,7 +43,7 @@ Cada nota `atomica` tiene **1 archivo de pregunta asociado** en `05-self-assessm
 3. **Autolinking**: al escribir `[[texto]]` se autocompleta contra notas atómicas existentes y se generan backlinks automáticos y bidireccionales.
 4. **Generador de preguntas**: botón "crear pregunta" en cada nota atómica → crea el archivo asociado en `05-self-assessment/`. *(recuperación activa / practice testing)*
 5. **Motor de repaso espaciado + intercalado** (algoritmo en §5–6). *(repetición espaciada + interleaving)*
-6. **Mapas de contenido**: enlazar notas atómicas exige rellenar un campo `razon` — no se permite un enlace sin explicar por qué se relaciona. *(organización tipo outline/matriz, Kiewra et al. 1991)*
+6. **Mapas de contenido**: enlazar notas atómicas exige rellenar un campo `razon` — no se permite un enlace sin explicar por qué se relaciona. *(organización tipo outline/matriz relacional)*
 7. **Backlinks** visibles en cada nota atómica.
 8. **Búsqueda** full-text + filtro por `tipo` / tag.
 

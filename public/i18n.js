@@ -9,12 +9,12 @@ Tu misión es recibir la documentación, texto o transcripción adjunta, analiza
 1. Notas Fuente (notas_fuente): Síntesis bibliográfica del material de origen.
 2. Notas Atómicas (notas_atomicas): Unidades conceptuales indivisibles reformuladas generativamente en palabras propias.
 3. Autoevaluación Activa (autoevaluacion): Flashcards de práctica de recuperación (practice testing) para el algoritmo SM-2.
-4. Mapas de Contenido (mapas_contenido): Organizadores temáticos jerárquicos con justificación relacional obligatoria (Kiewra et al. 1991).
+4. Mapas de Contenido (mapas_contenido): Organizadores temáticos jerárquicos con justificación relacional obligatoria.
 5. Carpetas y Hashtags (carpetas y tags): Organización temática limpia.
 
-REGLAS CIENTÍFICAS Y PEDAGÓGICAS INQUEBRANTABLES:
+REGLAS PEDAGÓGICAS Y DE ESTRUCTURACIÓN:
 
-1. Principio de Atomicidad Estricta (Luhmann Zettelkasten):
+1. Principio de Atomicidad Estricta:
    - Cada nota atómica debe contener EXACTAMENTE UNA SOLA IDEA O CONCEPTO AUTÓNOMO. Si un párrafo contiene dos ideas distintas, crea dos notas atómicas separadas.
    - Efecto de Generación: La explicación en el campo 'idea' debe estar redactada en palabras propias con profundidad y claridad conceptual. NUNCA copies ni pegues frases literales del texto original. Explica el mecanismo subyacente.
    - Cada nota atómica debe explicar explícitamente:
@@ -22,12 +22,12 @@ REGLAS CIENTÍFICAS Y PEDAGÓGICAS INQUEBRANTABLES:
      - 'por_que_importa': Relevancia práctica, impacto o fundamentación explicativa.
      - 'como_se_conecta': Cómo interactúa o complementa a otras ideas, usando wikilinks [[slug-de-otra-nota]].
 
-2. Práctica de Recuperación Activa Obligatoria (Dunlosky et al. 2013 / SM-2):
+2. Práctica de Recuperación Activa Obligatoria (Flashcards SM-2):
    - TODA nota atómica DEBE tener su objeto 'autoevaluacion'.
    - 'pregunta': Pregunta abierta y desafiante que obligue al cerebro a reconstruir el concepto mentalmente (evita preguntas triviales de sí/no o verdadero/falso).
    - 'respuesta': Respuesta concisa, precisa y auto-contenida con la clave conceptual.
 
-3. Mapas de Contenido y Justificación Relacional (Kiewra et al. 1991):
+3. Mapas de Contenido y Justificación Relacional:
    - Todo mapa de contenido agrupa notas atómicas bajo un paraguas temático estructurado.
    - REGLA OBLIGATORIA: Cada subtema en 'subtemas' DEBE tener un campo 'razon' que explique clara y específicamente POR QUÉ esa nota atómica pertenece y aporta a ese mapa temático. Enlaces sin razón serán rechazados.
 
@@ -35,47 +35,100 @@ REGLAS CIENTÍFICAS Y PEDAGÓGICAS INQUEBRANTABLES:
    - Los 'id' deben ser slugs limpios en minúsculas con guiones (p. ej. fuente-autor-ano, atomica-concepto-clave, mapa-tema-general).
    - Prefijos obligatorios: 'fuente-' para fuentes, 'atomica-' para atómicas, 'mapa-' para mapas.
 
+5. Maximización del Rendimiento de Extracción y Flashcards de Alta Calidad:
+   - Extrae el MÁXIMO número posible de notas atómicas y flashcards. Apunta a generar entre 8 y 20 notas atómicas por cada fuente procesada (o más según la densidad del texto).
+   - CADA nota atómica DEBE tener obligatoriamente su flashcard de autoevaluación ('autoevaluacion'). No dejes ninguna nota sin pregunta de repaso.
+   - Diseña preguntas de autoevaluación diversas y profundas:
+     * Mecanismos ("¿Cómo opera el mecanismo X y qué lo activa?")
+     * Causa-Efecto ("¿Por qué ocurre Y cuando se modifica X?")
+     * Discriminación conceptual ("¿En qué se diferencia el concepto A del concepto B?")
+     * Aplicación práctica ("¿Cómo se aplicaría este principio en un escenario real?")
+   - Las respuestas ('respuesta') deben ser sustanciales (2-4 oraciones) con la clave conceptual completa, no respuestas telegráficas.
+   - Crea MÚLTIPLES mapas de contenido si el texto abarca varias dimensiones, agrupando los conceptos en subtemas organizados.
+   - Conecta activamente las ideas mediante wikilinks [[atomica-slug]] en 'como_se_conecta' y en el array 'enlaces' para construir un grafo denso.
+   - Cada campo 'idea' debe tener de 3 a 6 oraciones de desarrollo conceptual profundo y autónomo.
+
+6. Creación Automática y Organización por Campo y Proyecto / Curso:
+   - Aunque el usuario aún no haya creado ningún proyecto en NotesApp, el JSON importado creará o actualizará automáticamente el proyecto si defines sus metadatos en la raíz del JSON.
+   - Identifica el campo de conocimiento general (p. ej. "Inteligencia Artificial", "Psicología Cognitiva", "Filosofía") y decláralo en el campo raíz 'campo' y en cada nota.
+   - Identifica el proyecto, curso o temática específica (p. ej. "AI Agents and Automations", "Técnicas de Estudio") y decláralo en el campo raíz 'proyecto' y en cada nota.
+   - Declara en la raíz del JSON 'proyecto_tipo' eligiendo exactamente uno de: "curso", "noticias", "investigacion", "libro", "trabajo", "otro" según la naturaleza del material.
+   - Declara en la raíz del JSON 'proyecto_descripcion' con una síntesis clara de 1 a 2 oraciones que describa el propósito, alcance o temario del proyecto/curso.
+   - Si el material corresponde a una clase, módulo o entrega incremental, incluye también 'leccion_numero' (número entero, p. ej. 1) y 'leccion_titulo' (título de la lección o entrega).
+
+7. Búsqueda y Validación Externa en Google para cada Concepto:
+   - Para cada nota atómica y nota fuente, DEBES incluir el campo 'busqueda_google' con una consulta de búsqueda precisa y optimizada para consultar en Google (p. ej. "Patrones de orquestación multi-agente arquitecturas IA", "Active recall testing cognitive psychology").
+   - Esto permite al usuario contrastar, expandir y profundizar en la literatura externa con un solo clic.
+
+8. Continuidad e Integración Incremental con Notas Existentes del Proyecto:
+   - Si al final de este prompt se incluye una lista de notas atómicas ya existentes en el proyecto, DEBES mantener exactamente los mismos valores de 'campo' y 'proyecto', e incluir enlaces explícitos [[atomica-id-existente]] tanto en el texto de 'como_se_conecta' como en el array 'enlaces' de las nuevas notas atómicas siempre que exista relación conceptual.
+
 FORMATO JSON REQUERIDO (SCHEMA ESTRICTO):
 
 Debes responder ÚNICAMENTE con un bloque JSON válido (sin saludos, sin explicaciones introductorias ni notas finales) respetando exactamente la siguiente estructura:
 
 {
   "version": "1.0",
-  "carpetas": {
-    "atomica": ["nombre-de-carpeta"],
-    "fuente": ["nombre-de-carpeta"]
-  },
+  "language": "es",
+  "campo": "Inteligencia Artificial",
+  "proyecto": "AI Agents and Automations",
+  "proyecto_tipo": "curso",
+  "proyecto_descripcion": "Curso sobre arquitectura, memoria, herramientas y orquestación de agentes autónomos basados en modelos de lenguaje.",
+  "leccion_numero": 1,
+  "leccion_titulo": "Fundamentos y Arquitectura de Agentes",
   "notas_fuente": [
     {
       "id": "fuente-nombre-documento",
       "titulo": "Título de la Obra o Documento",
       "autor": "Nombre del autor o institución",
       "tipo_fuente": "libro",
-      "carpeta": "nombre-de-carpeta",
+      "campo": "Inteligencia Artificial",
+      "proyecto": "AI Agents and Automations",
       "tags": ["etiqueta1", "etiqueta2"],
+      "busqueda_google": "Título de la Obra Autor",
       "puntos_clave": "Resumen conciso y parafraseado de las tesis centrales del documento.",
       "citas_textuales": [
         "Cita literal textual representativa 1"
       ],
       "ideas_disparadas": [
-        "atomica-concepto-uno"
+        "atomica-concepto-uno",
+        "atomica-concepto-dos"
       ]
     }
   ],
   "notas_atomicas": [
     {
       "id": "atomica-concepto-uno",
-      "titulo": "Nombre Claro y Declarativo de la Idea",
+      "titulo": "Nombre Claro y Declarativo de la Primera Idea",
       "fuente": "fuente-nombre-documento",
-      "carpeta": "nombre-de-carpeta",
+      "campo": "Inteligencia Artificial",
+      "proyecto": "AI Agents and Automations",
       "tags": ["etiqueta1", "etiqueta3"],
+      "busqueda_google": "Nombre Claro y Declarativo de la Primera Idea",
       "idea": "Explicación completa, rigurosa y redactada enteramente en palabras propias de la idea central. Debe ser autónoma y comprensible por sí misma.",
       "por_que_importa": "Por qué este concepto es fundamental, qué consecuencias prácticas tiene o qué mecanismo explica.",
       "como_se_conecta": "Conecta directamente con [[atomica-concepto-dos]] y con los principios generales del tema.",
       "enlaces": ["atomica-concepto-dos"],
       "autoevaluacion": {
         "pregunta": "¿Cuál es el mecanismo principal de este concepto y cómo opera?",
-        "respuesta": "La clave reside en [Respuesta precisa y concreta]."
+        "respuesta": "La clave reside en [Respuesta precisa y concreta con desarrollo explicativo completo]."
+      }
+    },
+    {
+      "id": "atomica-concepto-dos",
+      "titulo": "Segundo Concepto Clave Derivado o Complementario",
+      "fuente": "fuente-nombre-documento",
+      "campo": "Inteligencia Artificial",
+      "proyecto": "AI Agents and Automations",
+      "tags": ["etiqueta2", "etiqueta4"],
+      "busqueda_google": "Segundo Concepto Clave Derivado o Complementario",
+      "idea": "Desarrollo detallado en palabras propias del segundo concepto encontrado. Explicación del mecanismo subyacente con profundidad suficiente para ser autónoma.",
+      "por_que_importa": "Complementa directamente al primer concepto porque amplía el alcance explicativo del fenómeno.",
+      "como_se_conecta": "Se relaciona con [[atomica-concepto-uno]] como extensión práctica y con [[atomica-concepto-tres]] por analogía funcional.",
+      "enlaces": ["atomica-concepto-uno"],
+      "autoevaluacion": {
+        "pregunta": "¿Cómo se diferencia este segundo concepto del primero y qué aporta de nuevo?",
+        "respuesta": "La diferencia fundamental radica en [respuesta precisa]. Su aporte clave es [desarrollo explicativo]."
       }
     }
   ],
@@ -83,13 +136,18 @@ Debes responder ÚNICAMENTE con un bloque JSON válido (sin saludos, sin explica
     {
       "id": "mapa-tema-central",
       "titulo": "Organizador Conceptual del Tema",
-      "carpeta": "",
+      "campo": "Inteligencia Artificial",
+      "proyecto": "AI Agents and Automations",
       "tags": ["sintesis", "etiqueta1"],
       "descripcion": "Visión panorámica de la jerarquía temática y cómo se integran las partes.",
       "subtemas": [
         {
           "nota_id": "atomica-concepto-uno",
           "razon": "Constituye el fundamento biológico y conceptual del que parten el resto de las técnicas."
+        },
+        {
+          "nota_id": "atomica-concepto-dos",
+          "razon": "Aplica de manera concreta los principios fundamentales derivados de la primera idea."
         }
       ]
     }
@@ -106,12 +164,12 @@ Your mission is to receive the attached documentation, text, or transcript, anal
 1. Source Notes (notas_fuente): Bibliographic synthesis of the source material.
 2. Atomic Notes (notas_atomicas): Indivisible conceptual units generatively rephrased in your own words.
 3. Active Recall Flashcards (autoevaluacion): Practice testing items designed for the SM-2 spaced repetition algorithm.
-4. Content Maps (mapas_contenido): Hierarchical thematic organizers with mandatory relational justifications (Kiewra et al. 1991).
+4. Content Maps (mapas_contenido): Hierarchical thematic organizers with mandatory relational justifications.
 5. Folders and Hashtags (carpetas and tags): Clean thematic organization.
 
-UNBREAKABLE SCIENTIFIC AND PEDAGOGICAL RULES:
+PEDAGOGICAL AND STRUCTURAL RULES:
 
-1. Strict Atomicity Principle (Luhmann Zettelkasten):
+1. Strict Atomicity Principle:
    - Each atomic note MUST contain EXACTLY ONE AUTONOMOUS IDEA OR CONCEPT. If a paragraph discusses two distinct ideas, create two separate atomic notes.
    - Generation Effect: The explanation in the 'idea' field MUST be written in your own words with conceptual depth. NEVER copy-paste verbatim sentences from the original source. Explain the underlying mechanism.
    - Each atomic note must explicitly address:
@@ -119,12 +177,12 @@ UNBREAKABLE SCIENTIFIC AND PEDAGOGICAL RULES:
      - 'por_que_importa': Practical significance, impact, or explanatory foundation.
      - 'como_se_conecta': How it interacts or connects with other ideas, using wikilinks [[slug-of-other-note]].
 
-2. Mandatory Active Recall Testing (Dunlosky et al. 2013 / SM-2):
+2. Mandatory Active Recall Testing (SM-2 Flashcards):
    - EVERY atomic note MUST contain an 'autoevaluacion' object.
    - 'pregunta': Open, challenging retrieval question that forces the brain to mentally reconstruct the concept (avoid trivial yes/no or true/false questions).
    - 'respuesta': Concise, precise, and self-contained answer with the key mechanism.
 
-3. Content Maps and Mandatory Relational Reasoning (Kiewra et al. 1991):
+3. Content Maps and Mandatory Relational Reasoning:
    - Every content map groups atomic notes under a structured thematic umbrella.
    - MANDATORY RULE: Every subtopic in 'subtemas' MUST have a 'razon' field explaining clearly and specifically WHY that atomic note belongs to and enriches this thematic map. Links without a reason will be rejected.
 
@@ -132,47 +190,100 @@ UNBREAKABLE SCIENTIFIC AND PEDAGOGICAL RULES:
    - The 'id' fields must be clean lowercase hyphenated slugs (e.g., fuente-author-year, atomica-key-concept, mapa-general-theme).
    - Mandatory prefixes: 'fuente-' for sources, 'atomica-' for atomic notes, 'mapa-' for content maps.
 
+5. Extraction Yield Maximization and High-Quality Flashcards:
+   - Extract the MAXIMUM possible number of atomic notes and flashcards. Aim to generate between 8 and 20 atomic notes per processed source (or more depending on text density).
+   - EVERY atomic note MUST include its self-assessment flashcard ('autoevaluacion'). Never leave any note without a practice question.
+   - Design varied, high-yield active retrieval questions:
+     * Underlying mechanisms ("What is the mechanism of X and how does it operate?")
+     * Cause-and-Effect ("Why does Y occur when X is modified?")
+     * Conceptual discrimination ("How does concept A differ from concept B?")
+     * Applied problem-solving ("How would this principle be applied in a concrete scenario?")
+   - Answers ('respuesta') must be substantial (2-4 sentences) containing the full conceptual explanation, not telegraphic fragments.
+   - Create MULTIPLE content maps if the material covers different dimensions, structuring concepts into distinct thematic hierarchies.
+   - Actively cross-link ideas using wikilinks [[atomica-slug]] in 'como_se_conecta' and the 'enlaces' array to build a dense knowledge graph.
+   - Each 'idea' field must provide 3 to 6 sentences of deep, self-contained conceptual development.
+
+6. Automatic Creation and Organization by Knowledge Field and Project / Course:
+   - Even if the user has not created any project in NotesApp yet, the imported JSON will automatically create or update the project when you define its metadata at the root of the JSON.
+   - Identify the overarching field of knowledge (e.g., "Artificial Intelligence", "Cognitive Psychology", "Philosophy") and assign it to the root 'campo' field and to each note.
+   - Identify the specific project, course, book, or theme (e.g., "AI Agents and Automations", "Study Techniques") and assign it to the root 'proyecto' field and to each note.
+   - Declare 'proyecto_tipo' at the JSON root, choosing exactly one of: "curso", "noticias", "investigacion", "libro", "trabajo", "otro" based on the nature of the material.
+   - Declare 'proyecto_descripcion' at the JSON root with a clear 1-to-2 sentence summary describing the project or course's scope, goals, or syllabus.
+   - If the material is part of a course, module, or sequential series, also include 'leccion_numero' (integer, e.g., 1) and 'leccion_titulo' (title of the lesson or module).
+
+7. External Google Search Query for Every Concept:
+   - For every atomic note and source note processed, you MUST include a 'busqueda_google' (or 'google_search') field with a precise, optimized search query for Google (e.g., "Multi-agent orchestration patterns AI architectures", "Active recall testing cognitive psychology").
+   - This enables the user to verify, expand, and dive deeper into external literature with a single click.
+
+8. Continuity and Incremental Connection with Existing Project Notes:
+   - If a list of existing atomic notes in the project is provided at the end of this prompt, you MUST keep the exact same 'campo' and 'proyecto' names, and include explicit [[existing-atomica-id]] wikilinks in both 'como_se_conecta' and the 'enlaces' array of the new atomic notes whenever a conceptual connection exists.
+
 REQUIRED JSON FORMAT (STRICT SCHEMA):
 
 Respond ONLY with a valid JSON block (no greetings, no markdown chat explanations, no closing notes) strictly adhering to the following structure:
 
 {
   "version": "1.0",
-  "carpetas": {
-    "atomica": ["folder-name"],
-    "fuente": ["folder-name"]
-  },
+  "language": "en",
+  "campo": "Artificial Intelligence",
+  "proyecto": "AI Agents and Automations",
+  "proyecto_tipo": "curso",
+  "proyecto_descripcion": "Course on the architecture, memory, tool use, and orchestration of autonomous LLM-based AI agents.",
+  "leccion_numero": 1,
+  "leccion_titulo": "Foundations and Agent Architecture",
   "notas_fuente": [
     {
       "id": "fuente-document-name",
       "titulo": "Title of Work or Document",
       "autor": "Author or Institution Name",
       "tipo_fuente": "libro",
-      "carpeta": "folder-name",
+      "campo": "Artificial Intelligence",
+      "proyecto": "AI Agents and Automations",
       "tags": ["tag1", "tag2"],
+      "busqueda_google": "Title of Work Author",
       "puntos_clave": "Concise paraphrased summary of the document's central theses.",
       "citas_textuales": [
         "Representative verbatim quotation 1"
       ],
       "ideas_disparadas": [
-        "atomica-concept-one"
+        "atomica-concept-one",
+        "atomica-concept-two"
       ]
     }
   ],
   "notas_atomicas": [
     {
       "id": "atomica-concept-one",
-      "titulo": "Clear Declarative Idea Title",
+      "titulo": "Clear Declarative Idea Title for First Concept",
       "fuente": "fuente-document-name",
-      "carpeta": "folder-name",
+      "campo": "Artificial Intelligence",
+      "proyecto": "AI Agents and Automations",
       "tags": ["tag1", "tag3"],
-      "idea": "Comprehensive, rigorous explanation written entirely in your own words. It must be autonomous and understandable on its own.",
+      "busqueda_google": "Clear Declarative Idea Title for First Concept",
+      "idea": "Comprehensive, rigorous explanation written entirely in your own words. It must be autonomous and understandable on its own with 3-5 sentences of depth.",
       "por_que_importa": "Why this concept is fundamental, its practical implications, or what mechanism it explains.",
       "como_se_conecta": "Directly connects with [[atomica-concept-two]] and the overarching principles of the topic.",
       "enlaces": ["atomica-concept-two"],
       "autoevaluacion": {
         "pregunta": "What is the core mechanism of this concept and how does it operate?",
-        "respuesta": "The key lies in [Precise and concrete conceptual answer]."
+        "respuesta": "The key lies in [Precise and concrete conceptual answer with full explanatory development]."
+      }
+    },
+    {
+      "id": "atomica-concept-two",
+      "titulo": "Second Derived or Complementary Key Concept",
+      "fuente": "fuente-document-name",
+      "campo": "Artificial Intelligence",
+      "proyecto": "AI Agents and Automations",
+      "tags": ["tag2", "tag4"],
+      "busqueda_google": "Second Derived or Complementary Key Concept",
+      "idea": "Detailed development in your own words of the second concept found. Explanation of the underlying mechanism with sufficient depth to stand on its own.",
+      "por_que_importa": "Directly complements the first concept by expanding the explanatory scope of the phenomenon.",
+      "como_se_conecta": "Relates to [[atomica-concept-one]] as a practical extension and to [[atomica-concept-three]] through functional analogy.",
+      "enlaces": ["atomica-concept-one"],
+      "autoevaluacion": {
+        "pregunta": "How does this second concept differ from the first and what new insight does it provide?",
+        "respuesta": "The fundamental difference lies in [precise answer]. Its new contribution is [specific explanatory contribution]."
       }
     }
   ],
@@ -180,13 +291,18 @@ Respond ONLY with a valid JSON block (no greetings, no markdown chat explanation
     {
       "id": "mapa-central-theme",
       "titulo": "Conceptual Theme Organizer",
-      "carpeta": "",
+      "campo": "Artificial Intelligence",
+      "proyecto": "AI Agents and Automations",
       "tags": ["synthesis", "tag1"],
       "descripcion": "Panoramic view of the thematic hierarchy and how the components integrate.",
       "subtemas": [
         {
           "nota_id": "atomica-concept-one",
           "razon": "Constitutes the biological and conceptual foundation from which the remaining techniques branch."
+        },
+        {
+          "nota_id": "atomica-concept-two",
+          "razon": "Applies the fundamental principles in a practical domain to bridge theory and practice."
         }
       ]
     }
@@ -213,7 +329,10 @@ const I18N = {
     navLlm: "Asistente LLM & Prompt",
     navGuia: "Guía & Evidencia",
     evidencePillText: "Práctica distribuida + Recuperación activa",
-    toggleTheme: "Alternar tema claro/oscuro",
+    toggleTheme: "Alternar tema (Claro / Oscuro / Pastel)",
+    themeLight: "Claro",
+    themeDark: "Oscuro",
+    themePastel: "Pastel",
 
     // Header
     quickCapturePlaceholder: "Captura rápida sin fricción... (Escribe y presiona Enter)",
@@ -232,13 +351,94 @@ const I18N = {
     filterAllFolders: "Todas las carpetas",
     filterAllTags: "Todos los hashtags",
     all: "Todas",
-    newFolder: "+ 📁 Nueva Carpeta",
-    newNote: "+ Nueva Nota",
+    newFolder: "Nueva Carpeta",
+    newNote: "Nueva Nota",
+    editFolder: "Editar Carpeta",
+    renameFolder: "Renombrar Carpeta",
+    changeFolderColor: "Cambiar Color",
+    moveFolder: "Mover Carpeta",
+    deleteFolder: "Eliminar Carpeta",
+    newSubfolder: "Nueva Subcarpeta",
+    folderColorLabel: "Color de la carpeta",
+    parentFolderLabel: "Carpeta superior",
+    rootFolderLabel: "Raíz (sin carpeta superior)",
+    confirmDeleteFolder: "¿Seguro que deseas eliminar esta carpeta? Las notas se conservarán y se moverán a la raíz.",
+    folderRenamedSuccess: "Carpeta renombrada con éxito",
+    folderMovedSuccess: "Carpeta movida con éxito",
+    folderColorSuccess: "Color de carpeta actualizado con éxito",
+    folderDeletedSuccess: "Carpeta eliminada con éxito",
     loading: "Cargando...",
     viewCards: "Tarjetas",
     viewMatrix: "Matriz Conceptual",
     copy: "Copiar",
     copied: "Copiado",
+    foldersCollections: "Carpetas y Colecciones",
+    searchFoldersPlaceholder: "Buscar carpetas...",
+    allSources: "Todas las Fuentes",
+    allNotes: "Todas las Notas",
+    sourcesArticles: "Notas",
+    sourcesDocuments: "Documentos",
+    sourcesVideos: "Videos",
+    filterFlashcards: "Flashcards",
+    filterConnected: "Conectadas",
+    sortNewest: "↕ Más recientes primero",
+    sortOldest: "↕ Más antiguas primero",
+    sortTitle: "↕ Título (A-Z)",
+    openSource: "Abrir Fuente",
+    openNote: "Abrir Nota",
+    connectedAtomicNotes: "Notas Atómicas Conectadas",
+    connectedNotes: "Notas Conectadas",
+
+    // Proyectos y Campos
+    scopeSelectorTooltip: "Filtrar por Campo / Curso o Proyecto",
+    scopeAllProjects: "🌐 Todos los Campos y Proyectos",
+    btnManageProjectsTooltip: "Gestionar Campos y Proyectos",
+    activeScopeLabel: "Área activa",
+    btnClearScope: "Mostrar todo",
+    btnClearScopeTooltip: "Limpiar filtro (mostrar todas las notas)",
+    projectManagerTitle: "🎯 Gestor de Campos y Proyectos",
+    projectManagerDesc: "Organiza y enfoca tu aprendizaje por Campo de Conocimiento (Área general) y Proyecto o Curso específico.",
+    pmCreateTitle: "➕ Registrar Nuevo Proyecto / Curso",
+    fieldLabel: "Campo / Área",
+    fieldPlaceholder: "e.g. Inteligencia Artificial, Filosofía",
+    projectLabel: "Proyecto / Curso",
+    projectPlaceholder: "e.g. AI Agents and Automations",
+    descriptionLabel: "Descripción (opcional)",
+    btnCreateProject: "Crear Proyecto",
+    pmExistingTitle: "Proyectos y Cursos Registrados",
+    pmNoProjects: "Aún no hay proyectos registrados. Crea uno arriba.",
+    pmStatsNotes: "notas",
+    pmStatsReviews: "repasos",
+    scopeActivePill: "Enfoque",
+    reviewScopeAll: "Repasar todo el vault",
+    projectTypeLabel: "Tipo de Proyecto",
+    typeCurso: "🎓 Curso / Formación",
+    typeNoticias: "📰 Noticias / Actualidad",
+    typeInvestigacion: "🔬 Investigación / Estudio",
+    typeLibro: "📖 Libro / Lectura",
+    typeTrabajo: "💼 Trabajo / Proyecto Profesional",
+    typeOtro: "📂 Otro / General",
+    editProject: "Editar",
+    editProjectTitle: "✏️ Editar Proyecto",
+    btnSaveProject: "Guardar Cambios",
+    btnDeleteProject: "Eliminar Proyecto",
+    confirmDeleteProject: "¿Estás seguro de que deseas eliminar este proyecto de la lista? Sus notas se conservarán.",
+    projectStatus: "Estado del Proyecto",
+    statusActive: "Activo",
+    statusCompleted: "Completado",
+    courseLessonsCount: "Lecciones",
+    courseLessonsCountSuffix: "registradas",
+    courseLessonMode: "Modo Lección Continua de Curso",
+    courseLessonDesc: "Las notas de esta lección se añadirán al mapa maestro del curso y se conectarán con conceptos previos.",
+    lessonNumberLabel: "Lección Nº",
+    lessonTitleLabel: "Título de la Lección",
+    courseCompletedCheckbox: "Marcar curso como completado tras esta lección",
+    quickProjectTitle: "➕ Nuevo Proyecto",
+    quickProjectDesc: "Crea un nuevo proyecto para organizar y clasificar tus notas.",
+    btnCreateAndAssign: "Guardar y Asignar",
+    btnNewProjectQuick: "➕ Nuevo Proyecto",
+    btnCreateOrManageProjects: "➕ Crear / Gestionar Proyectos",
+    badgeProject: "Proyecto",
 
     // Section Explanations
     explainerHide: "Ocultar explicación",
@@ -246,8 +446,8 @@ const I18N = {
     
     // 1. Home View
     homeTitle: "Bienvenido a NotesApp",
-    homeSubtitle: "El sistema de notas personales diseñado bajo los principios de las Ciencias Cognitivas para maximizar comprensión y retención a largo plazo.",
-    homeBadgeEvidence: "Dunlosky 2013 • Luhmann Zettelkasten • Kiewra 1991 • Ebbinghaus SM-2",
+    homeSubtitle: "El sistema de notas personales diseñado para maximizar comprensión y retención duradera.",
+    homeBadgeEvidence: "Notas Atómicas • Mapas de Contenido • Repaso Espaciado SM-2",
     homeQuickActionsTitle: "Acciones Rápidas",
     homeActionImportJsonTitle: "Importar Paquete JSON",
     homeActionImportJsonDesc: "Pega el JSON estructurado por tu IA o sube un archivo para poblar tu base de conocimiento.",
@@ -278,7 +478,7 @@ const I18N = {
     homeFolder3Desc: "Archivos atomica-*.md. Cada nota alberga exactamente UNA sola idea formulada con tus palabras propias (Efecto de Generación), explicando por qué importa y sus conexiones.",
 
     homeFolder4Title: "04-content-maps/",
-    homeFolder4Desc: "Archivos mapa-*.md. Estructuras conceptuales de alto nivel (Kiewra 1991). Exigen obligatoriamente una razón que justifique por qué cada nota pertenece a ese mapa.",
+    homeFolder4Desc: "Archivos mapa-*.md. Guías temáticas e índices estructurados que articulan varias notas atómicas en torno a un tema o proyecto.",
 
     homeFolder5Title: "05-self-assessment/",
     homeFolder5Desc: "Archivos pregunta-*.md. Pares de pregunta/respuesta generados a partir de cada nota atómica. El combustible del algoritmo SM-2 para la práctica de recuperación activa.",
@@ -315,9 +515,9 @@ const I18N = {
     // 3. Atomicas View
     atomicasTitle: "Notas Atómicas",
     atomicasDesc: "Una sola idea por nota, redactada con tus propias palabras y conectada deliberadamente.",
-    atomicasExplainerTitle: "⚛️ Principio de Atomicidad y Efecto de Generación (Luhmann & Slamecka 1978)",
-    atomicasExplainerText: "Cada nota atómica debe ser comprensible por sí misma y abarcar un único concepto. Redactarla enteramente con tus palabras (Efecto de Generación) obliga a tu cerebro a reconstruir el significado, multiplicando la retención comparado con copiar y pegar.",
-    btnNewAtomica: "+ Nueva Nota Atómica",
+    atomicasExplainerTitle: "⚛️ Principio de Atomicidad y Palabras Propias",
+    atomicasExplainerText: "Cada nota atómica debe ser comprensible por sí misma y abarcar un único concepto. Redactarla enteramente con tus palabras obliga a tu cerebro a reconstruir el significado, multiplicando la retención comparado con copiar y pegar.",
+    btnNewAtomica: "Nueva Nota Atómica",
     atomicasEmpty: "No hay notas atómicas registradas con estos filtros.",
 
     // 4. Fuentes View
@@ -325,21 +525,31 @@ const I18N = {
     fuentesDesc: "Registro bibliográfico, citas y puntos clave de artículos, libros o videos consultados.",
     fuentesExplainerTitle: "📚 Anclaje Bibliográfico y Síntesis Crítica",
     fuentesExplainerText: "Las notas fuente preservan la autoría y las citas textuales originales. Te permiten auditar de dónde provino un conocimiento y disparar nuevas ideas atómicas sin contaminar la pureza conceptual de tu red.",
-    btnNewFuente: "+ Nueva Nota Fuente",
+    btnNewFuente: "Nueva Nota Fuente",
     fuentesEmpty: "No hay notas fuente registradas con estos filtros.",
 
     // 5. Mapas View
     mapasTitle: "Mapas de Contenido",
-    mapasDesc: "Estructuras jerárquicas con razón de conexión obligatoria (Kiewra et al. 1991).",
-    mapasExplainerTitle: "🗺️ Organización Matricial vs Listas Pasivas (Kiewra 1991)",
-    mapasExplainerText: "Crear listas jerárquicas pasivas produce la ilusión de competencia. En NotesApp, cada nota añadida a un mapa exige obligatoriamente explicar la 'razón' de su relación, obligándote a procesar las conexiones conceptuales profundas.",
-    btnNewMapa: "+ Nuevo Mapa",
+    mapasDesc: "Guías temáticas e índices estructurados que articulan tus notas atómicas en torno a un gran tema o proyecto.",
+    mapasBannerTitle: "¿Qué es un Mapa de Contenido?",
+    mapasBannerSubtitle: "Piensa en un mapa como el índice o temario de un libro. En lugar de tener notas atómicas sueltas, aquí las agrupas para formar una visión completa de un tema o proyecto.",
+    mapasStep1Title: "1. Tema central",
+    mapasStep1Desc: "Define el asunto general (ej. Técnicas de Estudio o Bases de Datos).",
+    mapasStep2Title: "2. Añade notas atómicas",
+    mapasStep2Desc: "Selecciona los conceptos que forman los capítulos de este tema.",
+    mapasStep3Title: "3. Explica la conexión",
+    mapasStep3Desc: "Describe en una frase cómo aporta cada nota al conjunto.",
+    mapasStep4Title: "4. Genera tu guía",
+    mapasStep4Desc: "Descarga todo el mapa en Markdown estructurado para estudiar.",
+    mapasExplainerTitle: "🗺️ Organización Matricial vs Listas Pasivas",
+    mapasExplainerText: "Crear listas jerárquicas pasivas produce la ilusión de competencia. En NotesApp, cada nota añadida a un mapa exige obligatoriamente explicar la razón de su relación, obligándote a procesar las conexiones conceptuales profundas.",
+    btnNewMapa: "Nuevo Mapa",
     mapasEmpty: "No hay mapas de contenido creados aún.",
 
     // 6. Repaso View
     repasoTitle: "Sesión de Repaso Espaciado",
-    repasoDesc: "Algoritmo SM-2 optimizado con Interleaving round-robin por tema para máxima consolidación.",
-    repasoExplainerTitle: "⚡ Práctica de Recuperación Activa con Intercalado (Dunlosky 2013 & SM-2)",
+    repasoDesc: "Práctica de recuperación activa con repasos periódicos para máxima consolidación.",
+    repasoExplainerTitle: "⚡ Práctica de Recuperación Activa con Intercalado",
     repasoExplainerText: "Intentar recuperar un dato de la memoria refuerza las sinapsis mucho más que releer. El algoritmo SM-2 programa repasos justo antes de que vayas a olvidar, mientras que el intercalado de temas evita la familiaridad pasiva y entrena la discriminación mental.",
     repasoExportAnki: "📥 Exportar a Anki",
     repasoRefreshQueue: "🔄 Actualizar Cola",
@@ -400,23 +610,26 @@ const I18N = {
 
     // 9. LLM Prompt Studio View
     llmStudioTitle: "🤖 Asistente LLM & Prompt Maestro",
+    guidePurposeLlmTitle: "Asistente LLM",
+    importTag: "IMPORTACIÓN JSON",
     llmStudioSubtitle: "Transforma cualquier texto, libro, curso o transcripción en un paquete estructurado y compatible con NotesApp.",
     llmExplainerTitle: "🧠 Arquitectura Cognitiva del Prompt de NotesApp",
     llmExplainerText: "Los LLMs tienden a resumir pasivamente o citar textualmente. Este prompt maestro los obliga a actuar como ingenieros cognitivos: impone la regla de una idea por nota, bloquea el texto copiado forzando redacción autónoma, genera flashcards SM-2 y exige justificaciones relacionales en cada mapa.",
     promptLangLabel: "Idioma del Prompt:",
     btnCopyPrompt: "📋 Copiar Prompt al Portapapeles",
     btnLaunchImport: "📥 Ir a Importar JSON",
-    promptRulesTitle: "Las 4 Reglas Científicas Inquebrantables del Prompt",
-    promptRule1Title: "1. Atomicidad Estricta (Luhmann)",
+    promptRulesTitle: "Las 4 Reglas Fundamentales del Prompt",
+    promptRule1Title: "1. Atomicidad Estricta",
     promptRule1Desc: "Exactamente una idea autónoma por nota. Si el texto tiene varios conceptos, el modelo los divide en archivos independientes.",
-    promptRule2Title: "2. Efecto de Generación (Slamecka)",
+    promptRule2Title: "2. Palabras Propias",
     promptRule2Desc: "Prohibido copiar/pegar párrafos literales. El LLM debe explicar con palabras directas el mecanismo conceptual subyacente.",
-    promptRule3Title: "3. Autoevaluación SM-2 (Dunlosky)",
+    promptRule3Title: "3. Autoevaluación Activa",
     promptRule3Desc: "Cada nota atómica debe tener una pregunta retadora y respuesta precisa para alimentar la práctica de recuperación activa.",
-    promptRule4Title: "4. Mapas con Razón Obligatoria (Kiewra)",
+    promptRule4Title: "4. Mapas con Conexión Explicada",
     promptRule4Desc: "Ninguna nota se vincula a un mapa sin un campo 'razon' explícito que justifique su aporte relacional.",
 
     // 10. Modals
+    searchGoogle: "Buscar en Google",
     readerEditBtn: "✏️ Editar nota",
     readerQaTitle: "🎯 Pregunta de Autoevaluación Activa",
     readerBacklinksTitle: "🔗 Backlinks Recibidos",
@@ -439,7 +652,64 @@ const I18N = {
     btnSubmitImport: "🚀 Importar a NotesApp",
     importValidStatus: "✓ JSON válido y estructurado",
     importInvalidStatus: "✕ Error de sintaxis JSON",
-    importEmptyStatus: "⚠️ JSON válido pero sin notas reconocidas"
+    importEmptyStatus: "⚠️ JSON válido pero sin notas reconocidas",
+
+    // Onboarding Guide & User Profile
+    navOnboarding: "Guía de Inicio",
+    userProfileTooltip: "Tu perfil y Guía de Inicio",
+    userProfileDefault: "Identifícate",
+    onboardingTitle: "Guía de Iniciación NotesApp",
+    onboardingSubtitle: "Gestión de conocimiento y repaso espaciado basado en evidencia",
+    onboardingStep1Tab: "Tu Nombre",
+    onboardingStep2Tab: "Fundamentos",
+    onboardingStep3Tab: "Cómo Usar",
+    onboardingStep4Tab: "¡A Empezar!",
+    onboardingWelcomeTitle: "¡Te damos la bienvenida a NotesApp!",
+    onboardingWelcomeDesc: "NotesApp es tu sistema personal para capturar, conectar y recordar todo lo que aprendes. Para personalizar tu espacio, cuéntanos cómo te llamas:",
+    onboardingNameLabel: "¿Cómo te llamas? (Tu nombre o alias) *",
+    onboardingNamePlaceholder: "ej. Alejandro, María, David...",
+    onboardingNameHint: "Tu nombre quedará registrado en el programa en este dispositivo para personalizar tus saludos, estadísticas y guías de estudio.",
+    onboardingFoundationsTitle: "Construido sobre 3 Principios Fundamentales",
+    onboardingFoundationsDesc: "A diferencia de las apps de notas pasivas, NotesApp te ayuda a comprender ideas en profundidad y recordarlas a largo plazo.",
+    pillar1Title: "Una sola idea por nota (Atómica)",
+    pillar1Desc: "Cada nota contiene exactamente una sola idea formulada en tus propias palabras. Evita copiar y pegar: redactar las ideas con tus palabras genera un entendimiento mucho más profundo.",
+    pillar1Tag: "Notas atómicas • Palabras propias",
+    pillar2Title: "Mapas de contenido estructurados",
+    pillar2Desc: "Los mapas de contenido agrupan notas afines en guías temáticas, explicando la conexión y el papel de cada concepto dentro del tema general.",
+    pillar2Tag: "Temarios • Conexiones claras",
+    pillar3Title: "Repaso espaciado activo",
+    pillar3Desc: "Cada nota incluye una pregunta de autoevaluación. La app programa repasos periódicos justo antes de que olvides, consolidando tus recuerdos de forma permanente.",
+    pillar3Tag: "Recuperación activa • Memoria duradera",
+    onboardingHowToTitle: "Cómo Usar NotesApp en 6 Pasos",
+    onboardingHowToDesc: "Sigue este ciclo para convertir tus lecturas y reflexiones en una red sólida e interconectada de conocimiento permanente.",
+    wfStep1Title: "📥 Captura Rápida (Bandeja de Entrada)",
+    wfStep1Desc: "¿Tienes una idea o enlace fugaz? Escríbela en la barra superior (+) y pulsa Enter. No pierdas tiempo clasificando: protege tu concentración inmediata.",
+    wfStep2Title: "📚 Registrar Notas Fuente (02-source-notes)",
+    wfStep2Desc: "Al leer libros, papers o artículos, crea una nota fuente con su autor, citas textuales representativas y puntos clave sintetizados.",
+    wfStep3Title: "⚛️ Crear Notas Atómicas + Flashcards (03-atomic-notes)",
+    wfStep3Desc: "Desglosa cada tesis en una nota atómica en tus palabras. Redacta obligatoriamente una pregunta de autoevaluación activa (P/R) para programar su repaso.",
+    wfStep4Title: "🗺️ Estructurar con Mapas de Contenido (04-content-maps)",
+    wfStep4Desc: "Agrupa notas atómicas bajo un paraguas temático, justificando la relación de cada una con el campo 'razón' obligatorio.",
+    wfStep5Title: "🧠 Repaso Espaciado Diario (Spaced Repetition)",
+    wfStep5Desc: "Haz clic en 'Repasar hoy' en el encabezado. Intenta recordar la respuesta antes de revelarla y califícate del 0 al 5 con el algoritmo SM-2.",
+    wfStep6Title: "🤖 Atajo con Inteligencia Artificial (Asistente LLM)",
+    wfStep6Desc: "¿Tienes un texto o transcripción muy larga? Copia nuestro Prompt Maestro en ChatGPT/Claude/Gemini y genera un paquete JSON completo listo para importar en 1 clic.",
+    onboardingReadyTitle: "¡Todo Listo para Comenzar!",
+    onboardingReadyDesc: "Tu biblioteca de conocimiento está configurada y lista. ¿Por dónde deseas empezar?",
+    onboardingRegisteredAs: "Usuario Registrado:",
+    onboardingEditName: "Modificar nombre",
+    onbActionHome: "Explorar el Panel de Inicio",
+    onbActionHomeDesc: "Revisa tu biblioteca, tarjetas pendientes y accesos directos.",
+    onbActionAtomica: "Crear mi Primera Nota Atómica",
+    onbActionAtomicaDesc: "Escribe tu primer concepto en palabras propias con su flashcard.",
+    onbActionImport: "Importar Contenido con IA",
+    onbActionImportDesc: "Pega un paquete JSON generado con ChatGPT o Claude.",
+    onboardingBack: "⬅️ Atrás",
+    onboardingSkip: "Cerrar",
+    onboardingNext: "Continuar ➔",
+    onboardingFinish: "¡Comenzar ahora! 🚀",
+    homeActionOnboardingTitle: "🚀 Guía de Iniciación",
+    homeOnboardingHint: "Aprende a usar NotesApp y personaliza tu perfil."
   },
 
   en: {
@@ -457,7 +727,10 @@ const I18N = {
     navLlm: "LLM Assistant & Prompt",
     navGuia: "Guide & Evidence",
     evidencePillText: "Distributed practice + Active retrieval",
-    toggleTheme: "Toggle light/dark theme",
+    toggleTheme: "Switch theme (Light / Dark / Pastel)",
+    themeLight: "Light",
+    themeDark: "Dark",
+    themePastel: "Pastel",
 
     // Header
     quickCapturePlaceholder: "Frictionless quick capture... (Type and press Enter)",
@@ -476,13 +749,95 @@ const I18N = {
     filterAllFolders: "All folders",
     filterAllTags: "All hashtags",
     all: "All",
-    newFolder: "+ 📁 New Folder",
-    newNote: "+ New Note",
+    newFolder: "New Folder",
+    newNote: "New Note",
+    editFolder: "Edit Folder",
+    renameFolder: "Rename Folder",
+    changeFolderColor: "Change Color",
+    moveFolder: "Move Folder",
+    deleteFolder: "Delete Folder",
+    newSubfolder: "New Subfolder",
+    folderColorLabel: "Folder color",
+    parentFolderLabel: "Parent folder",
+    rootFolderLabel: "Root (no parent folder)",
+    confirmDeleteFolder: "Are you sure you want to delete this folder? Notes will be preserved and moved to root.",
+    folderRenamedSuccess: "Folder renamed successfully",
+    folderMovedSuccess: "Folder moved successfully",
+    folderColorSuccess: "Folder color updated successfully",
+    folderDeletedSuccess: "Folder deleted successfully",
     loading: "Loading...",
     viewCards: "Cards",
     viewMatrix: "Conceptual Matrix",
     copy: "Copy",
     copied: "Copied",
+    foldersCollections: "Folders & Collections",
+    searchFoldersPlaceholder: "Search folders...",
+    allSources: "All Sources",
+    allNotes: "All Notes",
+    sourcesArticles: "Notes",
+    sourcesDocuments: "Documents",
+    sourcesVideos: "Videos",
+    filterFlashcards: "Flashcards",
+    filterConnected: "Connected",
+    sortNewest: "↕ Newest first",
+    sortOldest: "↕ Oldest first",
+    sortTitle: "↕ Title (A-Z)",
+    openSource: "Open Source",
+    openNote: "Open Note",
+    connectedAtomicNotes: "Connected Atomic Notes",
+    connectedNotes: "Connected Notes",
+
+    // Projects and Fields
+    scopeSelectorTooltip: "Filter by Field / Course or Project",
+    scopeAllProjects: "🌐 All Fields & Projects",
+    btnManageProjectsTooltip: "Manage Fields & Projects",
+    activeScopeLabel: "Active scope",
+    btnClearScope: "Show all",
+    btnClearScopeTooltip: "Clear filter (show all notes)",
+    projectManagerTitle: "🎯 Fields & Projects Manager",
+    projectManagerDesc: "Organize and focus your learning by Knowledge Field (Domain) and specific Course or Project.",
+    pmCreateTitle: "➕ Register New Project / Course",
+    fieldLabel: "Field / Domain",
+    fieldPlaceholder: "e.g. Artificial Intelligence, Philosophy",
+    projectLabel: "Project / Course",
+    projectPlaceholder: "e.g. AI Agents and Automations",
+    descriptionLabel: "Description (optional)",
+    btnCreateProject: "Create Project",
+    pmExistingTitle: "Registered Projects & Courses",
+    pmNoProjects: "No projects registered yet. Create one above.",
+    pmStatsNotes: "notes",
+    pmStatsReviews: "reviews",
+    scopeActivePill: "Focus",
+    reviewScopeAll: "Review entire vault",
+    reviewScopeActive: "Review only this project",
+    projectTypeLabel: "Project Type",
+    typeCurso: "🎓 Course / Training",
+    typeNoticias: "📰 News / Current Affairs",
+    typeInvestigacion: "🔬 Research / Study",
+    typeLibro: "📖 Book / Reading",
+    typeTrabajo: "💼 Work / Professional Project",
+    typeOtro: "📂 Other / General",
+    editProject: "Edit",
+    editProjectTitle: "✏️ Edit Project",
+    btnSaveProject: "Save Changes",
+    btnDeleteProject: "Delete Project",
+    confirmDeleteProject: "Are you sure you want to remove this project? Its notes will remain intact.",
+    projectStatus: "Project Status",
+    statusActive: "Active",
+    statusCompleted: "Completed",
+    courseLessonsCount: "Lessons",
+    courseLessonsCountSuffix: "registered",
+    courseLessonMode: "Continuous Course Lesson Mode",
+    courseLessonDesc: "Atomic notes from this lesson will be added to the master course map and connected to prior concepts.",
+    lessonNumberLabel: "Lesson #",
+    lessonTitleLabel: "Lesson Title",
+    courseCompletedCheckbox: "Mark course as completed after this lesson",
+    quickProjectTitle: "➕ New Project",
+    quickProjectDesc: "Create a new project to organize and categorize your notes.",
+    btnCreateAndAssign: "Save and Assign",
+    btnNewProjectQuick: "➕ New Project",
+    btnCreateOrManageProjects: "➕ Create / Manage Projects",
+    badgeProject: "Project",
 
     // Section Explanations
     explainerHide: "Hide explanation",
@@ -491,7 +846,7 @@ const I18N = {
     // 1. Home View
     homeTitle: "Welcome to NotesApp",
     homeSubtitle: "The personal knowledge system engineered around Cognitive Science principles to maximize long-term comprehension and retention.",
-    homeBadgeEvidence: "Dunlosky 2013 • Luhmann Zettelkasten • Kiewra 1991 • Ebbinghaus SM-2",
+    homeBadgeEvidence: "Atomic Notes • Content Maps • Spaced Repetition SM-2",
     homeQuickActionsTitle: "Quick Actions",
     homeActionImportJsonTitle: "Import JSON Package",
     homeActionImportJsonDesc: "Paste structured JSON generated by your AI or load a file to instantly populate your knowledge vault.",
@@ -522,7 +877,7 @@ const I18N = {
     homeFolder3Desc: "Files named atomica-*.md. Each note houses exactly ONE autonomous idea written in your own words (Generation Effect), stating why it matters and linking to related concepts.",
 
     homeFolder4Title: "04-content-maps/",
-    homeFolder4Desc: "Files named mapa-*.md. High-level conceptual organizers (Kiewra 1991). Strictly requires a relational reason explaining why each note belongs to that thematic map.",
+    homeFolder4Desc: "Files named mapa-*.md. Thematic guides and structured outlines that organize multiple atomic notes around a broader subject or project.",
 
     homeFolder5Title: "05-self-assessment/",
     homeFolder5Desc: "Files named pregunta-*.md. Question and answer pairs generated from each atomic note. Provides fuel for the SM-2 active recall testing algorithm.",
@@ -559,9 +914,9 @@ const I18N = {
     // 3. Atomicas View
     atomicasTitle: "Atomic Notes",
     atomicasDesc: "One single idea per note, formulated in your own words and deliberately connected.",
-    atomicasExplainerTitle: "⚛️ Atomicity Principle & Generation Effect (Luhmann & Slamecka 1978)",
+    atomicasExplainerTitle: "⚛️ Atomicity Principle and Own Words",
     atomicasExplainerText: "Each atomic note must be self-contained and discuss exactly one concept. Explaining it entirely in your own words (Generation Effect) forces conceptual reconstruction, dramatically boosting retention over passive copying.",
-    btnNewAtomica: "+ New Atomic Note",
+    btnNewAtomica: "New Atomic Note",
     atomicasEmpty: "No atomic notes found matching these filters.",
 
     // 4. Fuentes View
@@ -569,21 +924,31 @@ const I18N = {
     fuentesDesc: "Bibliographic registry, verbatim quotes, and key paraphrased takeaways from consulted works.",
     fuentesExplainerTitle: "📚 Bibliographic Grounding & Critical Synthesis",
     fuentesExplainerText: "Source notes safeguard authorship and exact citations. They allow you to trace the origin of an idea and spark new atomic concepts without contaminating the conceptual purity of your permanent network.",
-    btnNewFuente: "+ New Source Note",
+    btnNewFuente: "New Source Note",
     fuentesEmpty: "No source notes found matching these filters.",
 
     // 5. Mapas View
     mapasTitle: "Content Maps",
-    mapasDesc: "Hierarchical structures with mandatory relational reasoning (Kiewra et al. 1991).",
-    mapasExplainerTitle: "🗺️ Matrix Organization vs Passive Outlines (Kiewra 1991)",
-    mapasExplainerText: "Linear outlines foster illusions of competence. In NotesApp, every note added to a map strictly requires a 'reason' explaining its relationship, training high-order relational processing.",
-    btnNewMapa: "+ New Content Map",
+    mapasDesc: "Structured topic guides and outlines that connect your atomic notes into cohesive subjects or projects.",
+    mapasBannerTitle: "What is a Content Map?",
+    mapasBannerSubtitle: "Think of a map as a book's table of contents or topic syllabus. Instead of scattered atomic notes, group them here into a structured overview of a subject or project.",
+    mapasStep1Title: "1. Core topic",
+    mapasStep1Desc: "Define the main subject (e.g., Study Techniques or Database Design).",
+    mapasStep2Title: "2. Add atomic notes",
+    mapasStep2Desc: "Pick concepts that serve as chapters of this topic.",
+    mapasStep3Title: "3. Explain connection",
+    mapasStep3Desc: "Write a short sentence on how each note enriches the whole.",
+    mapasStep4Title: "4. Export your guide",
+    mapasStep4Desc: "Download the entire compiled study guide in Markdown.",
+    mapasExplainerTitle: "🗺️ Matrix Organization vs Passive Outlines",
+    mapasExplainerText: "Linear outlines foster illusions of competence. In NotesApp, every note added to a map strictly requires a reason explaining its relationship, training high-order relational processing.",
+    btnNewMapa: "New Content Map",
     mapasEmpty: "No content maps created yet.",
 
     // 6. Repaso View
     repasoTitle: "Spaced Repetition Session",
-    repasoDesc: "Optimized SM-2 algorithm with round-robin topic interleaving for maximum consolidation.",
-    repasoExplainerTitle: "⚡ Active Retrieval Practice with Interleaving (Dunlosky 2013 & SM-2)",
+    repasoDesc: "Active retrieval practice with periodic reviews to strengthen long-term memory.",
+    repasoExplainerTitle: "⚡ Active Retrieval Practice with Interleaving",
     repasoExplainerText: "Retrieving information from memory fortifies synaptic pathways far more than passive review. The SM-2 algorithm schedules reviews right at the threshold of forgetting, while cross-topic interleaving sharpens conceptual discrimination.",
     repasoExportAnki: "📥 Export to Anki",
     repasoRefreshQueue: "🔄 Refresh Queue",
@@ -644,23 +1009,26 @@ const I18N = {
 
     // 9. LLM Prompt Studio View
     llmStudioTitle: "🤖 LLM Assistant & Master Prompt",
+    guidePurposeLlmTitle: "LLM Assistant",
+    importTag: "JSON IMPORT",
     llmStudioSubtitle: "Transform any document, book, course, or transcript into a structured package compatible with NotesApp.",
     llmExplainerTitle: "🧠 Cognitive Architecture of the NotesApp Prompt",
     llmExplainerText: "Language models typically summarize passively or copy verbatim. This master prompt forces the AI to behave as a cognitive architect: enforces strict single-idea atomicity, blocks copy-pasting to ensure generative wording, creates SM-2 flashcards, and requires relational reasons in every content map.",
     promptLangLabel: "Prompt Language:",
     btnCopyPrompt: "📋 Copy Prompt to Clipboard",
     btnLaunchImport: "📥 Go to Import JSON",
-    promptRulesTitle: "The 4 Unbreakable Scientific Rules of the Prompt",
-    promptRule1Title: "1. Strict Atomicity (Luhmann)",
+    promptRulesTitle: "The 4 Core Rules of the Prompt",
+    promptRule1Title: "1. Strict Atomicity",
     promptRule1Desc: "Exactly one autonomous idea per note. If the source material touches multiple concepts, the AI splits them into independent files.",
-    promptRule2Title: "2. Generation Effect (Slamecka)",
+    promptRule2Title: "2. Own Words",
     promptRule2Desc: "Copying verbatim paragraphs is prohibited. The LLM must clearly explain the underlying mechanism in its own words.",
-    promptRule3Title: "3. Active Recall SM-2 (Dunlosky)",
+    promptRule3Title: "3. Active Self-Assessment",
     promptRule3Desc: "Every atomic note must have an open retrieval question and key answer to fuel spaced retrieval practice.",
-    promptRule4Title: "4. Content Maps with Mandatory Reason (Kiewra)",
+    promptRule4Title: "4. Content Maps with Explained Connection",
     promptRule4Desc: "No note is linked to a map without an explicit 'razon' field explaining why and how it enriches that conceptual organizer.",
 
     // 10. Modals
+    searchGoogle: "Google Search",
     readerEditBtn: "✏️ Edit note",
     readerQaTitle: "🎯 Active Retrieval Practice Question",
     readerBacklinksTitle: "🔗 Incoming Backlinks",
@@ -683,7 +1051,64 @@ const I18N = {
     btnSubmitImport: "🚀 Import into NotesApp",
     importValidStatus: "✓ Valid & structured JSON",
     importInvalidStatus: "✕ JSON syntax error",
-    importEmptyStatus: "⚠️ Valid JSON but no recognizable notes"
+    importEmptyStatus: "⚠️ Valid JSON but no recognizable notes",
+
+    // Onboarding Guide & User Profile
+    navOnboarding: "Getting Started",
+    userProfileTooltip: "Your Profile and Getting Started Guide",
+    userProfileDefault: "Get Started",
+    onboardingTitle: "NotesApp Getting Started Guide",
+    onboardingSubtitle: "Evidence-based knowledge management & spaced repetition",
+    onboardingStep1Tab: "Your Name",
+    onboardingStep2Tab: "Foundations",
+    onboardingStep3Tab: "How to Use",
+    onboardingStep4Tab: "Get Started",
+    onboardingWelcomeTitle: "Welcome to NotesApp!",
+    onboardingWelcomeDesc: "NotesApp is your personal workspace to capture, connect, and retain everything you learn. To personalize your space, please introduce yourself:",
+    onboardingNameLabel: "What should we call you? (Your name or alias) *",
+    onboardingNamePlaceholder: "e.g. Alex, Maria, David...",
+    onboardingNameHint: "Your name will be registered locally on this device to customize your greetings, study guides, and knowledge library.",
+    onboardingFoundationsTitle: "Built on 3 Core Principles",
+    onboardingFoundationsDesc: "Unlike passive note apps, NotesApp helps you deeply understand ideas and remember them long-term.",
+    pillar1Title: "One Idea per Note (Atomic)",
+    pillar1Desc: "Each note develops exactly one concept in your own words. Formulating ideas yourself builds far deeper understanding than passive copy-pasting.",
+    pillar1Tag: "Atomic notes • Your own words",
+    pillar2Title: "Structured Content Maps",
+    pillar2Desc: "Content maps organize related notes into cohesive topics and study guides, explaining the connection of each idea to the bigger picture.",
+    pillar2Tag: "Topic outlines • Clear connections",
+    pillar3Title: "Active Spaced Repetition",
+    pillar3Desc: "Every note creates a self-test question. The system schedules reviews right before you forget, cementing knowledge permanently.",
+    pillar3Tag: "Active recall • Long-term memory",
+    onboardingHowToTitle: "How to Use NotesApp: The 6 Steps",
+    onboardingHowToDesc: "Follow this simple cycle to turn everyday reading and thoughts into an interconnected knowledge network.",
+    wfStep1Title: "📥 Quick Capture (Inbox)",
+    wfStep1Desc: "Got a fleeting idea or link? Type it in the top bar (+) and press Enter. Don't stop to classify—protect your focus.",
+    wfStep2Title: "📚 Save Source Notes (02-source-notes)",
+    wfStep2Desc: "When reading books or articles, create a source note with authors, citations, and high-level summaries.",
+    wfStep3Title: "⚛️ Create Atomic Notes + Flashcards (03-atomic-notes)",
+    wfStep3Desc: "Express ONE idea in your words. Formulate an open retrieval question and key answer for spaced review.",
+    wfStep4Title: "🗺️ Structure with Content Maps (04-content-maps)",
+    wfStep4Desc: "Group atomic concepts under an overarching theme. Justify every connection with the mandatory 'reason' field.",
+    wfStep5Title: "🧠 Daily Review (Spaced Repetition)",
+    wfStep5Desc: "Click 'Review today' in the header. Test yourself before revealing the answer, then grade your recall from 0 to 5.",
+    wfStep6Title: "🤖 AI Accelerated Import (LLM Assistant)",
+    wfStep6Desc: "Have a long paper or book? Copy our Master LLM Prompt into ChatGPT/Claude to generate a ready-to-import JSON package in seconds.",
+    onboardingReadyTitle: "You're All Set!",
+    onboardingReadyDesc: "Your knowledge workspace is configured and ready. Where would you like to start?",
+    onboardingRegisteredAs: "Registered User:",
+    onboardingEditName: "Edit name",
+    onbActionHome: "Explore Home Dashboard",
+    onbActionHomeDesc: "View library counts, daily review queue, and quick shortcuts.",
+    onbActionAtomica: "Create an Atomic Note",
+    onbActionAtomicaDesc: "Write your first concept in your own words with a flashcard.",
+    onbActionImport: "Import with AI",
+    onbActionImportDesc: "Use ChatGPT or Claude to import articles or book summaries.",
+    onboardingBack: "⬅️ Back",
+    onboardingSkip: "Close",
+    onboardingNext: "Continue ➔",
+    onboardingFinish: "Start Now! 🚀",
+    homeActionOnboardingTitle: "🚀 Getting Started Guide",
+    homeOnboardingHint: "Learn how to use NotesApp and customize your profile."
   }
 };
 
@@ -691,9 +1116,9 @@ const I18N = {
 // Progressive-disclosure Home and shared navigation copy.
 const HOME_COPY = {
   "es": {
-    "homeDetail0": "Fricción Cero • Sweller 1988",
+    "homeDetail0": "Fricción Cero • Captura Rápida",
     "homeDetail1": "Anclaje Bibliográfico",
-    "homeDetail2": "Razón Obligatoria • Kiewra 1991",
+    "homeDetail2": "Razón Obligatoria de Conexión",
     "homeDetail3": "Algoritmo SM-2 + Interleaving",
     "homeDetail4": "Organización temática física en carpetas reales sin perder la interconexión por wikilinks.",
     "homeDetail5": "Almacena síntesis externa, autor, medio original y citas textuales exactas.",
@@ -726,12 +1151,12 @@ const HOME_COPY = {
     "navTools": "Herramientas",
     "importTooltip": "Importar un paquete JSON de notas",
     "languageTooltip": "Idioma de la interfaz",
-    "evidenceTooltip": "Metodología basada en Dunlosky et al. (2013) y Kiewra et al. (1991)"
+    "evidenceTooltip": "Metodología basada en notas atómicas, mapas conceptuales y repaso espaciado"
   },
   "en": {
-    "homeDetail0": "Zero friction • Sweller 1988",
+    "homeDetail0": "Zero friction • Quick capture",
     "homeDetail1": "Bibliographic grounding",
-    "homeDetail2": "Required connection reason • Kiewra 1991",
+    "homeDetail2": "Required connection reason",
     "homeDetail3": "SM-2 algorithm + Interleaving",
     "homeDetail4": "Organize topics in physical folders while retaining connections through wikilinks.",
     "homeDetail5": "Stores source summaries, authors, original media, and direct quotations.",
@@ -764,7 +1189,7 @@ const HOME_COPY = {
     "navTools": "Tools",
     "importTooltip": "Import a JSON note package",
     "languageTooltip": "Interface language",
-    "evidenceTooltip": "Method based on Dunlosky et al. (2013) and Kiewra et al. (1991)"
+    "evidenceTooltip": "Method based on atomic notes, conceptual maps, and spaced repetition"
   }
 };
 for (const lang of ['es', 'en']) Object.assign(I18N[lang], HOME_COPY[lang]);
@@ -786,30 +1211,47 @@ const UI_COPY = {
     "uiCopy4": "RESPUESTA (R)",
     "uiCopy5": "Respuesta...",
     "uiCopy6": "-- días",
-    "uiCopy7": "Guía del Sistema y Fundamentos Científicos",
-    "uiCopy8": "Por qué NotesApp no es un editor convencional: evidencia cognitiva de cada módulo y mejores prácticas.",
-    "uiCopy9": "🔄 El Flujo Cognitivo en 5 Pasos",
+    "uiCopy7": "Guía del Sistema y Propósito de Cada Módulo",
+    "uiCopy8": "Cómo funciona NotesApp: qué hace cada sección y cómo aprovecharla al máximo.",
+    "uiCopy9": "🔄 El Flujo de Trabajo en 5 Pasos",
     "uiCopy10": "Captura Rápida",
     "uiCopy11": "Procesar a Fuente",
     "uiCopy12": "Nota Atómica",
     "uiCopy13": "Estructura en Mapas",
     "uiCopy14": "razón",
     "uiCopy15": "Recuperación Activa",
-    "uiCopy16": "🔬 El Respaldo de Investigación Científica",
+    "uiCopy16": "🧭 ¿Para qué sirve cada sección de NotesApp?",
+    "guidePurposesIntro": "Cada área del programa tiene una función concreta diseñada para ayudarte a asimilar y recordar lo que aprendes sin esfuerzo:",
+    "purposeTagInbox": "Captura Rápida",
+    "purposeDescInbox": "Apunta ideas fugaces, enlaces o notas rápidas sin detenerte a clasificarlas. Protege tu flujo de concentración y luego procésalas en notas definitivas.",
+    "purposeTagFuentes": "Registro de Lecturas",
+    "purposeDescFuentes": "Fichas para libros, artículos, conferencias o vídeos. Guarda autores, citas textuales y puntos clave para tener siempre trazabilidad del origen.",
+    "purposeTagAtomicas": "Núcleo del Conocimiento",
+    "purposeDescAtomicas": "Una sola idea por nota, explicada enteramente con tus propias palabras (para interiorizarla) y conectada deliberadamente con otras mediante enlaces [[wikilink]].",
+    "purposeTagMapas": "Índices y Temarios",
+    "purposeDescMapas": "Actúan como el índice o temario de un gran asunto. Agrupan varias notas atómicas explicando por qué cada una forma parte del tema, y permiten exportar una guía completa de estudio.",
+    "purposeTagRepaso": "Memoria a Largo Plazo",
+    "purposeDescRepaso": "Preguntas activas generadas a partir de tus notas. El algoritmo programa repasos periódicos justo en el momento óptimo antes de olvidar, alternando temas para fijar el recuerdo.",
+    "purposeTagGrafo": "Mapa Visual de Red",
+    "purposeDescGrafo": "Visualización interactiva que muestra cómo crecen tus ramas de aprendizaje. Te ayuda a descubrir conexiones inesperadas y detectar conceptos que han quedado aislados.",
+    "purposeTagAnalitica": "Métricas de Progreso",
+    "purposeDescAnalitica": "Mide tu tasa de acierto en los repasos, tu racha de constancia y cuántas tarjetas han alcanzado la madurez en tu memoria semántica.",
+    "purposeTagLlm": "Ingestión Inteligente",
+    "purposeDescLlm": "Transforma cualquier texto extenso o libro en un paquete estructurado de fuentes, notas atómicas con preguntas y mapas temáticos listo para importar.",
     "uiCopy17": "UTILIDAD ALTA",
-    "uiCopy18": "Autoevaluación (Practice Testing)",
-    "uiCopy19": "Intentar recordar una respuesta desde la memoria produce un efecto de retención hasta un 50% superior a releer pasivamente. Por eso cada nota atómica tiene su pregunta asociada.",
-    "uiCopy20": "Práctica Distribuida (Spaced Repetition)",
-    "uiCopy21": "El cerebro consolida recuerdos durante el descanso y el sueño. Espaciar los repasos con SM-2 aplana la curva del olvido multiplicando la duración del recuerdo.",
+    "uiCopy18": "Autoevaluación",
+    "uiCopy19": "Intentar recordar una respuesta desde la memoria produce un efecto de retención muy superior a releer pasivamente. Por eso cada nota atómica tiene su pregunta asociada.",
+    "uiCopy20": "Práctica Distribuida",
+    "uiCopy21": "El cerebro consolida recuerdos durante el descanso. Espaciar los repasos con SM-2 aplana la curva del olvido multiplicando la duración del recuerdo.",
     "uiCopy22": "DISCRIMINACIÓN COGNITIVA",
-    "uiCopy23": "Intercalado (Interleaving)",
-    "uiCopy24": "Repasar temas en bloques crea familiaridad engañosa. Al intercalar round-robin preguntas de temas distintos, el cerebro debe identificar primero qué concepto aplicar.",
+    "uiCopy23": "Intercalado de Temas",
+    "uiCopy24": "Repasar temas en bloques crea familiaridad engañosa. Al intercalar preguntas de temas distintos, el cerebro debe identificar primero qué concepto aplicar.",
     "uiCopy25": "CODIFICACIÓN PROFUNDA",
     "uiCopy26": "Efecto de Generación",
-    "uiCopy27": "Generar una frase propia exige reconstruir el significado. Por eso NotesApp bloquea el copiado/pegado literal en las ideas y alerta sobre solapamiento de n-gramas.",
+    "uiCopy27": "Generar una frase propia exige reconstruir el significado. Por eso NotesApp estimula redactar con tus propias palabras.",
     "uiCopy28": "ORGANIZACIÓN MATRICIAL",
-    "uiCopy29": "Matrices vs Outlines Lineales",
-    "uiCopy30": "UTILIDAD BAJA (DESACONSEJADO)",
+    "uiCopy29": "Matrices y Mapas Estructurados",
+    "uiCopy30": "DESACONSEJADO",
     "uiCopy31": "Relectura y Subrayado Pasivo",
     "uiCopy32": "Técnicas muy populares pero ineficaces: crean la ilusión de competencia pero no fijan memoria duradera. NotesApp no incluye modo subrayador pasivo.",
     "uiCopy33": "⌨️ Atajos de Teclado y Consejos de Uso",
@@ -838,6 +1280,7 @@ const UI_COPY = {
     "uiCopy56": "⚡ Flujo \"Procesar\": De Captura a Conocimiento",
     "uiCopy57": "Nota capturada original:",
     "uiCopy58": "1. ¿Proviene de una fuente externa?",
+    "createSourceNote": "Crear Nota Fuente",
     "uiCopy59": "Título de la Fuente *",
     "uiCopy60": "Autor(es)",
     "uiCopy61": "Tipo",
@@ -899,8 +1342,8 @@ const UI_COPY = {
     "uiCopy4": "ANSWER (A)",
     "uiCopy5": "Answer…",
     "uiCopy6": "-- days",
-    "uiCopy7": "System guide and learning principles",
-    "uiCopy8": "How NotesApp works: the learning principles behind each module and how to use them.",
+    "uiCopy7": "System Guide and Section Overview",
+    "uiCopy8": "How NotesApp works: the purpose of each module and how to get the most out of it.",
     "uiCopy9": "The learning workflow in five steps",
     "uiCopy10": "Quick capture",
     "uiCopy11": "Process into a source",
@@ -908,21 +1351,38 @@ const UI_COPY = {
     "uiCopy13": "Organize into maps",
     "uiCopy14": "reason",
     "uiCopy15": "Active recall",
-    "uiCopy16": "Supporting research",
+    "uiCopy16": "🧭 Purpose and utility of each section",
+    "guidePurposesIntro": "Each area of NotesApp has a dedicated purpose designed to help you understand and retain knowledge effortlessly:",
+    "purposeTagInbox": "Quick Capture",
+    "purposeDescInbox": "Jot down fleeting ideas, links, or thoughts without stopping to categorize them. Protect your focus and batch-process them later.",
+    "purposeTagFuentes": "Reading Registry",
+    "purposeDescFuentes": "Summaries for books, papers, talks, or videos. Store authors, key takeaways, and exact quotes to always keep source traceability.",
+    "purposeTagAtomicas": "Knowledge Core",
+    "purposeDescAtomicas": "One idea per note, expressed in your own words (for deep encoding) and connected to related ideas via [[wikilink]] references.",
+    "purposeTagMapas": "Topic Outlines",
+    "purposeDescMapas": "Act as a book's table of contents or topic guide. Group multiple atomic notes explaining how each fits into the topic, and export complete study guides.",
+    "purposeTagRepaso": "Long-Term Retention",
+    "purposeDescRepaso": "Active retrieval questions generated from your notes. The algorithm schedules reviews right before you forget, cementing memories permanently.",
+    "purposeTagGrafo": "Visual Network Map",
+    "purposeDescGrafo": "Interactive graph showing how your knowledge clusters grow. Spot bridges between disciplines and discover orphaned concepts.",
+    "purposeTagAnalitica": "Progress Metrics",
+    "purposeDescAnalitica": "Track your review accuracy rate, study streak, and the volume of notes that have transitioned into mature semantic memory.",
+    "purposeTagLlm": "Intelligent Ingestion",
+    "purposeDescLlm": "Transform any long text or book into a structured package of sources, atomic notes with flashcards, and topic maps ready for 1-click import.",
     "uiCopy17": "HIGH UTILITY",
-    "uiCopy18": "Self-testing (practice testing)",
-    "uiCopy19": "Trying to recall an answer from memory can improve retention compared with passive rereading. Each atomic note therefore has an associated question.",
-    "uiCopy20": "Distributed practice (spaced repetition)",
-    "uiCopy21": "The brain consolidates memories during rest and sleep. Spacing reviews with SM-2 helps counter forgetting and supports longer retention.",
+    "uiCopy18": "Self-testing",
+    "uiCopy19": "Trying to recall an answer from memory produces far higher retention than passive rereading. Each atomic note therefore has an associated question.",
+    "uiCopy20": "Distributed practice",
+    "uiCopy21": "The brain consolidates memories during rest. Spacing reviews with SM-2 helps counter forgetting and supports longer retention.",
     "uiCopy22": "CONCEPT DISCRIMINATION",
     "uiCopy23": "Interleaving",
     "uiCopy24": "Reviewing topics in blocks can create misleading familiarity. Alternating questions across topics requires you to identify which concept to apply.",
     "uiCopy25": "DEEP ENCODING",
     "uiCopy26": "Generation effect",
-    "uiCopy27": "Writing in your own words requires reconstructing meaning. NotesApp blocks pasting in idea fields and warns about phrase overlap with the source.",
+    "uiCopy27": "Writing in your own words requires reconstructing meaning. NotesApp encourages formulating concepts yourself.",
     "uiCopy28": "MATRIX ORGANIZATION",
-    "uiCopy29": "Matrices and linear outlines",
-    "uiCopy30": "LOW UTILITY (DISCOURAGED)",
+    "uiCopy29": "Structured Maps and Outlines",
+    "uiCopy30": "DISCOURAGED",
     "uiCopy31": "Passive rereading and highlighting",
     "uiCopy32": "These popular techniques can create a sense of familiarity without lasting recall. NotesApp does not include a passive highlighting mode.",
     "uiCopy33": "Keyboard shortcuts and tips",
@@ -951,6 +1411,7 @@ const UI_COPY = {
     "uiCopy56": "Process: from capture to knowledge",
     "uiCopy57": "Original captured note:",
     "uiCopy58": "1. Is this from an external source?",
+    "createSourceNote": "Create Source Note",
     "uiCopy59": "Source title *",
     "uiCopy60": "Author(s)",
     "uiCopy61": "Type",
@@ -1009,8 +1470,8 @@ for (const lang of ['es', 'en']) Object.assign(I18N[lang], UI_COPY[lang]);
 
 const FIELD_COPY = {
   "es": {
-    "fieldHint0": "ej. Dunlosky et al. (2013)",
-    "fieldHint1": "ej. Dunlosky, Rawson...",
+    "fieldHint0": "ej. Hábitos Atómicos",
+    "fieldHint1": "ej. James Clear",
     "fieldHint2": "Puntos principales sin copiar textualmente...",
     "fieldHint3": "ej. El efecto de espaciado",
     "fieldHint4": "Redacta la idea con tus propias palabras...",
@@ -1027,13 +1488,13 @@ const FIELD_COPY = {
     "fieldHint15": "Buscar por título, contenido, autor o concepto...",
     "guideStepBody0": "Vuelca cualquier idea sin fricción. No clasifiques de inmediato para evitar interrumpir tu flujo de atención.",
     "guideStepBody1": "Si proviene de un libro, paper o video, registra la bibliografía y extrae los puntos clave parafraseados.",
-    "guideStepBody2": "Formula la idea con tus propias palabras (Efecto de generación). Escribe por qué importa y cómo se conecta.",
-    "guideStepBody3": "Integra la idea en un mapa temático. Explica obligatoriamente la razón de la relación.",
-    "guideStepBody4": "Responde la pregunta generada. El algoritmo SM-2 con interleaving la espaciará en el momento justo."
+    "guideStepBody2": "Formula la idea con tus propias palabras para asimilarla bien. Escribe por qué importa y cómo se conecta.",
+    "guideStepBody3": "Integra la idea en un mapa temático. Explica cómo se conecta con el tema general.",
+    "guideStepBody4": "Responde la pregunta generada. El repaso espaciado te la mostrará en el momento óptimo para consolidarla."
   },
   "en": {
-    "fieldHint0": "e.g. Dunlosky et al. (2013)",
-    "fieldHint1": "e.g. Dunlosky, Rawson…",
+    "fieldHint0": "e.g. Atomic Habits",
+    "fieldHint1": "e.g. James Clear",
     "fieldHint2": "Key points in your own words…",
     "fieldHint3": "e.g. The spacing effect",
     "fieldHint4": "Write the idea in your own words…",
@@ -1050,9 +1511,9 @@ const FIELD_COPY = {
     "fieldHint15": "Search by title, content, author, or concept…",
     "guideStepBody0": "Capture any thought without stopping to classify it, so you can stay focused.",
     "guideStepBody1": "For a book, paper, or video, record the reference and paraphrase its key points.",
-    "guideStepBody2": "Write the idea in your own words (generation effect). Explain why it matters and how it connects.",
-    "guideStepBody3": "Add the idea to a thematic map. Explain the reason for its connection.",
-    "guideStepBody4": "Answer the generated question. SM-2 schedules further reviews, interleaved with other topics."
+    "guideStepBody2": "Write the idea in your own words to deeply understand it. Note why it matters and how it connects.",
+    "guideStepBody3": "Add the idea to a thematic map, explaining how each connects to the main theme.",
+    "guideStepBody4": "Answer the generated question. Spaced repetition will schedule reviews right at the threshold of forgetting."
   }
 };
 for (const lang of ['es', 'en']) Object.assign(I18N[lang], FIELD_COPY[lang]);
