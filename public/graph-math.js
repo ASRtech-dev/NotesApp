@@ -4,7 +4,7 @@
  const api = {
   matches(node, query, tag, type) {
    return (!type || node.type === type) && (!tag || (node.tags || []).includes(tag)) &&
-    (!query || normalize([node.label,node.id,node.carpeta,node.campo,node.proyecto,...(node.tags || [])].join(' ')).includes(normalize(query)));
+    (!query || normalize([node.label,node.id,node.carpeta,node.campo,node.proyecto,node.modulo,node.leccion_titulo,...(node.tags || [])].join(' ')).includes(normalize(query)));
   },
   screen(node, camera) { return {x:node.x*camera.scale+camera.x,y:node.y*camera.scale+camera.y}; },
   world(point, camera) { return {x:(point.x-camera.x)/camera.scale,y:(point.y-camera.y)/camera.scale}; },
@@ -28,15 +28,32 @@
     const a=nodes[i],b=nodes[j];let dx=b.x-a.x,dy=b.y-a.y;
     if(Math.hypot(dx,dy)<.01){dx=1;dy=.5;}
     const d=Math.max(1,Math.hypot(dx,dy));
-    const force=Math.min(7,2300/(d*d)) + Math.max(0,(a.r+b.r+70-d))*.035;
+    const diffCluster = a.clusterId && b.clusterId && a.clusterId !== b.clusterId;
+    const repulse = diffCluster ? 3200/(d*d) : 1800/(d*d);
+    const minGap = (a.r||12)+(b.r||12)+(diffCluster ? 68 : 44);
+    const force = Math.min(8, repulse) + Math.max(0, minGap - d) * 0.045;
     const fx=dx/d*force,fy=dy/d*force;
     if(!a.fixed){a.vx-=fx;a.vy-=fy;} if(!b.fixed){b.vx+=fx;b.vy+=fy;}
    }
    links.forEach(l=>{const a=map.get(l.source),b=map.get(l.target);if(!a||!b||a===b)return;
-    const dx=b.x-a.x,dy=b.y-a.y,d=Math.max(1,Math.hypot(dx,dy)),f=(d-220)*.004;
+    const dx=b.x-a.x,dy=b.y-a.y,d=Math.max(1,Math.hypot(dx,dy));
+    const isCourseSpoke = (a.tipo_mapa==='curso'||b.tipo_mapa==='curso');
+    const sameCluster = a.clusterId && b.clusterId && a.clusterId === b.clusterId;
+    const ideal = isCourseSpoke ? 340 : (l.type==='fuente-idea'||l.type==='mapa-subtema') ? (sameCluster ? 82 : 145) : (sameCluster ? 95 : 160);
+    const k = isCourseSpoke ? 0.0035 : (l.type==='atomica-enlace' && !sameCluster && a.clusterId && b.clusterId) ? 0.0012 : 0.0065;
+    const f=(d-ideal)*k;
     if(!a.fixed){a.vx+=dx/d*f;a.vy+=dy/d*f;}if(!b.fixed){b.vx-=dx/d*f;b.vy-=dy/d*f;}
    });
-   nodes.forEach(n=>{if(n.fixed)return;n.vx=(n.vx-n.x*.0001)*.8;n.vy=(n.vy-n.y*.0001)*.8;n.x+=Math.max(-8,Math.min(8,n.vx));n.y+=Math.max(-8,Math.min(8,n.vy));});
+   nodes.forEach(n=>{
+    if(n.fixed)return;
+    const ax = typeof n.anchorX === 'number' ? n.anchorX : 0;
+    const ay = typeof n.anchorY === 'number' ? n.anchorY : 0;
+    const pull = typeof n.anchorX === 'number' ? 0.0045 : 0.0002;
+    n.vx=(n.vx+(ax-n.x)*pull)*.78;
+    n.vy=(n.vy+(ay-n.y)*pull)*.78;
+    n.x+=Math.max(-8,Math.min(8,n.vx));
+    n.y+=Math.max(-8,Math.min(8,n.vy));
+   });
   }
  };
  if(typeof module!=='undefined') module.exports=api; else root.GraphMath=api;

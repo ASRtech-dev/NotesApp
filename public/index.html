@@ -159,6 +159,44 @@
       <!-- ==================== CONTENEDOR DE VISTAS ==================== -->
       <section class="content-container">
 
+        <!-- BRÚJULA GLOBAL DE FLUJO DE ESTUDIO (EVITA QUE EL ESTUDIANTE SE SIENTA PERDIDO) -->
+        <nav id="study-compass-bar" class="study-compass-bar" aria-label="Study Workflow Compass">
+          <div class="study-compass-steps">
+            <button type="button" class="compass-step active" data-compass-view="inicio" onclick="switchView('inicio')" title="Syllabus, courses and daily study hub">
+              <span class="compass-step-icon">🏠</span>
+              <span class="compass-step-text" id="compass-lbl-inicio">Home &amp; Syllabus</span>
+            </button>
+            <span class="compass-arrow" aria-hidden="true">›</span>
+            <button type="button" class="compass-step" data-compass-view="llm" onclick="switchView('llm')" title="Step 1: Extract or capture study material">
+              <span class="compass-step-num">1</span>
+              <span class="compass-step-text" id="compass-lbl-capture">Capture / AI</span>
+            </button>
+            <span class="compass-arrow" aria-hidden="true">›</span>
+            <button type="button" class="compass-step" data-compass-view="fuentes" onclick="switchView('fuentes')" title="Step 2: Read summarized source references">
+              <span class="compass-step-num">2</span>
+              <span class="compass-step-text" id="compass-lbl-fuentes">Sources</span>
+            </button>
+            <span class="compass-arrow" aria-hidden="true">›</span>
+            <button type="button" class="compass-step" data-compass-view="atomicas" onclick="switchView('atomicas')" title="Step 3: Study individual concepts in depth">
+              <span class="compass-step-num">3</span>
+              <span class="compass-step-text" id="compass-lbl-atomicas">Atomic Notes</span>
+            </button>
+            <span class="compass-arrow" aria-hidden="true">›</span>
+            <button type="button" class="compass-step" data-compass-view="mapas" onclick="switchView('mapas')" title="Step 4: Connect concepts in structured Topic Maps">
+              <span class="compass-step-num">4</span>
+              <span class="compass-step-text" id="compass-lbl-mapas">Content Maps</span>
+            </button>
+            <span class="compass-arrow" aria-hidden="true">›</span>
+            <button type="button" class="compass-step" data-compass-view="repaso" onclick="switchView('repaso')" title="Step 5: Consolidate memory with SM-2 Flashcards">
+              <span class="compass-step-num">5</span>
+              <span class="compass-step-text" id="compass-lbl-repaso">Active Recall</span>
+            </button>
+          </div>
+          <div class="study-compass-context" id="study-compass-hint">
+            🧭 Select a project or course below to study step by step.
+          </div>
+        </nav>
+
         <!-- BANNER DE ÁREA / PROYECTO ACTIVO -->
         <div id="active-scope-banner" class="active-scope-banner" style="display: none;">
           <div class="scope-banner-content">
@@ -279,6 +317,13 @@
               </div>
             </div>
           </div>
+
+          <div class="section-study-strip" id="inbox-study-strip">
+            <span class="sss-badge">💡 <span id="inbox-strip-title">How to use Inbox</span></span>
+            <span class="sss-text" id="inbox-strip-desc">Capture spontaneous ideas in the top bar without interrupting your study session, then click <strong>Process note</strong> to turn them into permanent Atomic Notes or Sources — or use the <strong>LLM Assistant</strong> to import full lessons.</span>
+            <button type="button" class="btn-ghost-sm" onclick="switchView('llm')" id="inbox-strip-btn">🤖 AI Assistant →</button>
+          </div>
+
           <div id="inbox-list" class="cards-grid">
             <!-- Renderizado dinámico -->
           </div>
@@ -447,6 +492,9 @@
             <div class="notes-main-area">
               <div class="notes-top-filter-bar">
                 <div class="filter-pills-row" id="fuente-type-pills-row">
+                  <button type="button" class="filter-chip-pill" id="btn-toggle-fuente-folders" onclick="toggleFuentesFoldersDrawer()" title="Show or hide folders sidebar">
+                    📁 <span>Folders</span>
+                  </button>
                   <button class="filter-chip-pill active" data-type="all" onclick="setFuenteTypeFilter('all')">
                     <span data-i18n="allSources">All Sources</span> (<span id="count-pill-fuentes-all">0</span>)
                   </button>
@@ -637,6 +685,12 @@
               <span class="interleaving-badge" title="Questions alternate between topics" data-i18n-title="controlTip1" data-i18n="repasoInterleavingActive">🔀 Interleaving Active</span>
             </div>
 
+            <div class="review-session-progress-wrap" id="review-session-progress-wrap" style="display: none;">
+              <div class="review-session-progress-bar">
+                <div class="review-session-progress-fill" id="review-session-progress-fill" style="width: 0%;"></div>
+              </div>
+            </div>
+
             <!-- TARJETA FLASHCARD INTERACTIVA -->
             <div id="flashcard-container" class="flashcard">
               <div class="card-header">
@@ -666,6 +720,10 @@
                 <!-- BOTONES DE CALIFICACIÓN SM-2 -->
                 <div id="fc-grading-buttons" class="grading-panel" style="display: none;">
                   <div class="grading-header" data-i18n="repasoGradingPrompt">How well did you recall it? (Keys 0–5)</div>
+                  <div class="grading-groups-legend">
+                    <div class="grading-group-pill group-repeat" id="grading-group-repeat-lbl">🔴 Needs Repetition (0–2 · Resets to 1 day)</div>
+                    <div class="grading-group-pill group-pass" id="grading-group-pass-lbl">🟢 Recalled Successfully (3–5 · Expands interval)</div>
+                  </div>
                   <div class="grading-buttons-row">
                     <button class="grade-btn g0" data-q="0">
                       <span class="g-num">0</span>
@@ -767,6 +825,22 @@
               <button class="btn-ghost" id="btn-refresh-analytics" data-i18n="btnRefreshAnalytics">🔄 Refresh</button>
             </div>
           </div>
+
+          <!-- DIAGNÓSTICO Y RECOMENDACIÓN DE ESTUDIO ACCIONABLE -->
+          <div id="analytics-study-diagnosis" class="analytics-diagnosis-banner">
+            <div class="adb-left">
+              <span class="adb-icon">🧭</span>
+              <div>
+                <strong id="adb-title">Study Diagnosis &amp; Next Step</strong>
+                <p id="adb-desc">Loading your memory consolidation metrics to suggest the optimal study action for today...</p>
+              </div>
+            </div>
+            <div class="adb-actions">
+              <button type="button" class="btn-primary-sm" onclick="switchView('repaso')" id="adb-btn-review">🧠 Review Today</button>
+              <button type="button" class="btn-ghost-sm" onclick="switchView('mapas')" id="adb-btn-maps">🗺️ Study Maps</button>
+            </div>
+          </div>
+
           <div class="analytics-grid">
             <div class="kpi-card">
               <div class="kpi-label" data-i18n="kpiRetention">Retention Rate</div>
@@ -865,6 +939,24 @@
 
           <!-- CONTENEDOR DEL PROMPT STUDIO -->
           <div class="llm-studio-container">
+            <!-- CINTA GUIADA DE 3 PASOS PARA NO PERDERSE -->
+            <div class="llm-3step-strip">
+              <div class="llm-step-pill">
+                <span class="llm-step-num">1</span>
+                <span id="llm-step-1-txt"><strong>Configure Topic:</strong> Choose Project, Module &amp; Lesson below</span>
+              </div>
+              <span class="compass-arrow">›</span>
+              <div class="llm-step-pill">
+                <span class="llm-step-num">2</span>
+                <span id="llm-step-2-txt"><strong>Copy Master Prompt:</strong> Paste it into ChatGPT / Claude / Gemini with your PDF or notes</span>
+              </div>
+              <span class="compass-arrow">›</span>
+              <div class="llm-step-pill" style="cursor:pointer;" onclick="openModal('modal-import-json')">
+                <span class="llm-step-num">3</span>
+                <span id="llm-step-3-txt"><strong>Import .JSON:</strong> Paste the AI response to generate Sources, Atomic Notes &amp; Maps ↗</span>
+              </div>
+            </div>
+
             <!-- PANEL DE PERSONALIZACIÓN DEL PROMPT POR PROYECTO, MÓDULO Y TEMA -->
             <div id="studio-prompt-customizer" class="prompt-customizer-card">
               <div class="prompt-customizer-header">
@@ -923,14 +1015,22 @@
                   <button type="button" class="btn-lang active" id="btn-prompt-lang-es">Español</button>
                   <button type="button" class="btn-lang" id="btn-prompt-lang-en">English</button>
                 </div>
-                <span style="font-size: 11px; color: var(--text-muted); margin-left: 8px;" id="prompt-editable-hint">✏️ You can edit the prompt text directly before copying</span>
               </div>
-              <button type="button" class="btn-accent" id="btn-copy-studio-prompt" data-i18n="btnCopyPrompt">📋 Copy Prompt to Clipboard</button>
+              <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                <button type="button" class="btn-accent" id="btn-copy-studio-prompt" data-i18n="btnCopyPrompt">📋 Copy Prompt to Clipboard</button>
+                <button type="button" class="btn-primary" onclick="openModal('modal-import-json')">📥 Paste .JSON Result →</button>
+              </div>
             </div>
 
-            <div class="prompt-display-box">
-              <textarea id="studio-prompt-textarea" class="studio-prompt-textarea" rows="18"></textarea>
-            </div>
+            <details class="prompt-raw-collapsible">
+              <summary class="prompt-raw-summary">
+                <span>🔍 <strong id="prompt-raw-summary-title">Inspect or Edit Generated Master Prompt Text</strong></span>
+                <span style="font-size: 11.5px; color: var(--text-muted);" id="prompt-editable-hint">✏️ Optional: Click to expand and edit the raw prompt before copying</span>
+              </summary>
+              <div class="prompt-display-box" style="margin-top: 10px;">
+                <textarea id="studio-prompt-textarea" class="studio-prompt-textarea" rows="16"></textarea>
+              </div>
+            </details>
           </div>
         </div>
 

@@ -60,12 +60,24 @@ Then open **[http://localhost:3456](http://localhost:3456)** in your browser.
   3. **Course Thematic Sub-Maps Panel** (on Master Course Maps) to jump directly to any lesson's sub-map.
   4. **2-Column Numbered Concept Blueprint** displaying each atomic concept, its connection rationale (`Why it belongs here`), and its core idea preview.
 
-### 3. Dual-Window Reader for **Source Notes**
-- Opening a **Source Note** presents a side-by-side 2-window workspace:
-  - **Left Primary Window (67%):** Bibliographic header, paraphrased key takeaways, and verbatim highlights/quotes.
-  - **Right Inspector Window (33%):** Extracted **Atomic Notes**, linked **Content Maps**, curriculum hierarchy, and tags.
+### 3. Split-Stage **Source Notes** with Dual Pillars & Derived Concepts
+- **Clean Bibliographic Grid Cards:** Source cards display source type (*🎓 Course*, *📚 Book*, *📄 Article*, *🎬 Video*), Lesson & Module pills, a clean 3-line summary, and a derived concepts pill (*⚛️ N derived concepts*).
+- **Full-Width Split-Stage Expansion:** Clicking any Source Note shifts the source list into a compact left switcher rail and opens a dedicated reading stage with:
+  - **📌 Key Points (Paraphrased)** and **💬 Relevant Verbatim Quotes** cleanly separated into distinct pillar cards.
+  - **Sequential Study Navigation (`← Prev / Next →`)**, **👁️ Full Reader**, and a **2-Column Extracted Atomic Notes Grid** to jump directly to any concept sparked by that source.
 
-### 4. Calibrated Anti-Halation **Dark Mode** (Obsidian Slate & WCAG AAA Contrast)
+### 4. Hierarchical, Clustered **Knowledge Graph**
+- **Constellation Curriculum Topology:** Automatically organizes your knowledge base into visual constellations:
+  - **Center Hub:** Master Course Map (`🎓`) at the core.
+  - **Radial Topic Clusters (`L1`–`L10` & Thematic Folders):** Each lesson or topic forms its own satellite cluster with its **Topic Map (`🗺️`)** and **Source Note (`📚`)** at the cluster center and its **Atomic Notes (`⚛️`)** in orbit around them.
+  - **Hierarchy-Aware Physics & Inspector:** Type-aware spring physics keep clusters distinct and readable, while the right-hand inspector groups connections by hierarchy (*🗺️ Maps*, *📚 Sources*, *⚛️ Atomic Notes*).
+
+### 5. Global **Study Workflow Compass** & Guided Syllabus Paths
+- **Persistent 5-Step Study Compass Bar:** Located at the top of the workspace (`🏠 Home & Syllabus › 1 Capture / AI › 2 Sources › 3 Atomic Notes › 4 Content Maps › 5 Active Recall`) with contextual guidance and a 1-click next-step action button so students never feel lost.
+- **Topic Study Path in Syllabus:** Expanding any lesson in a Course Syllabus provides a direct 3-step study bar (*1. Read Source → 2. Study Concepts → 3. Open Topic Map*).
+- **Actionable Retention Diagnosis:** The **Retention Analytics** view evaluates your due queue and retention rate to recommend the single best study action for today.
+
+### 6. Calibrated Anti-Halation **Dark Mode** (Obsidian Slate & WCAG AAA Contrast)
 - Engineered by a 3-expert color & ocular ergonomics committee to eliminate astigmatic halation (white-on-pure-black glare) during long study sessions:
   - **3-Tier Obsidian Slate Surfaces:** `#0f1218` app canvas → `#171c26` elevated cards with subtle top specular highlights → `#1c2331` inner reading pillars.
   - **Soft Ivory Typography (`#e6edf5` & `#dde6f0`):** Delivers **13.2:1 AAA contrast** without eye strain, reserving pure bright `#f8fafc` for bolded key terms.

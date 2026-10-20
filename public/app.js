@@ -59,7 +59,10 @@ const state = {
   selectedMapaModulo: '',
   selectedMapaLeccion: '',
   mapaSearchQuery: '',
-  mapasExpandedKeys: {}
+  mapasExpandedKeys: {},
+  activeExpandedFuenteId: null,
+  activeExpandedFuenteTab: null,
+  showFuentesFoldersDrawer: false
 };
 
 // -------------------------------------------------------------
@@ -480,6 +483,8 @@ function setLanguage(lang, reloadViews = true) {
   const lblMapaDesc = document.getElementById('label-mapa-descripcion');
   if (lblMapaDesc) lblMapaDesc.textContent = ui('Descripción / Resumen del Mapa (Opcional)', 'Map Description / Summary (Optional)');
 
+  updateStudyCompass();
+
   if (reloadViews) {
     renderHomeView();
     renderInboxView();
@@ -498,6 +503,100 @@ function setLanguage(lang, reloadViews = true) {
   }
 }
 window.setLanguage = setLanguage;
+
+function updateStudyCompass() {
+  const v = state.currentView || 'inicio';
+  // Map Bandeja to step 1 (Capture/AI) for compass highlighting
+  const activeCompassView = (v === 'bandeja' || v === 'llm') ? 'llm' : v;
+  document.querySelectorAll('#study-compass-bar .compass-step').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-compass-view') === activeCompassView);
+  });
+
+  const setTxt = (id, es, en) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = ui(es, en);
+  };
+  const setHtml = (id, es, en) => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = ui(es, en);
+  };
+
+  setTxt('compass-lbl-inicio', 'Inicio y Temario', 'Home & Syllabus');
+  setTxt('compass-lbl-capture', 'Capturar / IA', 'Capture / AI');
+  setTxt('compass-lbl-fuentes', 'Fuentes', 'Sources');
+  setTxt('compass-lbl-atomicas', 'Notas Atómicas', 'Atomic Notes');
+  setTxt('compass-lbl-mapas', 'Mapas de Estudio', 'Content Maps');
+  setTxt('compass-lbl-repaso', 'Repaso Activo', 'Active Recall');
+
+  // Localize Inbox Strip
+  setTxt('inbox-strip-title', 'Cómo usar la Bandeja', 'How to use Inbox');
+  setHtml(
+    'inbox-strip-desc',
+    'Captura ideas rápidas arriba sin interrumpir tu lectura y pulsa <strong>Procesar nota</strong> para convertirlas en Notas Atómicas — o usa el <strong>Asistente IA</strong> para importar temas completos.',
+    'Capture spontaneous ideas in the top bar without interrupting your study session, then click <strong>Process note</strong> to turn them into Atomic Notes — or use the <strong>LLM Assistant</strong> to import full lessons.'
+  );
+  setTxt('inbox-strip-btn', '🤖 Asistente IA →', '🤖 AI Assistant →');
+
+  // Localize LLM 3-Step Strip & Collapsible Summary
+  setHtml('llm-step-1-txt', '<strong>Configura el Tema:</strong> Elige Proyecto, Módulo y Lección abajo', '<strong>Configure Topic:</strong> Choose Project, Module &amp; Lesson below');
+  setHtml('llm-step-2-txt', '<strong>Copia el Prompt:</strong> Pégalo en tu IA junto con tu PDF o apuntes', '<strong>Copy Master Prompt:</strong> Paste it into your AI with your PDF or notes');
+  setHtml('llm-step-3-txt', '<strong>Importa el .JSON:</strong> Pega la respuesta para crear tus Notas y Mapas ↗', '<strong>Import .JSON:</strong> Paste the AI response to generate Notes &amp; Maps ↗');
+  setTxt('prompt-raw-summary-title', 'Ver o editar el texto completo del Prompt Maestro', 'Inspect or Edit Generated Master Prompt Text');
+
+  // Localize Spaced Repetition Group Pills
+  setTxt('grading-group-repeat-lbl', '🔴 Necesito Repetir (0–2 · Se reprograma a 1 día)', '🔴 Needs Repetition (0–2 · Resets to 1 day)');
+  setTxt('grading-group-pass-lbl', '🟢 Recordado con Éxito (3–5 · Amplía el intervalo)', '🟢 Recalled Successfully (3–5 · Expands interval)');
+
+  // Contextual Study Hint on the right of the Compass Bar
+  const hintEl = document.getElementById('study-compass-hint');
+  if (!hintEl) return;
+
+  const hints = {
+    inicio: ui(
+      '🧭 <strong>Centro de Estudio:</strong> Elige un tema en tu curso o haz tu repaso diario. <button type="button" class="compass-next-btn" onclick="switchView(\'mapas\')">Ir a Mapas →</button>',
+      '🧭 <strong>Study Hub:</strong> Pick a topic in your syllabus or start today\'s review. <button type="button" class="compass-next-btn" onclick="switchView(\'mapas\')">Go to Maps →</button>'
+    ),
+    bandeja: ui(
+      '📥 <strong>Paso 1 (Captura):</strong> Convierte tus apuntes rápidos en conceptos permanentes. <button type="button" class="compass-next-btn" onclick="switchView(\'fuentes\')">Siguiente: Fuentes →</button>',
+      '📥 <strong>Step 1 (Capture):</strong> Turn raw thoughts into permanent concepts. <button type="button" class="compass-next-btn" onclick="switchView(\'fuentes\')">Next: Sources →</button>'
+    ),
+    llm: ui(
+      '🤖 <strong>Paso 1 (IA):</strong> Configura tu tema, copia el prompt e importa el .JSON. <button type="button" class="compass-next-btn" onclick="openModal(\'modal-import-json\')">Pegar .JSON →</button>',
+      '🤖 <strong>Step 1 (AI):</strong> Configure topic, copy prompt, and import the .JSON. <button type="button" class="compass-next-btn" onclick="openModal(\'modal-import-json\')">Paste .JSON →</button>'
+    ),
+    fuentes: ui(
+      '📄 <strong>Paso 2 (Fuentes):</strong> Haz clic en una fuente para leer sus puntos clave e ideas extraídas. <button type="button" class="compass-next-btn" onclick="switchView(\'atomicas\')">Siguiente: Atómicas →</button>',
+      '📄 <strong>Step 2 (Sources):</strong> Click any source to read its key points and extracted ideas. <button type="button" class="compass-next-btn" onclick="switchView(\'atomicas\')">Next: Atomic Notes →</button>'
+    ),
+    atomicas: ui(
+      '⚛️ <strong>Paso 3 (Conceptos):</strong> Haz clic en una nota para estudiar su Idea Central y autoevaluarte. <button type="button" class="compass-next-btn" onclick="switchView(\'mapas\')">Siguiente: Mapas →</button>',
+      '⚛️ <strong>Step 3 (Concepts):</strong> Click any note to study its Core Idea and self-test. <button type="button" class="compass-next-btn" onclick="switchView(\'mapas\')">Next: Content Maps →</button>'
+    ),
+    mapas: ui(
+      '🗺️ <strong>Paso 4 (Mapas):</strong> Despliega un mapa para ver cómo encajan todos los conceptos del tema. <button type="button" class="compass-next-btn" onclick="switchView(\'repaso\')">Siguiente: Repaso →</button>',
+      '🗺️ <strong>Step 4 (Maps):</strong> Expand a map to see how all concepts of a topic fit together. <button type="button" class="compass-next-btn" onclick="switchView(\'repaso\')">Next: Active Recall →</button>'
+    ),
+    repaso: ui(
+      '🧠 <strong>Paso 5 (Consolidación):</strong> Intenta recordar antes de mostrar la respuesta (Espacio). <button type="button" class="compass-next-btn" onclick="switchView(\'analitica\')">Ver Analítica →</button>',
+      '🧠 <strong>Step 5 (Consolidation):</strong> Recall the answer before pressing Show Answer (Space). <button type="button" class="compass-next-btn" onclick="switchView(\'analitica\')">View Analytics →</button>'
+    ),
+    grafo: ui(
+      '🕸️ <strong>Exploración:</strong> Haz clic en un nodo para inspeccionar sus enlaces o abrir la nota. <button type="button" class="compass-next-btn" onclick="switchView(\'mapas\')">Ir a Mapas →</button>',
+      '🕸️ <strong>Exploration:</strong> Click any node to inspect its connections or open the note. <button type="button" class="compass-next-btn" onclick="switchView(\'mapas\')">Go to Maps →</button>'
+    ),
+    analitica: ui(
+      '📊 <strong>Progreso:</strong> Revisa tu diagnóstico de retención y carga de estudio. <button type="button" class="compass-next-btn" onclick="switchView(\'repaso\')">Practicar ahora →</button>',
+      '📊 <strong>Progress:</strong> Check your retention diagnosis and upcoming review load. <button type="button" class="compass-next-btn" onclick="switchView(\'repaso\')">Practice now →</button>'
+    ),
+    guia: ui(
+      '📖 <strong>Guía Visual:</strong> Explora los 3 pósters y el método científico de estudio. <button type="button" class="compass-next-btn" onclick="switchView(\'inicio\')">Volver al Inicio →</button>',
+      '📖 <strong>Visual Guide:</strong> Explore the 3 posters and evidence-based study workflow. <button type="button" class="compass-next-btn" onclick="switchView(\'inicio\')">Back to Home →</button>'
+    )
+  };
+
+  hintEl.innerHTML = hints[v] || hints.inicio;
+}
+window.updateStudyCompass = updateStudyCompass;
 
 // -------------------------------------------------------------
 // Banners Explicativos de Sección (Cognitive Explainers)
@@ -988,6 +1087,10 @@ function buildHomeProjectFilteredBodyHtml(atomicas, fuentes, mapas, projObj) {
       ? `<span class="badge-folder" style="font-size:11px; color:var(--accent-primary);">📦 ${escapeHtml(lec.modulo)}</span>`
       : '';
 
+    const firstMapId = mapsInLec.length > 0 ? mapsInLec[0].id : '';
+    const firstAtomicaId = notesInLec.length > 0 ? notesInLec[0].id : '';
+    const firstFuenteId = sourcesInLec.length > 0 ? sourcesInLec[0].id : '';
+
     return `
       <details class="home-lesson-card" data-collapse-key="${escapeHtml(collapseKey)}" ${isOpen ? 'open' : ''} ontoggle="handleHomeDetailsToggle(this)">
         <summary class="home-lesson-card-header">
@@ -999,15 +1102,38 @@ function buildHomeProjectFilteredBodyHtml(atomicas, fuentes, mapas, projObj) {
           </div>
           <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
             <span style="font-size:11.5px; color:var(--text-muted);">${lec.fecha ? `${escapeHtml(lec.fecha)} · ` : ''}${noteCount} ${ui('notas', 'notes')}${mapsInLec.length > 0 ? ` · ${mapsInLec.length} ${ui('mapas', 'maps')}` : ''}</span>
-            <span class="home-collapse-pill">${ui('Desplegar / Plegar', 'Expand / Collapse')}</span>
+            <span class="home-collapse-pill">${ui('Estudiar tema ▾', 'Study topic ▾')}</span>
           </div>
         </summary>
         <div class="home-lesson-card-body">
+          ${(firstMapId || firstAtomicaId || firstFuenteId) ? `
+            <div class="home-lesson-study-actions">
+              <span class="hlsa-label">🎓 ${ui('Ruta de estudio de este tema:', 'Study path for this topic:')}</span>
+              <div class="hlsa-buttons">
+                ${firstFuenteId ? `
+                  <button type="button" class="btn-lesson-study-action action-source" onclick="openNoteInStudyStage('fuente', '${escapeHtml(firstFuenteId)}')">
+                    1. 📄 ${ui('Leer Resumen Fuente', 'Read Source Summary')}
+                  </button>
+                ` : ''}
+                ${firstAtomicaId ? `
+                  <button type="button" class="btn-lesson-study-action action-atomic" onclick="studyLessonNotesFromHome(${inlineArgument(lec.modulo || '')}, ${inlineArgument(lec.titulo || '')}, '${escapeHtml(firstAtomicaId)}')">
+                    2. ⚛️ ${ui('Estudiar Conceptos Paso a Paso', 'Study Concepts Step-by-Step')} (${notesInLec.length})
+                  </button>
+                ` : ''}
+                ${firstMapId ? `
+                  <button type="button" class="btn-lesson-study-action action-map" onclick="studyLessonMapFromHome('${escapeHtml(firstMapId)}')">
+                    3. 🗺️ ${ui('Abrir Mapa del Tema', 'Open Topic Map')}
+                  </button>
+                ` : ''}
+              </div>
+            </div>
+          ` : ''}
+
           ${notesInLec.length > 0 ? `
             <div class="home-lesson-notes-chips">
-              ${notesInLec.map(a => `
-                <button type="button" class="home-note-chip" onclick="openReaderModal('atomica', '${escapeHtml(a.id)}')">
-                  ⚛️ ${escapeHtml(a.data?.titulo || a.id)}
+              ${notesInLec.map((a, idx) => `
+                <button type="button" class="home-note-chip" onclick="openNoteInStudyStage('atomica', '${escapeHtml(a.id)}')" title="${ui('Abrir concepto en vista de estudio', 'Open concept in study view')}">
+                  <span style="opacity:0.65; font-size:11px; font-weight:700;">${String(idx + 1).padStart(2, '0')}.</span> ⚛️ ${escapeHtml(a.data?.titulo || a.id)}
                 </button>
               `).join('')}
             </div>
@@ -1020,7 +1146,7 @@ function buildHomeProjectFilteredBodyHtml(atomicas, fuentes, mapas, projObj) {
             <div style="margin-top:8px; padding-top:8px; border-top:1px dashed var(--border-subtle); display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
               <span style="font-size:11px; color:var(--text-muted); font-weight:600;">${ui('Mapas del tema:', 'Topic maps:')}</span>
               ${mapsInLec.map(m => `
-                <button type="button" class="home-note-chip" style="font-size:11.5px; padding:4px 9px;" onclick="openReaderModal('mapa', '${escapeHtml(m.id)}')">
+                <button type="button" class="home-note-chip" style="font-size:11.5px; padding:4px 9px;" onclick="studyLessonMapFromHome('${escapeHtml(m.id)}')">
                   🗺️ ${escapeHtml(m.data?.titulo || m.id)} (${(m.data?.subtemas || []).length})
                 </button>
               `).join('')}
@@ -1030,7 +1156,7 @@ function buildHomeProjectFilteredBodyHtml(atomicas, fuentes, mapas, projObj) {
             <div style="margin-top:8px; padding-top:8px; border-top:1px dashed var(--border-subtle); display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
               <span style="font-size:11px; color:var(--text-muted); font-weight:600;">${ui('Fuentes del tema:', 'Topic sources:')}</span>
               ${sourcesInLec.map(f => `
-                <button type="button" class="home-note-chip" style="font-size:11.5px; padding:4px 9px;" onclick="openReaderModal('fuente', '${escapeHtml(f.id)}')">
+                <button type="button" class="home-note-chip" style="font-size:11.5px; padding:4px 9px;" onclick="openNoteInStudyStage('fuente', '${escapeHtml(f.id)}')">
                   📄 ${escapeHtml(f.data?.titulo || f.id)}
                 </button>
               `).join('')}
@@ -1125,7 +1251,7 @@ function buildHomeProjectFilteredBodyHtml(atomicas, fuentes, mapas, projObj) {
                 if (meta.leccionNum) prefixParts.push(`L${meta.leccionNum}`);
                 const prefixLabel = prefixParts.length > 0 ? `[${escapeHtml(prefixParts.join(' · '))}] ` : '';
                 return `
-                  <button type="button" class="home-note-chip" onclick="openReaderModal('atomica', '${escapeHtml(a.id)}')">
+                  <button type="button" class="home-note-chip" onclick="openNoteInStudyStage('atomica', '${escapeHtml(a.id)}')">
                     ⚛️ <span style="opacity:0.72; font-size:11.5px;">${prefixLabel}</span>${escapeHtml(a.data?.titulo || a.id)}
                   </button>
                 `;
@@ -1171,7 +1297,7 @@ function buildHomeProjectFilteredBodyHtml(atomicas, fuentes, mapas, projObj) {
           ${filteredFuentes.length > 0 ? `
             <div class="home-lesson-notes-chips">
               ${filteredFuentes.map(f => `
-                <button type="button" class="home-note-chip" onclick="openReaderModal('fuente', '${escapeHtml(f.id)}')">
+                <button type="button" class="home-note-chip" onclick="openNoteInStudyStage('fuente', '${escapeHtml(f.id)}')">
                   📄 ${escapeHtml(f.data?.titulo || f.id)}
                 </button>
               `).join('')}
@@ -1206,7 +1332,7 @@ function buildHomeProjectFilteredBodyHtml(atomicas, fuentes, mapas, projObj) {
           ${filteredMapas.length > 0 ? `
             <div class="home-lesson-notes-chips">
               ${filteredMapas.map(m => `
-                <button type="button" class="home-note-chip" onclick="openReaderModal('mapa', '${escapeHtml(m.id)}')">
+                <button type="button" class="home-note-chip" onclick="studyLessonMapFromHome('${escapeHtml(m.id)}')">
                   🗺️ ${escapeHtml(m.data?.titulo || m.id)} (${(m.data?.subtemas || []).length})
                 </button>
               `).join('')}
@@ -1220,6 +1346,30 @@ function buildHomeProjectFilteredBodyHtml(atomicas, fuentes, mapas, projObj) {
       </details>
     `
     : '';
+
+  // Si el proyecto ya tiene Módulos/Lecciones estructurados, agrupamos los listados globales en un único cajón secundario plegado para evitar duplicar visualmente todo el temario
+  if (unifiedLessons.length > 0 && atomicas.length > 0) {
+    const openFullIdx = isHomeKeyExpanded('sec:full-index', Boolean(q));
+    return `
+      ${lessonsSectionHtml}
+      <details class="home-collapsible-section home-secondary-index-drawer" data-collapse-key="sec:full-index" ${openFullIdx ? 'open' : ''} ontoggle="handleHomeDetailsToggle(this)" style="margin-top: 18px;">
+        <summary class="home-collapsible-section-header">
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <span class="home-chevron">▸</span>
+            <h3 style="margin:0; font-size:14px; font-weight:600; color:var(--text-secondary);">
+              🗂️ ${ui('Índice global de elementos del proyecto', 'Complete Project Item Index')} (⚛️ ${atomicas.length} · 📄 ${fuentes.length} · 🗺️ ${mapas.length})
+            </h3>
+          </div>
+          <span class="home-collapse-pill">${ui('Ver listado completo', 'Show full list')}</span>
+        </summary>
+        <div class="home-collapsible-section-body" style="display:flex; flex-direction:column; gap:10px;">
+          ${recentNotesHtml}
+          ${sourcesHtml}
+          ${mapsHtml}
+        </div>
+      </details>
+    `;
+  }
 
   return `
     ${lessonsSectionHtml}
@@ -1904,6 +2054,8 @@ function switchView(viewName) {
   const target = document.getElementById(`view-${viewName}`);
   if (target) target.classList.add('active');
 
+  if (typeof updateStudyCompass === 'function') updateStudyCompass();
+
   // Lógica específica por vista
   if (viewName === 'inicio') {
     renderHomeView();
@@ -1918,6 +2070,49 @@ function switchView(viewName) {
   }
 }
 window.switchView = switchView;
+
+window.openNoteInStudyStage = function(tipo, id) {
+  if (!id) return;
+  if (tipo === 'atomica') {
+    switchView('atomicas');
+    if (typeof selectExpandedAtomica === 'function') {
+      state.activeExpandedAtomicaId = null; // force open
+      selectExpandedAtomica(id);
+    }
+  } else if (tipo === 'fuente') {
+    switchView('fuentes');
+    if (typeof selectExpandedFuente === 'function') {
+      state.activeExpandedFuenteId = null; // force open
+      selectExpandedFuente(id);
+    }
+  } else if (tipo === 'mapa') {
+    switchView('mapas');
+    if (typeof selectExpandedMapa === 'function') {
+      state.activeExpandedMapaId = null; // force open
+      selectExpandedMapa(id);
+    }
+  }
+};
+
+window.studyLessonMapFromHome = function(mapId) {
+  if (!mapId) return;
+  state.mapViewMode = 'cards';
+  document.getElementById('btn-map-cards-view')?.classList.add('active');
+  document.getElementById('btn-map-matrix-view')?.classList.remove('active');
+  state.activeExpandedMapaId = null;
+  switchView('mapas');
+  if (typeof selectExpandedMapa === 'function') selectExpandedMapa(mapId);
+};
+
+window.studyLessonNotesFromHome = function(modulo, leccionTitulo, firstAtomicaId) {
+  state.selectedAtomicaModulo = modulo || '';
+  state.selectedAtomicaLeccion = leccionTitulo || '';
+  state.atomicaSearchQuery = '';
+  state.activeExpandedAtomicaId = firstAtomicaId || null;
+  state.activeExpandedAtomicaTab = null;
+  switchView('atomicas');
+  renderAtomicasView();
+};
 
 
 // -------------------------------------------------------------
@@ -5128,6 +5323,10 @@ function renderAtomicasView() {
   const hasFlashcard = Boolean(activeNote.pregunta && activeNote.pregunta.pregunta);
   const activeDrawerTab = state.activeExpandedAtomicaTab || null; // 'recall' | 'connections' | 'details' | null
 
+  const currentIdx = itemsWithMeta.findIndex(e => e.item.id === activeNote.id);
+  const prevItem = currentIdx > 0 ? itemsWithMeta[currentIdx - 1].item : null;
+  const nextItem = (currentIdx >= 0 && currentIdx < itemsWithMeta.length - 1) ? itemsWithMeta[currentIdx + 1].item : null;
+
   container.innerHTML = `
     <div class="atomicas-split-stage-workspace">
       <!-- COLUMNA IZQUIERDA: ÍNDICE COMPACTO Y SILENCIOSO DE NOTAS -->
@@ -5145,7 +5344,7 @@ function renderAtomicasView() {
 
       <!-- COLUMNA DERECHA: LECTURA SERENA Y REVELACIÓN PROGRESIVA -->
       <section class="atomica-expanded-spotlight atomica-calm-stage">
-        <!-- 1. CABECERA LIMPIA SIN DUPLICADOS -->
+        <!-- 1. CABECERA LIMPIA CON NAVEGACIÓN SECUENCIAL DE ESTUDIO -->
         <header class="atomica-spotlight-header">
           <div class="atomica-spotlight-top-bar">
             <div class="smc-badges-left">
@@ -5154,6 +5353,15 @@ function renderAtomicasView() {
             </div>
 
             <div class="mapa-spotlight-actions">
+              <div class="study-seq-nav">
+                <button type="button" class="btn-seq-step" ${prevItem ? `onclick="selectExpandedAtomica('${escapeHtml(prevItem.id)}')"` : 'disabled'} title="${prevItem ? escapeHtml(prevItem.data?.titulo || prevItem.id) : ui('Primera nota', 'First note')}">
+                  ← ${ui("Anterior", "Prev")}
+                </button>
+                <span class="study-seq-counter">${currentIdx + 1} / ${itemsWithMeta.length}</span>
+                <button type="button" class="btn-seq-step" ${nextItem ? `onclick="selectExpandedAtomica('${escapeHtml(nextItem.id)}')"` : 'disabled'} title="${nextItem ? escapeHtml(nextItem.data?.titulo || nextItem.id) : ui('Última nota', 'Last note')}">
+                  ${ui("Siguiente", "Next")} →
+                </button>
+              </div>
               <button type="button" class="btn-ghost" style="padding: 6px 12px; font-size: 12px;" onclick="openAtomicaModal('${escapeHtml(activeNote.id)}')">
                 ${ui("✏️ Editar", "✏️ Edit")}
               </button>
@@ -5167,7 +5375,7 @@ function renderAtomicasView() {
 
           ${sourceConn ? `
             <div class="atomica-spotlight-source-bar">
-              <button type="button" class="mapa-source-pill" onclick="openReaderModal('fuente', '${escapeHtml(sourceConn.id)}')" title="${ui('Abrir Nota Fuente de origen', 'Open origin Source Note')}">
+              <button type="button" class="mapa-source-pill" onclick="openNoteInStudyStage('fuente', '${escapeHtml(sourceConn.id)}')" title="${ui('Abrir Nota Fuente de origen', 'Open origin Source Note')}">
                 <span>${sourceConn.icon}</span>
                 <span><strong>${ui("Fuente:", "Source:")}</strong> ${escapeHtml(sourceConn.titulo)} ↗</span>
               </button>
@@ -5671,6 +5879,9 @@ function renderFuentesView() {
   renderVerticalFoldersSidebar('fuente');
 
   if (items.length === 0) {
+    container.classList.remove('atomicas-stage-active');
+    const vfEl = document.getElementById('view-fuentes');
+    if (vfEl) vfEl.classList.remove('has-expanded-stage');
     container.innerHTML = `
       <div class="empty-state" style="grid-column: 1 / -1;">
         <div class="empty-icon">📚</div>
@@ -5685,6 +5896,7 @@ function renderFuentesView() {
   allAtomicas.forEach(a => { atomicaMap[a.id] = a; });
 
   const typeIcons = {
+    curso: '🎓',
     video: '🎬',
     articulo: '📄',
     libro: '📖',
@@ -5695,19 +5907,20 @@ function renderFuentesView() {
   };
 
   const typeLabels = {
+    curso: ui('CURSO', 'COURSE'),
     video: 'VIDEO',
-    articulo: 'NOTE',
-    libro: 'DOCUMENT',
-    documento: 'DOCUMENT',
-    pdf: 'DOCUMENT',
+    articulo: ui('APUNTE', 'NOTE'),
+    libro: ui('LIBRO', 'BOOK'),
+    documento: ui('DOCUMENTO', 'DOCUMENT'),
+    pdf: 'PDF',
     podcast: 'PODCAST',
-    otro: 'NOTE'
+    otro: ui('FUENTE', 'SOURCE')
   };
 
   const activeProjObj = findActiveProjectObj();
   const allMapas = state.notes.mapa || [];
 
-  container.innerHTML = items.map(item => {
+  const itemsWithMeta = items.map(item => {
     const directIdeas = Array.isArray(item.data.ideas_disparadas) ? item.data.ideas_disparadas : [];
     const connectedAtomicas = [];
     const seenIds = new Set();
@@ -5746,22 +5959,26 @@ function renderFuentesView() {
         });
       }
     });
+    connectedMapas.sort((a, b) => Number(a.isMaster) - Number(b.isMaster));
 
     const itemCampo = item.campo || (item.data && item.data.campo);
     const itemProyecto = item.proyecto || (item.data && item.data.proyecto);
     const itemCurrMeta = getNoteCurriculumMeta(item, activeProjObj);
     const rawTipo = (item.data.tipo_fuente || 'otro').toLowerCase();
     const typeIcon = typeIcons[rawTipo] || '📑';
-    const typeLabel = typeLabels[rawTipo] || 'NOTE';
+    const typeLabel = typeLabels[rawTipo] || ui('FUENTE', 'SOURCE');
 
-    const puntosMatch = item.content.match(/## (?:Puntos clave \(parafraseados, no copiados\)|Key points \(paraphrased,? not copied\)|Key points)([\s\S]*?)(?=## (?:Ideas propias|Ideas it sparks|My own ideas)|$)/i);
-    let rawSnippet = (puntosMatch ? puntosMatch[1] : item.content) || '';
-    rawSnippet = rawSnippet.replace(/^#+\s+.*$/gm, '').replace(/^-+\s*/gm, '').trim();
-    const snippetText = getCardSnippet(rawSnippet || ui("(Sin contenido adicional)", "(No additional content)"), 150);
+    const sourcePillars = typeof parseSourceNotePillars === 'function'
+      ? parseSourceNotePillars(item.content || '')
+      : { structured: false, raw: item.content || '' };
+    const keyPointsRaw = sourcePillars.structured
+      ? (sourcePillars.puntos || item.content || '')
+      : (sourcePillars.raw || item.content || '');
+    const citasRaw = sourcePillars.structured ? (sourcePillars.citas || '') : '';
 
-    const previewAtomicas = connectedAtomicas.slice(0, 3);
+    let rawSnippet = keyPointsRaw.replace(/^#+\s+.*$/gm, '').replace(/^-+\s*/gm, '').replace(/\s+/g, ' ').trim();
+    const snippetText = getCardSnippet(rawSnippet || ui("(Sin puntos clave adicionales)", "(No additional key points)"), 170);
 
-    // Topic pill label and color
     let topicName = itemProyecto || itemCampo || (item.data.tags && item.data.tags[0]) || '';
     if (topicName.startsWith('atomica-') || topicName.startsWith('fuente-')) {
       topicName = humanizeSlug(topicName);
@@ -5778,124 +5995,346 @@ function renderFuentesView() {
       topicColorClass = 'pill-topic-blue';
     }
 
-    // Media Thumbnail Box (only for real media)
-    let thumbnailHtml = '';
-    if (rawTipo === 'video') {
-      thumbnailHtml = `
-        <div class="smc-media-thumb thumb-video">
-          <div class="thumb-video-glow"></div>
-          <div class="thumb-play-overlay">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
-          </div>
-        </div>
-      `;
-    } else if (['documento', 'pdf', 'libro'].includes(rawTipo)) {
-      thumbnailHtml = `
-        <div class="smc-media-thumb thumb-document">
-          <div class="thumb-doc-icon">📄</div>
-          <span class="thumb-doc-tag">PDF</span>
-        </div>
-      `;
-    }
+    const shortTopicName = topicName.length > 28 ? topicName.slice(0, 26) + '…' : topicName;
+    const shortModuleLabel = itemCurrMeta.modulo || '';
+    const shortModPill = shortModuleLabel.length > 26 ? shortModuleLabel.slice(0, 24) + '…' : shortModuleLabel;
+    const shortLessonLabel = itemCurrMeta.leccionDisplay || '';
+    const shortLessonPill = shortLessonLabel.length > 28 ? shortLessonLabel.slice(0, 26) + '…' : shortLessonLabel;
 
-    const currPillLabel = itemCurrMeta.leccion
-      ? (itemCurrMeta.modulo ? `${itemCurrMeta.modulo} · ${itemCurrMeta.leccion}` : itemCurrMeta.leccion)
-      : itemCurrMeta.modulo;
+    return {
+      item,
+      connectedAtomicas,
+      connectedMapas,
+      itemCampo,
+      itemProyecto,
+      itemCurrMeta,
+      rawTipo,
+      typeIcon,
+      typeLabel,
+      keyPointsRaw: keyPointsRaw.trim(),
+      citasRaw: citasRaw.trim(),
+      snippetText,
+      topicName,
+      shortTopicName,
+      topicColorClass,
+      shortModuleLabel,
+      shortModPill,
+      shortLessonLabel,
+      shortLessonPill
+    };
+  });
 
-    return `
-      <div class="source-modern-card" onclick="openReaderModal('fuente', '${item.id}')">
-        <div class="smc-header-row">
+  const expandedEntry = state.activeExpandedFuenteId
+    ? itemsWithMeta.find(entry => entry.item.id === state.activeExpandedFuenteId) || null
+    : null;
+  const viewFuentesEl = document.getElementById('view-fuentes');
+  if (viewFuentesEl) {
+    viewFuentesEl.classList.toggle('has-expanded-stage', Boolean(expandedEntry));
+    viewFuentesEl.classList.toggle('show-folders-drawer', Boolean(state.showFuentesFoldersDrawer && !expandedEntry));
+  }
+  const folderBtn = document.getElementById('btn-toggle-fuente-folders');
+  if (folderBtn) {
+    folderBtn.classList.toggle('active', Boolean(state.showFuentesFoldersDrawer && !expandedEntry));
+  }
+
+  // ══════════════════════════════════════════════════════════════════════════
+  // MODO 1: CUADRÍCULA LIMPIA Y DESCANSADA DE NOTAS FUENTE (CERO SATURACIÓN)
+  // ══════════════════════════════════════════════════════════════════════════
+  if (!expandedEntry) {
+    container.classList.remove('atomicas-stage-active');
+    container.innerHTML = itemsWithMeta.map(({ item, connectedAtomicas, connectedMapas, itemProyecto, rawTipo, typeIcon, typeLabel, snippetText, topicName, shortTopicName, topicColorClass, shortModuleLabel, shortModPill, shortLessonLabel, shortLessonPill }) => `
+      <div class="source-modern-card atomic-redbox-card source-clean-card" onclick="selectExpandedFuente('${escapeHtml(item.id)}')" title="${ui('Haz clic para abrir y estudiar esta fuente', 'Click to open and study this source')}">
+        <div class="smc-header-row atomic-clean-header">
           <div class="smc-badges-left">
             <span class="smc-pill smc-pill-${rawTipo === 'video' ? 'video' : (['documento', 'pdf', 'libro'].includes(rawTipo) ? 'document' : 'note')}">
               ${typeIcon} ${escapeHtml(typeLabel)}
             </span>
-            ${topicName ? `<span class="smc-pill ${topicColorClass}">${escapeHtml(topicName)}</span>` : ''}
-            ${currPillLabel ? `<span class="smc-pill pill-topic-green" title="${escapeHtml(currPillLabel)}">📖 ${escapeHtml(currPillLabel.length > 28 ? currPillLabel.slice(0, 26) + '…' : currPillLabel)}</span>` : ''}
+            ${shortTopicName ? `<span class="smc-pill ${topicColorClass}" title="${escapeHtml(topicName)}">${escapeHtml(shortTopicName)}</span>` : ''}
+            ${shortModPill ? `<span class="smc-pill pill-topic-green" title="${escapeHtml(shortModuleLabel)}">📦 ${escapeHtml(shortModPill)}</span>` : ''}
+            ${shortLessonPill ? `<span class="smc-pill pill-topic-blue" title="${escapeHtml(shortLessonLabel)}">📖 ${escapeHtml(shortLessonPill)}</span>` : ''}
           </div>
-          <span class="smc-date-text">${item.data.creado || ''}</span>
         </div>
 
         <div class="smc-title-media-row">
-          <div class="smc-title-col ${thumbnailHtml ? '' : 'smc-title-fullwidth'}">
+          <div class="smc-title-col smc-title-fullwidth">
             <h3 class="smc-title-text" title="${escapeHtml(item.data.titulo || item.id)}">${escapeHtml(item.data.titulo || item.id)}</h3>
             ${item.data.autor ? `
-              <div class="smc-author-line">
+              <div class="smc-author-line atomic-calm-source-line">
                 <span class="smc-author-avatar">👤</span>
                 <span class="smc-author-name">${escapeHtml(item.data.autor)}</span>
-                ${item.data.url ? `<a href="${escapeHtml(item.data.url)}" target="_blank" rel="noopener noreferrer" class="smc-ext-link" onclick="event.stopPropagation();" title="${ui("Abrir enlace original", "Open source link")}">↗</a>` : ''}
               </div>
             ` : (itemProyecto ? `
-              <div class="smc-author-line">
+              <div class="smc-author-line atomic-calm-source-line">
                 <span class="smc-author-avatar">🎯</span>
                 <span class="smc-author-name">${escapeHtml(itemProyecto)}</span>
               </div>
             ` : '')}
           </div>
-          ${thumbnailHtml}
         </div>
 
-        <div class="smc-snippet-text">
+        <div class="smc-snippet-text source-card-snippet">
           ${escapeHtml(snippetText)}
         </div>
 
-        ${connectedMapas.length > 0 ? `
-          <div class="mapa-related-maps-bar" style="margin-bottom:10px;" onclick="event.stopPropagation();">
-            <span class="mapa-related-maps-title">🗺️ ${ui("Mapas de Contenido de esta Fuente", "Content Maps from this Source")} (${connectedMapas.length})</span>
-            <div class="mapa-related-maps-chips">
-              ${connectedMapas.map(cm => `
-                <button type="button" class="mapa-related-chip" onclick="event.stopPropagation(); openReaderModal('mapa', '${escapeHtml(cm.id)}')">
-                  ${cm.isMaster ? '🎓' : '🗺️'} ${escapeHtml(cm.titulo.length > 28 ? cm.titulo.slice(0, 26) + '…' : cm.titulo)}
-                </button>
-              `).join('')}
-            </div>
+        <div class="fuente-clean-footer">
+          <div class="fuente-footer-pills">
+            <span class="fuente-derived-pill">⚛️ ${connectedAtomicas.length} ${ui("conceptos", "concepts")}</span>
+            ${connectedMapas.length > 0 ? `<span class="fuente-derived-pill map-pill">🗺️ ${connectedMapas.length} ${ui("mapas", "maps")}</span>` : ''}
           </div>
-        ` : ''}
-
-        <div class="smc-connections-box">
-          <div class="smc-connections-header">
-            <span class="smc-conn-header-left">
-              <span class="smc-conn-icon">⚛️</span>
-              <span class="smc-conn-title">${ui("Notas Atómicas Conectadas", "Connected Atomic Notes")}</span>
-            </span>
-            <span class="smc-conn-count-pill">${connectedAtomicas.length}</span>
-          </div>
-
-          ${connectedAtomicas.length === 0 ? `
-            <div class="smc-conn-empty">
-              ${ui("Sin notas atómicas vinculadas aún", "No connected atomic notes yet")}
-            </div>
-          ` : `
-            <div class="smc-conn-items-list">
-              ${previewAtomicas.map(a => `
-                <div class="smc-conn-item-row" onclick="event.stopPropagation(); openReaderModal('atomica', '${escapeHtml(a.id)}')" title="${ui("Ver nota atómica", "View atomic note")}">
-                  <span class="smc-conn-item-icon">⚛️</span>
-                  <span class="smc-conn-item-title">${escapeHtml(a.titulo)}</span>
-                </div>
-              `).join('')}
-            </div>
-          `}
+          <span class="source-open-hint">${ui("Leer fuente →", "Read source →")}</span>
         </div>
+      </div>
+    `).join('');
+    return;
+  }
 
-        <div class="smc-footer-row">
-          <button class="btn-smc-open-source" onclick="event.stopPropagation(); openReaderModal('fuente', '${item.id}')">
-            ${ui("Open Source", "Open Source")} ↗
-          </button>
-          <div class="smc-footer-icons">
-            <button class="btn-smc-icon" onclick="event.stopPropagation(); copyNoteLink('fuente', '${item.id}')" title="${ui("Copiar enlace", "Copy link")}">
-              📋
-            </button>
-            <a href="https://www.google.com/search?q=${encodeURIComponent((item.data && (item.data.busqueda_google || item.data.titulo)) || item.id)}" target="_blank" rel="noopener noreferrer" class="btn-smc-icon" onclick="event.stopPropagation();" title="${ui("Buscar en Google", "Search on Google")}">
-              🔍
-            </a>
-            <button class="btn-smc-icon" onclick="event.stopPropagation(); openFuenteModal('${item.id}')" title="${ui("Editar fuente", "Edit source")}">
-              •••
-            </button>
-          </div>
-        </div>
+  // ══════════════════════════════════════════════════════════════════════════
+  // MODO 2: ESCENARIO SPLIT-STAGE PARA NOTAS FUENTE CON REVELACIÓN PROGRESIVA
+  // ══════════════════════════════════════════════════════════════════════════
+  container.classList.add('atomicas-stage-active');
+
+  const railHtml = itemsWithMeta.map(({ item, typeIcon, shortModPill, shortLessonPill }) => {
+    const isCurrent = item.id === expandedEntry.item.id;
+    const subBadge = shortLessonPill || shortModPill;
+    return `
+      <div class="atomica-mini-rail-card ${isCurrent ? 'is-active-stage' : ''}" onclick="selectExpandedFuente('${escapeHtml(item.id)}')" title="${isCurrent ? ui('Haz clic para cerrar y volver a la cuadrícula', 'Click to close and return to grid') : ui('Abrir esta nota fuente', 'Open this source note')}">
+        <h4 class="atomica-mini-title">${typeIcon} ${escapeHtml(item.data.titulo || item.id)}</h4>
+        ${subBadge ? `<span class="atomica-mini-mod-sub">📖 ${escapeHtml(subBadge)}</span>` : ''}
       </div>
     `;
   }).join('');
+
+  const {
+    item: activeFuente,
+    connectedAtomicas,
+    connectedMapas,
+    itemCampo,
+    itemProyecto,
+    itemCurrMeta,
+    rawTipo,
+    typeIcon,
+    typeLabel,
+    keyPointsRaw,
+    citasRaw,
+    topicName,
+    shortTopicName,
+    topicColorClass,
+    shortModuleLabel,
+    shortModPill,
+    shortLessonLabel,
+    shortLessonPill
+  } = expandedEntry;
+
+  const currentIdx = itemsWithMeta.findIndex(e => e.item.id === activeFuente.id);
+  const prevItem = currentIdx > 0 ? itemsWithMeta[currentIdx - 1].item : null;
+  const nextItem = (currentIdx >= 0 && currentIdx < itemsWithMeta.length - 1) ? itemsWithMeta[currentIdx + 1].item : null;
+  const activeDrawerTab = state.activeExpandedFuenteTab !== undefined ? state.activeExpandedFuenteTab : (connectedAtomicas.length > 0 ? 'concepts' : null);
+  const noteTags = Array.isArray(activeFuente.data?.tags) ? activeFuente.data.tags : [];
+  const folderName = (activeFuente.data && activeFuente.data.carpeta) || activeFuente.carpeta || '';
+  const googleQuery = (activeFuente.data && (activeFuente.data.busqueda_google || activeFuente.data.titulo)) || activeFuente.id;
+
+  container.innerHTML = `
+    <div class="atomicas-split-stage-workspace">
+      <!-- COLUMNA IZQUIERDA: ÍNDICE COMPACTO DE FUENTES -->
+      <aside class="atomicas-compact-rail">
+        <div class="mapas-rail-header">
+          <span class="mapas-rail-title">📄 ${ui("Fuentes", "Sources")} (${itemsWithMeta.length})</span>
+          <button type="button" class="btn-rail-collapse-all" onclick="selectExpandedFuente(null)" title="${ui('Volver a la cuadrícula de fuentes', 'Return to sources grid')}">
+            ⊞ ${ui("Cuadrícula", "Grid View")}
+          </button>
+        </div>
+        <div class="atomicas-rail-list" id="fuentes-rail-scroll-list">
+          ${railHtml}
+        </div>
+      </aside>
+
+      <!-- COLUMNA DERECHA: LECTURA DE PUNTOS CLAVE, CITAS Y CONCEPTOS EXTRAÍDOS -->
+      <section class="atomica-expanded-spotlight atomica-calm-stage source-expanded-spotlight">
+        <header class="atomica-spotlight-header">
+          <div class="atomica-spotlight-top-bar">
+            <div class="smc-badges-left">
+              <span class="smc-pill smc-pill-${rawTipo === 'video' ? 'video' : (['documento', 'pdf', 'libro'].includes(rawTipo) ? 'document' : 'note')}">
+                ${typeIcon} ${escapeHtml(typeLabel)}
+              </span>
+              ${shortTopicName ? `<span class="smc-pill ${topicColorClass}" title="${escapeHtml(topicName)}">${escapeHtml(shortTopicName)}</span>` : ''}
+              ${shortModPill ? `<span class="smc-pill pill-topic-green" title="${escapeHtml(shortModuleLabel)}">📦 ${escapeHtml(shortModPill)}</span>` : ''}
+              ${shortLessonPill ? `<span class="smc-pill pill-topic-blue" title="${escapeHtml(shortLessonLabel)}">📖 ${escapeHtml(shortLessonPill)}</span>` : ''}
+            </div>
+
+            <div class="mapa-spotlight-actions">
+              <div class="study-seq-nav">
+                <button type="button" class="btn-seq-nav" ${prevItem ? `onclick="selectExpandedFuente('${escapeHtml(prevItem.id)}')"` : 'disabled'} title="${prevItem ? escapeHtml(prevItem.data?.titulo || prevItem.id) : ''}">
+                  ← ${ui("Anterior", "Prev")}
+                </button>
+                <span class="study-seq-counter">${currentIdx + 1} / ${itemsWithMeta.length}</span>
+                <button type="button" class="btn-seq-nav" ${nextItem ? `onclick="selectExpandedFuente('${escapeHtml(nextItem.id)}')"` : 'disabled'} title="${nextItem ? escapeHtml(nextItem.data?.titulo || nextItem.id) : ''}">
+                  ${ui("Siguiente", "Next")} →
+                </button>
+              </div>
+              ${connectedAtomicas.length > 0 ? `
+                <button type="button" class="btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="openNoteInStudyStage('atomica', '${escapeHtml(connectedAtomicas[0].id)}')">
+                  🎓 ${ui("Estudiar Conceptos", "Study Concepts")} (${connectedAtomicas.length}) →
+                </button>
+              ` : ''}
+              <button type="button" class="btn-ghost" style="padding: 6px 11px; font-size: 12px;" onclick="openReaderModal('fuente', '${escapeHtml(activeFuente.id)}')">
+                ${ui("👁️ Lector", "👁️ Reader")}
+              </button>
+              <button type="button" class="btn-ghost" style="padding: 6px 11px; font-size: 12px;" onclick="openFuenteModal('${escapeHtml(activeFuente.id)}')">
+                ${ui("✏️ Editar", "✏️ Edit")}
+              </button>
+              <button type="button" class="btn-spotlight-close" onclick="selectExpandedFuente(null)">
+                ✕ ${ui("Cerrar", "Close")}
+              </button>
+            </div>
+          </div>
+
+          <h2 class="atomica-spotlight-title">${escapeHtml(activeFuente.data.titulo || activeFuente.id)}</h2>
+
+          <div class="atomica-spotlight-source-bar" style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            ${activeFuente.data.autor ? `<span class="mapa-curr-pill">👤 ${escapeHtml(activeFuente.data.autor)}</span>` : ''}
+            ${activeFuente.data.creado ? `<span class="card-date">📅 ${escapeHtml(activeFuente.data.creado)}</span>` : ''}
+            ${activeFuente.data.url ? `<a href="${escapeHtml(activeFuente.data.url)}" target="_blank" rel="noopener noreferrer" class="mapa-source-pill">🌐 ${ui("Abrir referencia original", "Open original reference")} ↗</a>` : ''}
+            <a href="https://www.google.com/search?q=${encodeURIComponent(googleQuery)}" target="_blank" rel="noopener noreferrer" class="btn-google-pill">🔍 Google</a>
+          </div>
+        </header>
+
+        <!-- NÚCLEO DE LECTURA: PUNTOS CLAVE PARAFRASEADOS Y CITAS RELEVANTES -->
+        <div class="atomica-calm-core-reading">
+          <article class="atomic-pillar-card pillar-source-points">
+            <div class="atomic-calm-section-label">📌 ${ui("Puntos Clave (Parafraseados, no copiados)", "Key Points (Paraphrased, not copied)")}</div>
+            <div class="atomic-pillar-body reader-markdown-content">
+              ${renderMarkdown(keyPointsRaw || activeFuente.content || ui("(Sin puntos clave registrados)", "(No key points recorded)"))}
+            </div>
+          </article>
+
+          ${citasRaw ? `
+            <article class="atomic-pillar-card pillar-source-quotes">
+              <div class="atomic-calm-section-label">💬 ${ui("Citas Textuales Relevantes", "Relevant Verbatim Quotations")}</div>
+              <div class="atomic-pillar-body reader-markdown-content source-quotes-body">
+                ${renderMarkdown(citasRaw)}
+              </div>
+            </article>
+          ` : ''}
+        </div>
+
+        <!-- PESTAÑAS INFERIORES DE REVELACIÓN PROGRESIVA -->
+        <div class="atomica-progressive-dock">
+          <div class="atomica-dock-tabs-bar">
+            <span class="atomica-dock-hint">${ui("Explorar a partir de esta fuente:", "Explore from this source:")}</span>
+            <button type="button" class="atomica-dock-tab-btn ${activeDrawerTab === 'concepts' ? 'active' : ''}" onclick="switchExpandedFuenteTab('concepts')">
+              ⚛️ ${ui("Conceptos Atómicos Extraídos", "Extracted Atomic Concepts")} (${connectedAtomicas.length})
+              <span class="dock-chevron">${activeDrawerTab === 'concepts' ? '▴' : '▾'}</span>
+            </button>
+            <button type="button" class="atomica-dock-tab-btn ${activeDrawerTab === 'maps' ? 'active' : ''}" onclick="switchExpandedFuenteTab('maps')">
+              🗺️ ${ui("Mapas de Contenido", "Content Maps")} (${connectedMapas.length})
+              <span class="dock-chevron">${activeDrawerTab === 'maps' ? '▴' : '▾'}</span>
+            </button>
+            <button type="button" class="atomica-dock-tab-btn ${activeDrawerTab === 'details' ? 'active' : ''}" onclick="switchExpandedFuenteTab('details')">
+              🧭 ${ui("Ficha y Etiquetas", "Details & Tags")}
+              <span class="dock-chevron">${activeDrawerTab === 'details' ? '▴' : '▾'}</span>
+            </button>
+          </div>
+
+          ${activeDrawerTab === 'concepts' ? `
+            <div class="atomica-dock-panel">
+              <div class="atomic-inspector-card">
+                <div class="inspector-card-title">⚛️ ${ui("Haz clic en cualquier concepto para estudiarlo en detalle", "Click any concept to study it in depth")} (${connectedAtomicas.length})</div>
+                ${connectedAtomicas.length === 0 ? `
+                  <p class="text-muted" style="font-size: 12.5px; margin: 0;">${ui("Aún no se han vinculado notas atómicas a esta fuente.", "No atomic notes linked to this source yet.")}</p>
+                ` : `
+                  <div class="inspector-conn-list source-concepts-grid">
+                    ${connectedAtomicas.map((ac, idx) => `
+                      <div class="inspector-conn-pill atomic-conn-pill" onclick="openNoteInStudyStage('atomica', '${escapeHtml(ac.id)}')">
+                        <span class="icp-icon">${String(idx + 1).padStart(2, '0')}. ⚛️</span>
+                        <span class="icp-text">${escapeHtml(ac.titulo)}</span>
+                        <span class="icp-arrow">→</span>
+                      </div>
+                    `).join('')}
+                  </div>
+                `}
+              </div>
+            </div>
+          ` : ''}
+
+          ${activeDrawerTab === 'maps' ? `
+            <div class="atomica-dock-panel">
+              <div class="atomic-inspector-card">
+                <div class="inspector-card-title">🗺️ ${ui("Mapas de Contenido relacionados con esta fuente", "Content Maps related to this source")} (${connectedMapas.length})</div>
+                ${connectedMapas.length === 0 ? `
+                  <p class="text-muted" style="font-size: 12.5px; margin: 0;">${ui("No hay mapas asociados a esta fuente todavía.", "No content maps associated with this source yet.")}</p>
+                ` : `
+                  <div class="inspector-conn-list">
+                    ${connectedMapas.map(cm => `
+                      <div class="inspector-conn-pill map-conn-pill" onclick="studyLessonMapFromHome('${escapeHtml(cm.id)}')">
+                        <span class="icp-icon">${cm.isMaster ? '🎓' : '🗺️'}</span>
+                        <span class="icp-text">${escapeHtml(cm.titulo)}</span>
+                        <span class="icp-arrow">→</span>
+                      </div>
+                    `).join('')}
+                  </div>
+                `}
+              </div>
+            </div>
+          ` : ''}
+
+          ${activeDrawerTab === 'details' ? `
+            <div class="atomica-dock-panel">
+              <div class="atomic-inspector-card">
+                <div class="inspector-card-title">🧭 ${ui("Metadatos de la Fuente", "Source Metadata")}</div>
+                <div class="inspector-meta-list">
+                  ${itemProyecto ? `<div class="inspector-meta-row"><span class="im-lbl">${ui("Proyecto", "Project")}</span><span class="im-val">🎯 ${escapeHtml(itemProyecto)}</span></div>` : ''}
+                  ${itemCampo ? `<div class="inspector-meta-row"><span class="im-lbl">${ui("Campo", "Field")}</span><span class="im-val">🌐 ${escapeHtml(itemCampo)}</span></div>` : ''}
+                  ${itemCurrMeta.modulo ? `<div class="inspector-meta-row"><span class="im-lbl">${ui("Módulo", "Module")}</span><span class="im-val">📦 ${escapeHtml(itemCurrMeta.modulo)}</span></div>` : ''}
+                  ${itemCurrMeta.leccionDisplay ? `<div class="inspector-meta-row"><span class="im-lbl">${ui("Tema", "Topic")}</span><span class="im-val">📖 ${escapeHtml(itemCurrMeta.leccionDisplay)}</span></div>` : ''}
+                  ${folderName ? `<div class="inspector-meta-row"><span class="im-lbl">${ui("Carpeta", "Folder")}</span><span class="im-val">📁 ${escapeHtml(folderName)}</span></div>` : ''}
+                  ${activeFuente.data?.creado ? `<div class="inspector-meta-row"><span class="im-lbl">${ui("Creado", "Created")}</span><span class="im-val">📅 ${escapeHtml(activeFuente.data.creado)}</span></div>` : ''}
+                </div>
+                ${noteTags.length > 0 ? `
+                  <div class="inspector-tags-wrap" style="margin-top: 12px; display:flex; gap:6px; flex-wrap:wrap;">
+                    ${noteTags.map(t => `<span class="badge-hashtag" onclick="filterByTag('${escapeHtml(t)}')">#${escapeHtml(t)}</span>`).join('')}
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      </section>
+    </div>
+  `;
 }
+
+window.toggleFuentesFoldersDrawer = function() {
+  state.showFuentesFoldersDrawer = !state.showFuentesFoldersDrawer;
+  renderFuentesView();
+};
+
+window.selectExpandedFuente = function(fuenteId) {
+  if (!fuenteId || state.activeExpandedFuenteId === fuenteId) {
+    state.activeExpandedFuenteId = null;
+    state.activeExpandedFuenteTab = null;
+  } else {
+    state.activeExpandedFuenteId = fuenteId;
+    state.activeExpandedFuenteTab = 'concepts';
+  }
+  renderFuentesView();
+  if (state.activeExpandedFuenteId) {
+    setTimeout(() => {
+      const activeRailEl = document.querySelector('#fuentes-rail-scroll-list .atomica-mini-rail-card.is-active-stage');
+      if (activeRailEl && typeof activeRailEl.scrollIntoView === 'function') {
+        activeRailEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+    }, 30);
+  }
+};
+
+window.switchExpandedFuenteTab = function(tabName) {
+  if (state.activeExpandedFuenteTab === tabName) {
+    state.activeExpandedFuenteTab = null;
+  } else {
+    state.activeExpandedFuenteTab = tabName;
+  }
+  renderFuentesView();
+};
 
 window.openNewFuenteModal = function() {
   document.getElementById('modal-fuente-title').textContent = ui("Nueva Nota Fuente", "New source note");
@@ -6353,7 +6792,7 @@ function renderMapasCards() {
     const numStr = String(idx + 1).padStart(2, '0');
 
     return `
-      <div class="mapa-blueprint-node-card" onclick="openReaderModal('atomica', '${escapeHtml(s.nota_id)}')" title="${ui('Abrir nota atómica en el lector de 2 paneles', 'Open atomic note in 2-panel reader')}">
+      <div class="mapa-blueprint-node-card" onclick="openNoteInStudyStage('atomica', '${escapeHtml(s.nota_id)}')" title="${ui('Estudiar esta nota atómica en su escenario expandido', 'Study this atomic note in its expanded stage')}">
         <div class="blueprint-node-top">
           <span class="blueprint-node-num">${numStr}</span>
           <h4 class="blueprint-node-title">⚛️ ${escapeHtml(title)}</h4>
@@ -6407,7 +6846,12 @@ function renderMapasCards() {
             </div>
 
             <div class="mapa-spotlight-actions">
-              <button type="button" class="btn-primary" style="padding: 6px 13px; font-size: 12px;" onclick="openReaderModal('mapa', '${escapeHtml(m.id)}')">
+              ${subtemas.length > 0 ? `
+                <button type="button" class="btn-primary" style="padding: 6px 13px; font-size: 12px;" onclick="openNoteInStudyStage('atomica', '${escapeHtml(subtemas[0].nota_id)}')" title="${ui('Empezar a estudiar los conceptos de este mapa paso a paso', 'Start studying the concepts of this map step-by-step')}">
+                  🎓 ${ui("Estudiar Conceptos", "Study Concepts")}
+                </button>
+              ` : ''}
+              <button type="button" class="btn-ghost" style="padding: 6px 11px; font-size: 12px;" onclick="openReaderModal('mapa', '${escapeHtml(m.id)}')">
                 ${ui("👁️ Lector Completo", "👁️ Full Reader")}
               </button>
               <button type="button" class="btn-ghost" style="padding: 6px 11px; font-size: 12px;" onclick="openMapaModal('${escapeHtml(m.id)}')">
@@ -6432,7 +6876,7 @@ function renderMapasCards() {
               ${currMeta.modulo ? `<span class="mapa-curr-pill">📦 ${escapeHtml(currMeta.modulo)}</span>` : ''}
               ${currMeta.leccionDisplay ? `<span class="mapa-curr-pill">📖 ${escapeHtml(currMeta.leccionDisplay)}</span>` : ''}
               ${fuenteId ? `
-                <button type="button" class="mapa-source-pill" onclick="openReaderModal('fuente', '${escapeHtml(fuenteId)}')">
+                <button type="button" class="mapa-source-pill" onclick="openNoteInStudyStage('fuente', '${escapeHtml(fuenteId)}')">
                   📄 ${ui("Fuente:", "Source:")} ${escapeHtml(fuenteTitle)} ↗
                 </button>
               ` : ''}
@@ -6496,7 +6940,7 @@ function renderMapasCards() {
           <div class="mapa-blueprint-header">
             <div>
               <h3 class="mapa-blueprint-heading">🧭 ${ui("Arquitectura de Conceptos Conectados", "Connected Concepts Architecture")} (${subtemas.length})</h3>
-              <p class="mapa-blueprint-sub">${ui("Cada tarjeta muestra el rol estructural del concepto en este mapa y una síntesis de su idea central. Haz clic en cualquier concepto para abrir su lector de 2 paneles.", "Each card displays the concept's structural role in this map alongside a synthesis of its core idea. Click any concept to open its 2-panel reader.")}</p>
+              <p class="mapa-blueprint-sub">${ui("Cada tarjeta muestra el rol estructural del concepto en este mapa y una síntesis de su idea central. Haz clic en cualquier concepto para estudiarlo en detalle.", "Each card displays the concept's structural role in this map alongside a synthesis of its core idea. Click any concept to study it in detail.")}</p>
             </div>
           </div>
 
@@ -6833,14 +7277,17 @@ function renderFlashcard() {
   const card = document.getElementById('flashcard-container');
   const empty = document.getElementById('review-empty-state');
   const statusText = document.getElementById('queue-status-text');
+  const progressWrap = document.getElementById('review-session-progress-wrap');
+  const progressFill = document.getElementById('review-session-progress-fill');
 
   if (!state.reviewQueue || state.reviewQueue.length === 0 || state.currentReviewIndex >= state.reviewQueue.length) {
     if (card) card.style.display = 'none';
+    if (progressWrap) progressWrap.style.display = 'none';
     if (empty) {
       empty.style.display = 'block';
       const noCards = !state.notes.preguntasCount;
-      empty.querySelector('h3').textContent = noCards ? ui('Todavía no hay tarjetas', 'No flashcards yet') : ui('No quedan tarjetas pendientes', 'No cards left to review');
-      empty.querySelector('p').textContent = noCards ? ui('Añade una pregunta y una respuesta a una nota atómica para empezar.', 'Add a question and answer to an atomic note to start reviewing.') : ui('Vuelve más tarde o practica todas tus tarjetas.', 'Come back later or practice all your cards.');
+      empty.querySelector('h3').textContent = noCards ? ui('Todavía no hay tarjetas', 'No flashcards yet') : ui('¡Sesión de repaso completada!', 'Review session complete!');
+      empty.querySelector('p').textContent = noCards ? ui('Añade una pregunta y una respuesta a una nota atómica para empezar.', 'Add a question and answer to an atomic note to start reviewing.') : ui('Has repasado todas las tarjetas pendientes de hoy. Puedes repasar tus Mapas de Contenido o practicar todas las tarjetas.', 'You have reviewed all cards due today. You can review your Content Maps or practice all cards.');
       document.getElementById('btn-practice-all').hidden = noCards;
     }
     if (statusText) statusText.textContent = ui("0 tarjetas pendientes", "0 cards due");
@@ -6855,8 +7302,13 @@ function renderFlashcard() {
 
   const total = state.reviewQueue.length;
   const currentNum = state.currentReviewIndex + 1;
+  const pct = Math.round(((currentNum - 1) / Math.max(1, total)) * 100);
+  if (progressWrap && progressFill) {
+    progressWrap.style.display = 'block';
+    progressFill.style.width = `${Math.max(6, pct)}%`;
+  }
   if (statusText) {
-    statusText.textContent = `${ui("Tarjeta", "Card")} ${currentNum} / ${total} (${state.practiceAll ? ui("Práctica", "Practice") : ui("Pendientes hoy", "Due today")}: ${total - state.currentReviewIndex})`;
+    statusText.textContent = `${ui("Tarjeta", "Card")} ${currentNum} / ${total} · ${state.practiceAll ? ui("Modo Práctica", "Practice Mode") : ui("Pendientes hoy", "Due today")}: ${total - state.currentReviewIndex}`;
   }
 
   let topicLabel = item.tema || 'General';
@@ -6871,7 +7323,7 @@ function renderFlashcard() {
   document.getElementById('fc-interval').textContent = `${ui("Intervalo actual", "Current interval")}: ${item.intervalo_dias || 1}d (Ease: ${item.ease_factor || 2.5})`;
   document.getElementById('fc-question').innerHTML = renderMarkdown(item.pregunta || ui("(Pregunta no definida)", "(No question defined)"));
   document.getElementById('fc-answer').innerHTML = renderMarkdown(item.respuesta || ui("(Respuesta no definida)", "(No answer defined)"));
-  document.getElementById('fc-origin').innerHTML = item.nota_id ? `${ui("Nota origen", "Source note")}: <a href="#" onclick="openAtomicaModal('${item.nota_id}')">[[${item.nota_id}]]</a>` : '';
+  document.getElementById('fc-origin').innerHTML = item.nota_id ? `${ui("Nota origen", "Source note")}: <a href="#" onclick="event.preventDefault(); openReaderModal('atomica', '${escapeHtml(item.nota_id)}')">⚛️ [[${escapeHtml(item.nota_id)}]] (${ui("Leer nota completa", "Read full note")})</a>` : '';
 
   document.getElementById('fc-answer-container').style.display = 'none';
   document.getElementById('fc-grading-buttons').style.display = 'none';
@@ -6957,6 +7409,28 @@ async function loadAnalyticsView() {
     document.getElementById('fc-7d').textContent = data.forecast.due1to7;
     document.getElementById('fc-30d').textContent = data.forecast.due8to30;
     document.getElementById('fc-later').textContent = data.forecast.dueLater;
+
+    // Actualizar el Diagnóstico Accionable de Estudio
+    const adbTitle = document.getElementById('adb-title');
+    const adbDesc = document.getElementById('adb-desc');
+    const adbBtnReview = document.getElementById('adb-btn-review');
+    const adbBtnMaps = document.getElementById('adb-btn-maps');
+    if (adbTitle && adbDesc) {
+      const dueNow = data.forecast.dueToday || 0;
+      if (adbBtnReview) adbBtnReview.textContent = dueNow > 0 ? `🧠 ${ui(`Repasar ${dueNow} ahora`, `Review ${dueNow} now`)}` : `🧠 ${ui("Practicar Flashcards", "Practice Flashcards")}`;
+      if (adbBtnMaps) adbBtnMaps.textContent = `🗺️ ${ui("Ver Mapas", "View Maps")}`;
+
+      if (!data.totalCards) {
+        adbTitle.textContent = ui("Diagnóstico: Todavía no tienes flashcards activas", "Diagnosis: You don't have active flashcards yet");
+        adbDesc.textContent = ui("Importa un tema con el Asistente IA o añade una pregunta de autoevaluación a tus notas atómicas para activar el repaso espaciado.", "Import a topic with the AI Assistant or add a self-assessment question to your atomic notes to activate spaced repetition.");
+      } else if (dueNow > 0) {
+        adbTitle.textContent = ui(`Diagnóstico: Tienes ${dueNow} tarjeta${dueNow === 1 ? '' : 's'} lista${dueNow === 1 ? '' : 's'} para consolidar hoy`, `Diagnosis: You have ${dueNow} card${dueNow === 1 ? '' : 's'} ready to consolidate today`);
+        adbDesc.textContent = ui(`Completar tu cola de hoy mantendrá tu tasa de retención (${data.retentionRate || 100}%) y pasará tus conceptos de "En Aprendizaje" a "Maduras".`, `Completing today's queue will preserve your retention rate (${data.retentionRate || 100}%) and move concepts from "Learning" to "Mature".`);
+      } else {
+        adbTitle.textContent = ui("Diagnóstico: ¡Estás al día con tu memoria a largo plazo!", "Diagnosis: You are caught up with your long-term memory!");
+        adbDesc.textContent = ui(`0 tarjetas pendientes hoy · ${data.maturity.maduras} conceptos maduros (>21 días). Es un momento ideal para explorar un nuevo tema en Inicio o Mapas de Contenido.`, `0 cards due today · ${data.maturity.maduras} mature concepts (>21 days). Great time to explore a new topic in Home or Content Maps.`);
+      }
+    }
   } catch (e) {
     showToast(ui('Error cargando analítica de retención', 'Could not load retention analytics'), 'danger');
   }

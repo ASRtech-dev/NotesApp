@@ -1976,16 +1976,61 @@ app.get('/api/graph', (req, res) => {
     }
   }
 
-  // Nodos de mapas
+  const isMasterMap = (m) => Boolean(m && ((m.data && m.data.tipo_mapa === 'curso') || String(m.id || '').startsWith('mapa-curso-')));
+
+  // Nodos de mapas (Jerarquía limpia: Mapa Maestro del Curso -> Mapas Temáticos -> Notas Atómicas)
   mapas.forEach(m => {
+    const isMaster = isMasterMap(m);
+    const subtemas = Array.isArray(m.data.subtemas) ? m.data.subtemas : [];
     addNode(m.id, m.data.titulo || m.id, 'mapa', {
       carpeta: m.carpeta || '',
       campo: m.campo || '',
       proyecto: m.proyecto || '',
+      modulo: m.data.modulo || '',
+      leccion: m.data.leccion ?? null,
+      leccion_titulo: m.data.leccion_titulo || '',
+      tipo_mapa: isMaster ? 'curso' : 'tematico',
       tags: m.tags || [],
-      subtemas: Array.isArray(m.data.subtemas) ? m.data.subtemas : []
+      subtemas
     });
-    const subtemas = Array.isArray(m.data.subtemas) ? m.data.subtemas : [];
+
+    if (isMaster) {
+      const mProy = (m.proyecto || (m.data && m.data.proyecto) || '').trim();
+      const mFolder = (m.carpeta || '').trim();
+      const siblingTopicMaps = mapas.filter(other => {
+        if (!other || other.id === m.id || isMasterMap(other)) return false;
+        const oProy = (other.proyecto || (other.data && other.data.proyecto) || '').trim();
+        const oFolder = (other.carpeta || '').trim();
+        return (mProy && oProy === mProy) || (mFolder && oFolder === mFolder);
+      });
+
+      if (siblingTopicMaps.length > 0) {
+        const coveredByTopicMap = new Set();
+        siblingTopicMaps.forEach(tm => {
+          links.push({
+            source: m.id,
+            target: tm.id,
+            label: tm.data?.leccion_titulo ? `Tema: ${tm.data.leccion_titulo}` : 'Mapa temático del curso',
+            type: 'mapa-subtema'
+          });
+          (Array.isArray(tm.data?.subtemas) ? tm.data.subtemas : []).forEach(s => {
+            if (s && s.nota_id) coveredByTopicMap.add(s.nota_id);
+          });
+        });
+        subtemas.forEach(s => {
+          if (s && s.nota_id && !coveredByTopicMap.has(s.nota_id)) {
+            links.push({
+              source: m.id,
+              target: s.nota_id,
+              label: s.razon || 'subtema',
+              type: 'mapa-subtema'
+            });
+          }
+        });
+        return;
+      }
+    }
+
     subtemas.forEach(s => {
       if (s && s.nota_id) {
         links.push({
@@ -2005,6 +2050,9 @@ app.get('/api/graph', (req, res) => {
       carpeta: f.carpeta || '',
       campo: f.campo || '',
       proyecto: f.proyecto || '',
+      modulo: f.data.modulo || '',
+      leccion: f.data.leccion ?? null,
+      leccion_titulo: f.data.leccion_titulo || '',
       tags: f.tags || []
     });
     const ideas = Array.isArray(f.data.ideas_disparadas) ? f.data.ideas_disparadas : [];
@@ -2022,9 +2070,13 @@ app.get('/api/graph', (req, res) => {
   atomicas.forEach(a => {
     addNode(a.id, a.data.titulo || a.id, 'atomica', {
       ultimo_repaso: a.data.ultimo_repaso,
+      fuente: a.data.fuente || '',
       carpeta: a.carpeta || '',
       campo: a.campo || '',
       proyecto: a.proyecto || '',
+      modulo: a.data.modulo || '',
+      leccion: a.data.leccion ?? null,
+      leccion_titulo: a.data.leccion_titulo || '',
       tags: a.tags || []
     });
 
@@ -3098,9 +3150,10 @@ app.post('/api/import/json', (req, res) => {
       });
 
       if (priorProjectNotes.length > 0) {
-        const genericTags = new Set(['curso', 'sintesis', 'general', 'test', 'importci', 'estudio', 'notas', targetPSlug, targetCSlug]);
-        const isGenericTag = (t) => !t || genericTags.has(t) || /^leccion-\d+$/.test(t);
-        const stopWords = new Set(['sobre', 'entre', 'desde', 'hasta', 'como', 'para', 'este', 'esta', 'estos', 'estas', 'donde', 'cuando', 'porque', 'about', 'between', 'through', 'where', 'which', 'their', 'these', 'those', 'using']);
+        const modSlugCurrent = importModulo ? slugify(importModulo) : '';
+        const genericTags = new Set(['curso', 'sintesis', 'general', 'test', 'importci', 'estudio', 'notas', 'ai-agents', 'machine-learning', 'artificial-intelligence', 'wbs-coding-school', targetPSlug, targetCSlug, modSlugCurrent].filter(Boolean));
+        const isGenericTag = (t) => !t || genericTags.has(t) || /^(leccion|lesson|modulo|module|unidad|unit|tema|topic|parte|part|semana|week|bloque|capitulo|chapter)[-_]?\d*/i.test(t);
+        const stopWords = new Set(['sobre', 'entre', 'desde', 'hasta', 'como', 'para', 'este', 'esta', 'estos', 'estas', 'donde', 'cuando', 'porque', 'about', 'between', 'through', 'where', 'which', 'their', 'these', 'those', 'using', 'learning', 'machine', 'artificial', 'intelligence', 'model', 'models', 'system', 'systems']);
         const extractTitleWords = (str) => String(str || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').split(/[^a-z0-9]+/).filter(w => w.length >= 5 && !stopWords.has(w));
 
         let anyInterProjectLinkCreated = false;
@@ -3114,12 +3167,14 @@ app.post('/api/import/json', (req, res) => {
           if (!Array.isArray(aParsed.data.enlaces)) aParsed.data.enlaces = [];
 
           let noteModified = false;
+          let addedForThisNote = 0;
           const aTitle = (aParsed.data?.titulo || '').toLowerCase();
           const aFullText = `${aTitle} ${aParsed.content} ${(aParsed.data.tags || []).join(' ')}`.toLowerCase();
           const aSpecificTags = (aParsed.data?.tags || []).filter(t => !isGenericTag(t));
           const aTitleWords = extractTitleWords(aTitle);
 
           priorProjectNotes.forEach(prior => {
+            if (addedForThisNote >= 2) return;
             const priorId = prior.id;
             const priorTitle = (prior.data?.titulo || '').toLowerCase();
             const priorFullText = `${priorTitle} ${prior.content || ''}`.toLowerCase();
@@ -3128,13 +3183,14 @@ app.post('/api/import/json', (req, res) => {
 
             const explicitMention = aParsed.data.enlaces.includes(priorId) ||
               aFullText.includes(priorId.toLowerCase()) ||
-              (priorTitle.length > 5 && aFullText.includes(priorTitle)) ||
-              (aTitle.length > 5 && priorFullText.includes(aTitle));
+              (priorTitle.length > 8 && aFullText.includes(priorTitle)) ||
+              (aTitle.length > 8 && priorFullText.includes(aTitle));
 
-            const sharedTag = aSpecificTags.some(t => priorSpecificTags.includes(t));
+            const sharedTagCount = aSpecificTags.filter(t => priorSpecificTags.includes(t)).length;
             const sharedKeywords = aTitleWords.filter(w => priorTitleWords.includes(w)).length >= 2;
 
-            if (explicitMention || sharedTag || sharedKeywords) {
+            if (explicitMention || sharedTagCount >= 2 || (sharedTagCount >= 1 && sharedKeywords)) {
+              addedForThisNote++;
               if (!aParsed.data.enlaces.includes(priorId)) {
                 aParsed.data.enlaces.push(priorId);
                 if (!aParsed.content.includes(`[[${priorId}]]`)) {
